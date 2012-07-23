@@ -5,7 +5,7 @@
  * If you have models in your app, you should extend this class like that:
  *
  * {{{
- *  class MyModel extends \radium\model\BaseModel {
+ *  class MyModel extends \radium\models\BaseModel {
  * }}}
  *
  * @see app\models
