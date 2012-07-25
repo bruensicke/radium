@@ -81,15 +81,6 @@ class Configurations extends \radium\models\BaseModel {
 	 */
 	public static function __init(array $options = array()) {
 		parent::__init($options);
-
-		// auto-populate keys and vals
-		static::applyFilter('save', function ($self, $params, $chain) {
-			if ($params['entity']->type == 'array') {
-				$config = parse_ini_string($params['entity']->value);
-				$params['entity']->val = Set::expand($config);
-			}
-			return $chain->next($self, $params, $chain);
-		});
 	}
 
 	public static function dropdown() {
@@ -123,7 +114,7 @@ class Configurations extends \radium\models\BaseModel {
 			case 'string':
 				return (string) $entity->value;
 			case 'array':
-				$config = $entity->val;
+				$config = Set::expand(parse_ini_string($entity->value));
 				if (!empty($field)) {
 					if (array_key_exists($field, $config)) {
 						return $config[$field];
