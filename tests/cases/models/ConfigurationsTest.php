@@ -84,6 +84,15 @@ class ConfigurationsTest extends \lithium\test\Unit {
 		$this->assertEqual('baz', $result->val('foo.bar'));
 	}
 
+	public function testDropdownConfiguration() {
+		$result = Configurations::dropdown();
+		$expected = array(
+			'active' => array(1 => 'first', 3 => 'third'),
+			'inactive' => array(2 => 'second'),
+		);
+		$this->assertEqual($expected, $result);
+	}
+
 }
 
 ?>
