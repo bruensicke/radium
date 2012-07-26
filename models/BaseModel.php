@@ -113,6 +113,17 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * undeletes a record, in case it was marked as deleted
+	 *
+	 * @param object $entity current instance
+	 * @return boolean true on success, false otherwise
+	 */
+	public function undelete($entity) {
+		unset($entity->deleted);
+		return is_null($entity->deleted) && $entity->save();
+	}
+
+	/**
 	 * fetches the associated config record
 	 *
 	 * @param object $entity current instance
