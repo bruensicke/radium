@@ -169,7 +169,7 @@ class BaseModel extends \lithium\data\Model {
 					$entity->$name = null;
 					continue;
 				}
-				$return = $entity->$name = $model::first($entity->$attribute);
+				$return = $entity->$name = $model::first((string) $entity->$attribute);
 			}
 		}
 		return $return;
