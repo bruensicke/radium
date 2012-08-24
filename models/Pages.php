@@ -14,8 +14,10 @@ class Pages extends \radium\models\BaseModel {
 	 */
 	protected $_schema = array(
 		'_id' => array('type' => 'id'),
+		'parent_id' => array('type' => 'string'),
 		'name' => array('type' => 'string', 'default' => '', 'null' => false),
 		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
+		'fullslug' => array('type' => 'string', 'default' => '', 'null' => false),
 		'type' => array('type' => 'string', 'default' => 'string'),
 		'body' => array('type' => 'string'),
 		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
@@ -34,16 +36,16 @@ class Pages extends \radium\models\BaseModel {
 		'_id' => array(
 			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
 		),
-		'type' => array(
-			array('notEmpty', 'message' => 'type is empty.'),
-			array('inList', 'list' => array('page', 'post', 'wiki'), 'message' => 'type must be valid.')
-		),
 		'name' => array(
 			array('notEmpty', 'message' => 'a name is required.'),
 		),
 		'slug' => array(
 			array('notEmpty', 'message' => 'a valid slug is required.', 'last' => true),
 			array('alphaNumeric', 'message' => 'only numbers and letters are allowed.', 'last' => true),
+		),
+		'type' => array(
+			array('notEmpty', 'message' => 'type is empty.'),
+			array('inList', 'list' => array('page', 'post', 'wiki'), 'message' => 'type must be valid.')
 		),
 		'status' => array(
 			array('notEmpty', 'message' => 'Status is empty.'),
