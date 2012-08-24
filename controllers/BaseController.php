@@ -50,7 +50,7 @@ class BaseController extends \lithium\action\Controller {
 	public function add() {
 		$model = $this->model();
 		$singular = $this->model('singular');
-		$object = $model::create();
+		$object = $model::create($this->_options());
 
 		if (($this->request->data) && $object->save($this->request->data)) {
 			return $this->redirect(array("{$this->controller}::view", 'args' => array($object->_id)));
@@ -62,6 +62,7 @@ class BaseController extends \lithium\action\Controller {
 		$model = $this->model();
 		$singular = $this->model('singular');
 		$object = $model::first($this->request->id);
+		$object->set($this->_options());
 
 		if (!$object) {
 			return $this->redirect("{$this->controller}::index");
