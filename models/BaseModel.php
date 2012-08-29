@@ -66,7 +66,7 @@ class BaseModel extends \lithium\data\Model {
 			static::finder($key, array('conditions' => array('status' => $key)));
 		}
 
-		foreach (static::$_types as $key => $value) {
+		foreach (static::types() as $key => $value) {
 			if (is_numeric($key)) $key = $name;
 			static::finder($key, array('conditions' => array('type' => $key)));
 		}
@@ -87,6 +87,15 @@ class BaseModel extends \lithium\data\Model {
 			$params['entity']->deleted = date(DATE_ATOM);
 			return $params['entity']->save();
 		});
+	}
+
+	/**
+	 * all types for current model
+	 *
+	 * @return array all types with keys and their name
+	 */
+	public static function types() {
+		return static::$_types;
 	}
 
 	/**
