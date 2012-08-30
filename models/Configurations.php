@@ -83,11 +83,6 @@ class Configurations extends \radium\models\BaseModel {
 		parent::__init($options);
 	}
 
-	public static function dropdown() {
-		$configurations = static::find('array');
-		return Set::combine($configurations->data(), '/_id', '/name', '/status');
-	}
-
 	/**
 	 * return configured value
 	 *
