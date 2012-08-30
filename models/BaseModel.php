@@ -16,6 +16,7 @@ namespace radium\models;
 use radium\models\Configurations;
 
 use lithium\core\Libraries;
+use lithium\util\Set;
 use lithium\util\Inflector;
 
 class BaseModel extends \lithium\data\Model {
