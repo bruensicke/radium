@@ -99,6 +99,28 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * all status for current model
+	 *
+	 * @return array all status with keys and their name
+	 */
+	public static function status() {
+		return static::$_status;
+	}
+
+	/**
+	 * generates an array that perfectly fits the form helpers select format
+	 *
+	 * @param string $name what field to display as name field
+	 * @param string $order on what field to group results, defaults to status
+	 * @return array a list, suitable for dropdowns, with the id as primary key
+	 */
+	public static function dropdown($name = 'name', $order = 'status') {
+		$data = static::all();
+		$key = static::key();
+		return Set::combine($data->data(), "/$key", "/$name", "/$order");
+	}
+
+	/**
 	 * Allows to pass in a query to do, what a man needs to do.
 	 * Make sure, you are not trying to be james bond, without
 	 * beeing sure, you know what you are doing.
