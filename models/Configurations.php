@@ -157,6 +157,28 @@ class Configurations extends \radium\models\BaseModel {
 		}
 		return $entity->val($options);
 	}
+
+	/**
+	 * finds and loads configuration with given slug
+	 *
+	 * @param string $slug short unique string to identify configuration
+	 * @param string $status status configuration must have
+	 * @return object|boolean found configuration entity or false, if none found
+	 * @filter
+	 */
+	public static function slug($slug, $status = 'active', array $options = array()) {
+		$params = compact('slug', 'status', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$options['conditions'] = compact('slug', 'status');
+			$configuration = Configurations::find('first', $options);
+			if (!$configuration) {
+				return false;
+			}
+			return $configuration;
+		});
+	}
+
 }
 
 ?>
