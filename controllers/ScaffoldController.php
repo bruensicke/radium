@@ -9,53 +9,51 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public $model = null;
 
 	public function index() {
-		$model = $this->model();
-		$plural = $this->model('table');
+		$model = $this->_model();
+		$plural = $this->_model('table');
 		$result = $model::all();
 		return array($plural => $result);
 	}
 
 	public function view() {
-		$model = $this->model();
-		$singular = $this->model('singular');
+		$model = $this->_model();
+		$singular = $this->_model('singular');
 
 		$result = $model::first($this->request->id);
 		return array($singular => $result);
 	}
 
 	public function add() {
-		$model = $this->model();
-		$singular = $this->model('singular');
+		$model = $this->_model();
+		$singular = $this->_model('singular');
 		$object = $model::create($this->_options());
 
 		if (($this->request->data) && $object->save($this->request->data)) {
-			return $this->redirect(array(
-				'library' => $this->library, 'action' => 'view', 'args' => array($object->_id)
-			));
+			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+			return $this->redirect($url);
 		}
-		return array($singular => $object);
+		return array($singular => $object, 'errors' => $object->errors());
 	}
 
 	public function edit() {
-		$model = $this->model();
-		$singular = $this->model('singular');
+		$model = $this->_model();
+		$singular = $this->_model('singular');
 		$object = $model::first($this->request->id);
 		$object->set($this->_options());
 
 		if (!$object) {
-			return $this->redirect(array('library' => $this->library, 'action' => 'index'));
+			return $this->redirect(array('action' => 'index'));
 		}
 		if (($this->request->data) && $object->save($this->request->data)) {
-			return $this->redirect(array(
-				'library' => $this->library, 'action' => 'view', 'args' => array($object->_id)
-			));
+			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+			return $this->redirect($url);
 		}
 		return array($singular => $object);
 	}
 
 	public function duplicate() {
-		$model = $this->model();
-		$singular = $this->model('singular');
+		$model = $this->_model();
+		$singular = $this->_model('singular');
 		$object = $model::first($this->request->id);
 
 		$data = $object->data();
@@ -64,13 +62,12 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$object->set($this->_options());
 
 		if (!$object) {
-			return $this->redirect(array('library' => $this->library, 'action' => 'index'));
+			return $this->redirect(array('action' => 'index'));
 		}
 
 		if (($this->request->data) && $object->save($this->request->data)) {
-			return $this->redirect(array(
-				'library' => $this->library, 'action' => 'view', 'args' => array($object->_id)
-			));
+			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+			return $this->redirect($url);
 		}
 
 		$this->_render['template'] = 'edit';
@@ -78,15 +75,15 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	}
 
 	public function delete() {
-		$model = $this->model();
+		$model = $this->_model();
 		$model::find($this->request->id)->delete();
-		return $this->redirect(array('library' => $this->library, 'action' => 'index'));
+		return $this->redirect(array('action' => 'index'));
 	}
 
 	public function undelete() {
-		$model = $this->model();
+		$model = $this->_model();
 		$model::find($this->request->id)->undelete();
-		return $this->redirect(array('library' => $this->library, 'action' => 'index'));
+		return $this->redirect(array('action' => 'index'));
 	}
 
 	/**
@@ -97,7 +94,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	 *               the full qualified modelname, as defined in $this->model.
 	 * @return string
 	 **/
-	protected function model($type = 'class') {
+	protected function _model($type = 'class') {
 		$class_name = basename(str_replace('\\', '/', $this->model));
 		switch ($type) {
 			case 'singular':
