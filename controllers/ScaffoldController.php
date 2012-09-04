@@ -48,7 +48,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
 		}
-		return array($singular => $object);
+		return array($singular => $object, 'errors' => $object->errors());
 	}
 
 	public function duplicate() {
@@ -71,7 +71,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		}
 
 		$this->_render['template'] = 'edit';
-		return array($singular => $object);
+		return array($singular => $object, 'errors' => $object->errors());
 	}
 
 	public function delete() {
