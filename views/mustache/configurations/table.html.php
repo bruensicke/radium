@@ -37,6 +37,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="<?=$this->url('/'); ?>radium/configurations/view/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
 						<li><a href="<?=$this->url('/'); ?>radium/configurations/edit/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
+						<li><a href="<?=$this->url('/'); ?>radium/configurations/duplicate/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>
 						<li class="divider"></li>
 						{{^deleted}}
 							<li><a href="<?=$this->url('/'); ?>radium/configurations/delete/{{ _id }}"><i class="icon-trash"></i> Delete</a></li>
