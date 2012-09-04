@@ -53,6 +53,30 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $object);
 	}
 
+	public function duplicate() {
+		$model = $this->model();
+		$singular = $this->model('singular');
+		$object = $model::first($this->request->id);
+
+		$data = $object->data();
+		unset($data[$model::key()]);
+		$object = $model::create($data);
+		$object->set($this->_options());
+
+		if (!$object) {
+			return $this->redirect(array('library' => $this->library, 'action' => 'index'));
+		}
+
+		if (($this->request->data) && $object->save($this->request->data)) {
+			return $this->redirect(array(
+				'library' => $this->library, 'action' => 'view', 'args' => array($object->_id)
+			));
+		}
+
+		$this->_render['template'] = 'edit';
+		return array($singular => $object);
+	}
+
 	public function delete() {
 		$model = $this->model();
 		$model::find($this->request->id)->delete();
