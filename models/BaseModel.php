@@ -96,6 +96,9 @@ class BaseModel extends \lithium\data\Model {
 		if (!Validator::rules('loose_slug')) {
 			Validator::add('loose_slug', '/^[a-zA-Z0-9\_\-\.]*$/');
 		}
+		if (!Validator::rules('strict_slug')) {
+			Validator::add('strict_slug', '/^[a-z][a-z0-9\_\-]*$/');
+		}
 	}
 
 	/**
