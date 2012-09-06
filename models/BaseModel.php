@@ -17,6 +17,7 @@ use radium\models\Configurations;
 
 use lithium\core\Libraries;
 use lithium\util\Set;
+use lithium\util\Validator;
 use lithium\util\Inflector;
 
 class BaseModel extends \lithium\data\Model {
@@ -88,6 +89,13 @@ class BaseModel extends \lithium\data\Model {
 			$params['entity']->deleted = date(DATE_ATOM);
 			return $params['entity']->save();
 		});
+
+		if (!Validator::rules('slug')) {
+			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
+		}
+		if (!Validator::rules('loose_slug')) {
+			Validator::add('loose_slug', '/^[a-zA-Z0-9\_\-\.]*$/');
+		}
 	}
 
 	/**
