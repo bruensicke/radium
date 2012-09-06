@@ -46,7 +46,7 @@ class Contents extends \radium\models\BaseModel {
 		),
 		'slug' => array(
 			array('notEmpty', 'message' => 'a valid slug is required.', 'last' => true),
-			array('alphaNumeric', 'message' => 'only numbers and letters are allowed.', 'last' => true),
+			array('slug', 'message' => 'only numbers, small letters and . - _ are allowed.', 'last' => true),
 		),
 		'status' => array(
 			array('notEmpty', 'message' => 'Status is empty.'),
