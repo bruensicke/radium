@@ -14,8 +14,8 @@ class ContentsController extends \radium\controllers\ScaffoldController {
 	}
 
 	public function index($type = 'all') {
-		$model = $this->model();
-		$plural = $this->model('table');
+		$model = $this->_model();
+		$plural = $this->_model('table');
 		$result = $model::$type();
 		return array($plural => $result);
 	}
