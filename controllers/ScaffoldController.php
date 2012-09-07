@@ -80,6 +80,13 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
+	public function remove() {
+		$model = $this->_model();
+		$key = $model::key();
+		$model::remove(array($key => $this->request->id));
+		return $this->redirect(array('action' => 'index'));
+	}
+
 	public function undelete() {
 		$model = $this->_model();
 		$model::find($this->request->id)->undelete();
