@@ -9,7 +9,7 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th>State</th>
+			<th>Status</th>
 			<th>Type</th>
 			<th>Name</th>
 			<th>Notes</th>
