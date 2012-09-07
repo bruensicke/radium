@@ -99,6 +99,18 @@ class BaseModel extends \lithium\data\Model {
 		if (!Validator::rules('strict_slug')) {
 			Validator::add('strict_slug', '/^[a-z][a-z0-9\_\-]*$/');
 		}
+		if (!Validator::rules('isUnique')) {
+			Validator::add('isUnique', function ($value, $format, $options) {
+				$conditions = array($options['field'] => $value);
+				foreach((array) $options['model']::meta('key') as $field) {
+					if (!empty($options['values'][$field])) {
+						$conditions[$field] = array('!=' => $options['values'][$field]);
+					}
+				}
+				$fields = $options['field'];
+				return is_null($options['model']::find('first', compact('fields', 'conditions')));
+			});
+		}
 	}
 
 	/**
