@@ -204,7 +204,9 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$result = $self::first($id, $options);
+			$key = $self::key();
+			$options['conditions'] = array($key => $id);
+			$result = $self::find('first', $options);
 			if (!$result) {
 				return false;
 			}
