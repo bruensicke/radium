@@ -43,7 +43,8 @@
 							<li><a href="<?=$this->url('/'); ?>radium/configurations/delete/{{ _id }}"><i class="icon-trash"></i> Delete</a></li>
 						{{/deleted}}
 						{{#deleted}}
-							<li><a href="<?=$this->url('/'); ?>radium/configurations/undelete/{{ _id }}"><i class="icon-trash"></i> Restore</a></li>
+							<li><a href="<?=$this->url('/'); ?>radium/configurations/remove/{{ _id }}"><i class="icon-trash"></i> Remove physically</a></li>
+							<li><a href="<?=$this->url('/'); ?>radium/configurations/undelete/{{ _id }}"><i class="icon-retweet"></i> Restore</a></li>
 						{{/deleted}}
 					</ul>
 				</div>
