@@ -142,7 +142,7 @@ class Configurations extends \radium\models\BaseModel {
 	 * You can also use $options to request a certain field, see val()
 	 *
 	 * @see sy_core\model\Configs::val()
-	 * @param string $name name of confiuration to retrieve
+	 * @param string $name name of configuration to retrieve
 	 * @param string $default what to return, if nothing is found
 	 * @param array $options an array of options, currently all of
 	 *              Configs::val() are supported, see there.
@@ -156,27 +156,6 @@ class Configurations extends \radium\models\BaseModel {
 			return $options['default'];
 		}
 		return $entity->val($options);
-	}
-
-	/**
-	 * finds and loads configuration with given slug
-	 *
-	 * @param string $slug short unique string to identify configuration
-	 * @param string $status status configuration must have
-	 * @return object|boolean found configuration entity or false, if none found
-	 * @filter
-	 */
-	public static function slug($slug, $status = 'active', array $options = array()) {
-		$params = compact('slug', 'status', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
-			extract($params);
-			$options['conditions'] = compact('slug', 'status');
-			$configuration = Configurations::find('first', $options);
-			if (!$configuration) {
-				return false;
-			}
-			return $configuration;
-		});
 	}
 
 }
