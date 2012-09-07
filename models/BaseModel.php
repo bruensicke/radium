@@ -145,6 +145,77 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * finds and loads entities that match slug subpattern
+	 *
+	 * @see lithium\data\Model::find()
+	 * @param string $slug short unique string to look for
+	 * @param string $status status must have
+	 * @param array $options additional options to be merged into find options
+	 * @return object|boolean found results as collection or false, if none found
+	 * @filter
+	 */
+	public static function search($slug, $status = 'active', array $options = array()) {
+		$params = compact('slug', 'status', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$options['conditions'] = array(
+				'slug' => array('like' => "/$slug/i"),
+				'status' => $status
+			);
+			$result = $self::find('all', $options);
+			if (!$result) {
+				return false;
+			}
+			return $result;
+		});
+	}
+
+	/**
+	 * finds and loads entity with given slug
+	 *
+	 * @param string $slug short unique string to identify entity
+	 * @param string $status status entity must have
+	 * @return object|boolean found entity entity or false, if none found
+	 * @filter
+	 */
+	public static function slug($slug, $status = 'active', array $options = array()) {
+		$params = compact('slug', 'status', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$options['conditions'] = compact('slug', 'status');
+			$result = $self::find('first', $options);
+			if (!$result) {
+				return false;
+			}
+			return $result;
+		});
+	}
+
+	/**
+	 * finds and loads active entity for given id
+	 *
+	 * @param string $id id of entity to load
+	 * @return object|boolean entity if found and active, false otherwise
+	 * @filter
+	 */
+	public static function load($id, $status = 'active', array $options = array()) {
+		$params = compact('id', 'status', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$defaults = array();
+			$options += $defaults;
+			$result = $self::first($id);
+			if (!$result) {
+				return false;
+			}
+			if ($result->status != $status) {
+				return false;
+			}
+			return $result;
+		});
+	}
+
+	/**
 	 * Allows to pass in a query to do, what a man needs to do.
 	 * Make sure, you are not trying to be james bond, without
 	 * beeing sure, you know what you are doing.
