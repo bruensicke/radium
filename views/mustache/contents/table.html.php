@@ -41,12 +41,14 @@
 					<ul class="dropdown-menu">
 						<li><a href="<?=$this->url('/'); ?>radium/contents/view/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
 						<li><a href="<?=$this->url('/'); ?>radium/contents/edit/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
+						<li><a href="<?=$this->url('/'); ?>radium/contents/duplicate/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>
 						<li class="divider"></li>
-						{{#deleted}}
-							<li><a href="<?=$this->url('/'); ?>radium/contents/undelete/{{ _id }}"><i class="icon-trash"></i> Undelete</a></li>
-						{{/deleted}}
 						{{^deleted}}
 							<li><a href="<?=$this->url('/'); ?>radium/contents/delete/{{ _id }}"><i class="icon-trash"></i> Delete</a></li>
+						{{/deleted}}
+						{{#deleted}}
+							<li><a href="<?=$this->url('/'); ?>radium/contents/remove/{{ _id }}"><i class="icon-trash"></i> Remove physically</a></li>
+							<li><a href="<?=$this->url('/'); ?>radium/contents/undelete/{{ _id }}"><i class="icon-retweet"></i> Restore</a></li>
 						{{/deleted}}
 					</ul>
 				</div>
