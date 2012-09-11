@@ -241,6 +241,22 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * updates fields for records, specified by key => value
+	 *
+	 * @param array $data array keys are primary keys, values will be set
+	 * @param string $field name of field to update
+	 * @return array an array containing all results
+	 */
+	public static function updateFields($data, $field) {
+		$key = static::key();
+		$result = array();
+		foreach ($data as $id => $value) {
+			$result[] = static::update(array($field => $value), array($key => $id));
+		}
+		return $result;
+	}
+
+	/**
 	 * undeletes a record, in case it was marked as deleted
 	 *
 	 * @param object $entity current instance
