@@ -23,6 +23,19 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $result);
 	}
 
+	public function slug($slug) {
+		$model = $this->_model();
+		$singular = $this->_model('singular');
+
+		$result = $model::slug($slug);
+		if (!$result) {
+			$url = array('action' => 'add', 'args' => array("slug:$slug"));
+			return $this->redirect($url);
+		}
+		$this->_render['template'] = 'view';
+		return array($singular => $result);
+	}
+
 	public function add() {
 		$model = $this->_model();
 		$singular = $this->_model('singular');
