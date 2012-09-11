@@ -160,7 +160,8 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$options['conditions'] = array(
 				'slug' => array('like' => "/$slug/i"),
-				'status' => $status
+				'status' => $status,
+				'deleted' => array('<=' => null), // only not deleted
 			);
 			$result = $self::find('all', $options);
 			if (!$result) {
@@ -182,7 +183,8 @@ class BaseModel extends \lithium\data\Model {
 		$params = compact('slug', 'status', 'options');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
-			$options['conditions'] = compact('slug', 'status');
+			$deleted = array('<=' => null); // only not deleted
+			$options['conditions'] = compact('slug', 'status', 'deleted');
 			$result = $self::find('first', $options);
 			if (!$result) {
 				return false;
@@ -211,6 +213,9 @@ class BaseModel extends \lithium\data\Model {
 				return false;
 			}
 			if ($result->status != $status) {
+				return false;
+			}
+			if (!empty($result->deleted)) {
 				return false;
 			}
 			return $result;
