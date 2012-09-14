@@ -52,11 +52,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$model = $this->_model();
 		$singular = $this->_model('singular');
 		$object = $model::first($this->request->id);
-		$object->set($this->_options());
-
 		if (!$object) {
 			return $this->redirect(array('action' => 'index'));
 		}
+		$object->set($this->_options());
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
@@ -68,15 +67,13 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$model = $this->_model();
 		$singular = $this->_model('singular');
 		$object = $model::first($this->request->id);
-
+		if (!$object) {
+			return $this->redirect(array('action' => 'add'));
+		}
 		$data = $object->data();
 		unset($data[$model::key()]);
 		$object = $model::create($data);
 		$object->set($this->_options());
-
-		if (!$object) {
-			return $this->redirect(array('action' => 'index'));
-		}
 
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
