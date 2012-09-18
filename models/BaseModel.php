@@ -252,11 +252,17 @@ class BaseModel extends \lithium\data\Model {
 	 * @param string $field name of field to update
 	 * @return array an array containing all results
 	 */
-	public static function updateFields($data, $field) {
+	public static function updateFields($data, $field, array $options = array()) {
+		$defaults = array('updated' => true);
+		$options += $defaults;
 		$key = static::key();
 		$result = array();
 		foreach ($data as $id => $value) {
-			$result[] = static::update(array($field => $value), array($key => $id));
+			$update = array($field => $value);
+			if ($options['updated']) {
+				$update['updated'] = date(DATE_ATOM);
+			}
+			$result[$id] = static::update($update, array($key => $id));
 		}
 		return $result;
 	}
