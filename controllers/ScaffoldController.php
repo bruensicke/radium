@@ -92,8 +92,11 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 	public function remove() {
 		$model = $this->_model();
-		$key = $model::key();
-		$model::remove(array($key => $this->request->id));
+		$conditions = array();
+		if (!empty($this->request->id)) {
+			$conditions[$model::key()] = $this->request->id;
+		}
+		$model::remove($conditions);
 		return $this->redirect(array('action' => 'index'));
 	}
 
