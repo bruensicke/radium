@@ -118,7 +118,10 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @return array all types with keys and their name
 	 */
-	public static function types() {
+	public static function types($type = null) {
+		if (!empty($type) && isset(static::$_types[$type])) {
+			return static::$_types[$type];
+		}
 		return static::$_types;
 	}
 
@@ -127,7 +130,10 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @return array all status with keys and their name
 	 */
-	public static function status() {
+	public static function status($status = null) {
+		if (!empty($status) && isset(static::$_status[$status])) {
+			return static::$_status[$status];
+		}
 		return static::$_status;
 	}
 
