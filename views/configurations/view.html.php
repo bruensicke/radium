@@ -18,7 +18,12 @@
 <?php
 switch($configuration->type) {
 	case 'array':
-		echo $this->mustache->render('data', array('data' => $configuration->flat()));
+		echo $this->mustache->render('data', array('data' => $this->mustache->data($configuration->val())));
+		break;
+	case 'list':
+		echo '<div class="well">';
+		echo $this->mustache->render('list', array('data' => $configuration->val()));
+		echo '</div>';
 		break;
 	case 'string':
 		echo '<p class="well">'.$configuration->value.'</p>';
