@@ -131,18 +131,11 @@ class Configurations extends \radium\models\BaseModel {
 				if (!empty($result)) {
 					return $result;
 				}
-				return (array) $config;
+				return ($options['flat'])
+					? Set::flatten($config)
+					: $config;
 		}
 		return $options['default'];
-	}
-
-	public function flat($entity) {
-		$config = Set::flatten($entity->val());
-		$result = array();
-		foreach ($config as $key => $value) {
-			$result[] = compact('key', 'value');
-		}
-		return $result;
 	}
 
 	/**
