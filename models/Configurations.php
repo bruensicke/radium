@@ -46,7 +46,7 @@ class Configurations extends \radium\models\BaseModel {
 		),
 		'type' => array(
 			array('notEmpty', 'message' => 'type is empty.'),
-			array('inList', 'list' => array('boolean', 'string', 'array'), 'message' => 'type must be valid.')
+			array('inList', 'list' => array('boolean', 'string', 'list', 'array'), 'message' => 'type must be valid.')
 		),
 		'name' => array(
 			array('notEmpty', 'message' => 'a name is required.'),
@@ -69,6 +69,7 @@ class Configurations extends \radium\models\BaseModel {
 	public static $_types = array(
 		'boolean' => 'boolean',
 		'string' => 'string',
+		'list' => 'list',
 		'array' => 'array',
 	);
 
@@ -101,13 +102,23 @@ class Configurations extends \radium\models\BaseModel {
 	 * @return mixed whatever can be returned
 	 */
 	public function val($entity, $field = null, array $options = array()) {
-		$defaults = array('default' => null);
+		$defaults = array('default' => null, 'flat' => false);
 		$options += $defaults;
 		switch ($entity->type) {
 			case 'boolean':
 				return (boolean) $entity->value;
 			case 'string':
 				return (string) $entity->value;
+			case 'list':
+				$items = explode("\n", $entity->value);
+				$result = array();
+				foreach($items as $item) {
+					$item = trim($item);
+					if (!empty($item)) {
+						$result[] = $item;
+					}
+				}
+				return $result;
 			case 'array':
 				$config = Set::expand(parse_ini_string($entity->value));
 				if (!empty($field)) {
