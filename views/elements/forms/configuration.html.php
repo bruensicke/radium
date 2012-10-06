@@ -9,8 +9,8 @@
 				'id' => 'type_switch',
 				'list' => radium\models\Configurations::types()
 			));?>
-			<?=$this->form->field('name', array('class' => 'span3'));?>
-			<?=$this->form->field('slug', array('class' => 'span3'));?>
+			<?=$this->form->field('name', array('class' => 'span3', 'required' => true));?>
+			<?=$this->form->field('slug', array('class' => 'span3', 'required' => true));?>
 			<?=$this->form->field('status', array(
 				'type' => 'select',
 				'class' => 'span3',
