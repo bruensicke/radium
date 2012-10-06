@@ -7,6 +7,20 @@ use lithium\util\Set;
 class Contents extends \radium\models\BaseModel {
 
 	/**
+	 * Custom type options
+	 *
+	 * @var array
+	 */
+	public static $_types = array(
+		'page' => 'page',
+		'post' => 'post',
+		'news' => 'news',
+		'wiki' => 'wiki',
+		'faq' => 'faq',
+		'term' => 'term',
+	);
+
+	/**
 	 * Stores the data schema.
 	 *
 	 * @see lithium\data\source\MongoDb::$_schema
@@ -34,13 +48,6 @@ class Contents extends \radium\models\BaseModel {
 		'_id' => array(
 			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
 		),
-		'type' => array(
-			array('notEmpty', 'message' => 'type is empty.'),
-			array('inList',
-				'list' => array('page', 'post', 'news', 'wiki', 'faq', 'term'),
-				'message' => 'type must be valid.'
-			)
-		),
 		'name' => array(
 			array('notEmpty', 'message' => 'a name is required.'),
 		),
@@ -48,24 +55,6 @@ class Contents extends \radium\models\BaseModel {
 			array('notEmpty', 'message' => 'a valid slug is required.', 'last' => true),
 			array('slug', 'message' => 'only numbers, small letters and . - _ are allowed.', 'last' => true),
 		),
-		'status' => array(
-			array('notEmpty', 'message' => 'Status is empty.'),
-			array('inList', 'list' => array('active', 'inactive'), 'message' => 'Status must be a valid option.')
-		)
-	);
-
-	/**
-	 * Custom type options
-	 *
-	 * @var array
-	 */
-	public static $_types = array(
-		'page' => 'page',
-		'post' => 'post',
-		'news' => 'news',
-		'wiki' => 'wiki',
-		'faq' => 'faq',
-		'term' => 'term',
 	);
 
 
