@@ -68,6 +68,21 @@ class ConfigurationsTest extends \lithium\test\Unit {
 		$this->assertEqual('1', $result->val());
 	}
 
+	public function testListConfiguration() {
+		$result = Configurations::create(Set::merge($this->_default, array(
+			'type' => 'list',
+			'value' => "foo\nbar\nbaz",
+		)));
+		$this->assertEqual(array(0 => 'foo', 1 => 'bar', 2 => 'baz'), $result->val());
+		$this->assertEqual(3, count($result->val()));
+		$result = Configurations::create(Set::merge($this->_default, array(
+			'type' => 'list',
+			'value' => "\n\nfoo\nbar\nbaz\n",
+		)));
+		$this->assertEqual(array(0 => 'foo', 1 => 'bar', 2 => 'baz'), $result->val());
+		$this->assertEqual(3, count($result->val()));
+	}
+
 	public function testArrayConfiguration() {
 		$result = Configurations::create(Set::merge($this->_default, array(
 			'type' => 'array',
@@ -83,16 +98,6 @@ class ConfigurationsTest extends \lithium\test\Unit {
 		$this->assertEqual(array('bar' => 'baz', 'baz' => 'bar'), $result->val('foo'));
 		$this->assertEqual('baz', $result->val('foo.bar'));
 	}
-
-	public function testDropdownConfiguration() {
-		$result = Configurations::dropdown();
-		$expected = array(
-			'active' => array(1 => 'first', 3 => 'third'),
-			'inactive' => array(2 => 'second'),
-		);
-		$this->assertEqual($expected, $result);
-	}
-
 }
 
 ?>
