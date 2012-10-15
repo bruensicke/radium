@@ -11,7 +11,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function index() {
 		$model = $this->_model();
 		$plural = $this->_model('table');
-		$result = $model::all();
+		$conditions = $this->_options();
+		$result = $model::find('all', compact('conditions'));
 		return array($plural => $result);
 	}
 
