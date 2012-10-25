@@ -6,7 +6,7 @@
 			<?=$this->form->field('type', array(
 				'type' => 'select',
 				'class' => 'span3',
-				'id' => 'type_switch',
+				'data-switch' => 'type',
 				'list' => \radium\models\Contents::types()
 			));?>
 			<?=$this->form->field('name', array('class' => 'span3', 'required' => true));?>
