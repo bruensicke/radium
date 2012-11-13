@@ -58,9 +58,8 @@ class BaseModel extends \lithium\data\Model {
 	 * @see lithium\data\Model
 	 * @return void
 	 */
-	public static function __init() {
-		static::_isBase(__CLASS__, true);
-		parent::__init();
+	public static function init($class) {
+		$self = parent::_init($class);
 
 		if (!Validator::rules('slug')) {
 			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
@@ -84,11 +83,6 @@ class BaseModel extends \lithium\data\Model {
 			});
 		}
 
-		if (static::_name() == 'BaseModel') {
-			return;
-		}
-		$obj = static::_object();
-
 		$types = static::types();
 		$deleted = array('<=' => null); // for conditions compact (only undeleted records)
 		if (!empty($types)) {
@@ -96,12 +90,12 @@ class BaseModel extends \lithium\data\Model {
 				if (is_numeric($type)) $type = $name;
 				static::finder($type, array('conditions' => compact('type', 'deleted')));
 			}
-			$original = (isset($obj->validates['type'])) ? $obj->validates['type'] : array();
+			$original = (isset($self->validates['type'])) ? $self->validates['type'] : array();
 			$new = array(
 				array('notEmpty', 'message' => 'type can not be empty'),
 				array('inList', 'list' => array_keys($types), 'message' => 'type must be valid')
 			);
-			$obj->validates['type'] = array_merge($new, $original);
+			$self->validates['type'] = array_merge($new, $original);
 		}
 
 		$stati = static::status();
@@ -110,12 +104,12 @@ class BaseModel extends \lithium\data\Model {
 				if (is_numeric($status)) $status = $name;
 				static::finder($status, array('conditions' => compact('status', 'deleted')));
 			}
-			$original = (isset($obj->validates['status'])) ? $obj->validates['status'] : array();
+			$original = (isset($self->validates['status'])) ? $self->validates['status'] : array();
 			$new = array(
 				array('notEmpty', 'message' => 'status can not be empty'),
 				array('inList', 'list' => array_keys($stati), 'message' => 'status must be valid')
 			);
-			$obj->validates['status'] = array_merge($new, $original);
+			$self->validates['status'] = array_merge($new, $original);
 		}
 
 		// auto-update the created and updated fields
@@ -134,6 +128,7 @@ class BaseModel extends \lithium\data\Model {
 			$params['entity']->deleted = date(DATE_ATOM);
 			return $params['entity']->save();
 		});
+		return $self;
 	}
 
 	/**
@@ -261,7 +256,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @param string $sql
 	 * @return object
 	 */
-	public static function query($sql) {
+	public static function execute($sql) {
 		return static::connection()->invokeMethod('_execute', array($sql));
 	}
 
