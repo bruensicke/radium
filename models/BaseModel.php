@@ -53,35 +53,12 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
-	 * Required by lithium
+	 * initialize method
 	 *
 	 * @see lithium\data\Model
 	 * @return void
 	 */
 	public static function __init() {
-		$types = static::types();
-		// debug($types);
-
-		// auto-update the created and updated fields
-		static::applyFilter('save', function ($self, $params, $chain) {
-			$field = ($params['entity']->exists()) ? 'updated' : 'created';
-			$params['entity']->$field = date(DATE_ATOM);
-			return $chain->next($self, $params, $chain);
-		});
-
-		// soft-delete on all rows, that have a 'deleted' field in schema
-		static::applyFilter('delete', function ($self, $params, $chain) {
-			$deleted = $params['entity']->schema('deleted');
-			if(is_null($deleted)) {
-				return $chain->next($self, $params, $chain);
-			}
-			$params['entity']->deleted = date(DATE_ATOM);
-			return $params['entity']->save();
-		});
-	}
-
-	public static function _init($class) {
-		$self = parent::_init($class);
 		if (!Validator::rules('slug')) {
 			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
 		}
@@ -103,7 +80,23 @@ class BaseModel extends \lithium\data\Model {
 				return is_null($options['model']::find('first', compact('fields', 'conditions')));
 			});
 		}
-		return $self;
+
+		// auto-update the created and updated fields
+		static::applyFilter('save', function ($self, $params, $chain) {
+			$field = ($params['entity']->exists()) ? 'updated' : 'created';
+			$params['entity']->$field = date(DATE_ATOM);
+			return $chain->next($self, $params, $chain);
+		});
+
+		// soft-delete on all rows, that have a 'deleted' field in schema
+		static::applyFilter('delete', function ($self, $params, $chain) {
+			$deleted = $params['entity']->schema('deleted');
+			if(is_null($deleted)) {
+				return $chain->next($self, $params, $chain);
+			}
+			$params['entity']->deleted = date(DATE_ATOM);
+			return $params['entity']->save();
+		});
 	}
 
 	/**
