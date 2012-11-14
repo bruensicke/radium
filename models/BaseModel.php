@@ -234,7 +234,8 @@ class BaseModel extends \lithium\data\Model {
 	 * @return array
 	 */
 	public static function fields() {
-		return array_keys(static::schema());
+		$schema = static::schema();
+		return $schema->names();
 	}
 
 	/**
