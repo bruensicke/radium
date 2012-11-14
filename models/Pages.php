@@ -63,18 +63,6 @@ class Pages extends \radium\models\BaseModel {
 		'post' => 'post',
 		'wiki' => 'wiki',
 	);
-
-	/**
-	 * Sets default connection options and connects default finders.
-	 *
-	 * @see lithium\data\Model::__init()
-	 * @param array $options
-	 * @return void
-	 */
-	public static function __init(array $options = array()) {
-		parent::__init($options);
-	}
-
 }
 
 ?>

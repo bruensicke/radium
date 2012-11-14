@@ -58,9 +58,30 @@ class BaseModel extends \lithium\data\Model {
 	 * @see lithium\data\Model
 	 * @return void
 	 */
-	public static function init($class) {
-		$self = parent::_init($class);
+	public static function __init() {
+		$types = static::types();
+		// debug($types);
 
+		// auto-update the created and updated fields
+		static::applyFilter('save', function ($self, $params, $chain) {
+			$field = ($params['entity']->exists()) ? 'updated' : 'created';
+			$params['entity']->$field = date(DATE_ATOM);
+			return $chain->next($self, $params, $chain);
+		});
+
+		// soft-delete on all rows, that have a 'deleted' field in schema
+		static::applyFilter('delete', function ($self, $params, $chain) {
+			$deleted = $params['entity']->schema('deleted');
+			if(is_null($deleted)) {
+				return $chain->next($self, $params, $chain);
+			}
+			$params['entity']->deleted = date(DATE_ATOM);
+			return $params['entity']->save();
+		});
+	}
+
+	public static function _init($class) {
+		$self = parent::_init($class);
 		if (!Validator::rules('slug')) {
 			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
 		}
@@ -82,52 +103,6 @@ class BaseModel extends \lithium\data\Model {
 				return is_null($options['model']::find('first', compact('fields', 'conditions')));
 			});
 		}
-
-		$types = static::types();
-		$deleted = array('<=' => null); // for conditions compact (only undeleted records)
-		if (!empty($types)) {
-			foreach ($types as $type => $name) {
-				if (is_numeric($type)) $type = $name;
-				static::finder($type, array('conditions' => compact('type', 'deleted')));
-			}
-			$original = (isset($self->validates['type'])) ? $self->validates['type'] : array();
-			$new = array(
-				array('notEmpty', 'message' => 'type can not be empty'),
-				array('inList', 'list' => array_keys($types), 'message' => 'type must be valid')
-			);
-			$self->validates['type'] = array_merge($new, $original);
-		}
-
-		$stati = static::status();
-		if (!empty($stati)) {
-			foreach ($stati as $status => $name) {
-				if (is_numeric($status)) $status = $name;
-				static::finder($status, array('conditions' => compact('status', 'deleted')));
-			}
-			$original = (isset($self->validates['status'])) ? $self->validates['status'] : array();
-			$new = array(
-				array('notEmpty', 'message' => 'status can not be empty'),
-				array('inList', 'list' => array_keys($stati), 'message' => 'status must be valid')
-			);
-			$self->validates['status'] = array_merge($new, $original);
-		}
-
-		// auto-update the created and updated fields
-		static::applyFilter('save', function ($self, $params, $chain) {
-			$field = ($params['entity']->exists()) ? 'updated' : 'created';
-			$params['entity']->$field = date(DATE_ATOM);
-			return $chain->next($self, $params, $chain);
-		});
-
-		// soft-delete on all rows, that have a 'deleted' field in schema
-		static::applyFilter('delete', function ($self, $params, $chain) {
-			$deleted = $params['entity']->schema('deleted');
-			if(is_null($deleted)) {
-				return $chain->next($self, $params, $chain);
-			}
-			$params['entity']->deleted = date(DATE_ATOM);
-			return $params['entity']->save();
-		});
 		return $self;
 	}
 

@@ -84,18 +84,6 @@ class Contents extends \radium\models\BaseModel {
 			'order' => array('title' => 'ASC'),
 		),
 	);
-
-	/**
-	 * Sets default connection options and connects default finders.
-	 *
-	 * @see lithium\data\Model::__init()
-	 * @param array $options
-	 * @return void
-	 */
-	public static function __init(array $options = array()) {
-		parent::__init($options);
-	}
-
 }
 
 ?>
