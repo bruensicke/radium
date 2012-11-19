@@ -317,7 +317,15 @@ class BaseModel extends \lithium\data\Model {
 					$entity->$name = null;
 					continue;
 				}
-				$return = $entity->$name = $model::first((string) $entity->$attribute);
+				$id = (string) $entity->$attribute;
+				if (!$id) {
+					continue;
+				}
+				$res = $model::first($id);
+				if (!$res) {
+					continue;
+				}
+				$return = $entity->$name = $res;
 			}
 		}
 		return $return;
