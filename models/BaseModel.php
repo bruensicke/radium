@@ -133,7 +133,7 @@ class BaseModel extends \lithium\data\Model {
 	public static function dropdown($name = 'name', $order = 'status') {
 		$data = static::all();
 		$key = static::key();
-		return Set::combine($data->data(), "/$key", "/$name", "/$order");
+		return Set::combine(array_values($data->data()), "/$key", "/$name", "/$order");
 	}
 
 	/**
