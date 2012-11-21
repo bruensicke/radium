@@ -94,7 +94,7 @@ class Configurations extends \radium\models\BaseModel {
 	 * @return mixed whatever can be returned
 	 */
 	public function val($entity, $field = null, array $options = array()) {
-		$defaults = array('default' => null, 'flat' => false);
+		$defaults = array('default' => null, 'flat' => false, 'field' => null);
 		$options += $defaults;
 		switch ($entity->type) {
 			case 'boolean':
@@ -113,6 +113,7 @@ class Configurations extends \radium\models\BaseModel {
 				return $result;
 			case 'array':
 				$config = Set::expand(parse_ini_string($entity->value));
+				$field = $options['field'];
 				if (!empty($field)) {
 					if (array_key_exists($field, $config)) {
 						return $config[$field];
