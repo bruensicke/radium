@@ -87,14 +87,14 @@ class Configurations extends \radium\models\BaseModel {
 	 *
 	 * @see sy_core\model\Configs::get()
 	 * @param object $entity instance of current Record
+	 * @param string $field what field (in case of array) to return
 	 * @param array $options an array of options currently supported are
 	 *              - `default` : what to return, if nothing is found
-	 *              - `field`   : what field (in case of array) to return
 	 *              - `type`    : to force a certain type, ie. boolean
 	 * @return mixed whatever can be returned
 	 */
 	public function val($entity, $field = null, array $options = array()) {
-		$defaults = array('default' => null, 'flat' => false, 'field' => null);
+		$defaults = array('default' => null, 'flat' => false);
 		$options += $defaults;
 		switch ($entity->type) {
 			case 'boolean':
@@ -113,8 +113,7 @@ class Configurations extends \radium\models\BaseModel {
 				return $result;
 			case 'array':
 				$config = Set::expand(parse_ini_string($entity->value));
-				$field = $options['field'];
-				if (!empty($field)) {
+				if (!empty($field) && is_scalar($field)) {
 					if (array_key_exists($field, $config)) {
 						return $config[$field];
 					}
@@ -152,7 +151,7 @@ class Configurations extends \radium\models\BaseModel {
 		if (!$entity || $entity->status != $options['status']) {
 			return $options['default'];
 		}
-		return $entity->val($options);
+		return $entity->val($options['field']);
 	}
 
 }
