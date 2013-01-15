@@ -5,6 +5,7 @@
 		<col width="180" />
 		<col width="*" />
 		<col width="120" />
+		<col width="120" />
 		<col width="180" />
 	</colgroup>
 	<thead>
@@ -13,6 +14,7 @@
 			<th>Type</th>
 			<th>Name</th>
 			<th>Notes</th>
+			<th>Updated</th>
 			<th>Created</th>
 			<th>Actions</th>
 		</tr>
@@ -29,6 +31,7 @@
 			<td><span class="label label_{{ type }}">{{ type }}</span></td>
 			<td><a href="<?=$this->url('/'); ?>radium/configurations/view/{{ _id }}">{{ name }}</a></td>
 			<td class="muted">{{ notes }}</td>
+			<td data-datetime="{{ updated }}"></td>
 			<td data-datetime="{{ created }}"></td>
 			<td>
 				<div class="btn-group">

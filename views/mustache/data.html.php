@@ -12,7 +12,7 @@
 	<tbody>
 	{{^data}}
 		<tr>
-			<td colspan="8"><h2>No data found...</h2></td>
+			<td colspan="8"><h5>No data found...</h5></td>
 		</tr>
 	{{/data}}
 	{{#data}}
