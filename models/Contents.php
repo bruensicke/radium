@@ -57,7 +57,6 @@ class Contents extends \radium\models\BaseModel {
 		),
 	);
 
-
 	public $_finders = array(
 		'pages' => array(
 			'conditions' => array('type' => 'page'),
@@ -84,6 +83,30 @@ class Contents extends \radium\models\BaseModel {
 			'order' => array('title' => 'ASC'),
 		),
 	);
+
+	/**
+	 * load a specific configuration, or retrieve a field from one.
+	 *
+	 * if just given a name, it returns the val() of that record. If you
+	 * pass in a default, you will return that, if nothing is found.
+	 * You can also use $options to request a certain field, see val()
+	 *
+	 * @param string $name name of configuration to retrieve
+	 * @param string $default what to return, if nothing is found
+	 * @param array $options an array of options
+	 * @return mixed
+	 */
+	public static function get($name, $default = null, array $options = array()) {
+		$defaults = array('default' => $default, 'field' => null, 'status' => 'active');
+		$options += $defaults;
+		$entity = static::loadBySlug($name);
+		if (!$entity || $entity->status != $options['status']) {
+			return $options['default'];
+		}
+		return $entity->val($options['field']);
+	}
+
+
 }
 
 ?>

@@ -152,7 +152,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return object|boolean found results as collection or false, if none found
 	 * @filter
 	 */
-	public static function search($slug, $status = 'active', array $options = array()) {
+	public static function searchBySlug($slug, $status = 'active', array $options = array()) {
 		$params = compact('slug', 'status', 'options');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
@@ -177,7 +177,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return object|boolean found entity entity or false, if none found
 	 * @filter
 	 */
-	public static function slug($slug, $status = 'active', array $options = array()) {
+	public static function loadBySlug($slug, $status = 'active', array $options = array()) {
 		$params = compact('slug', 'status', 'options');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
@@ -278,16 +278,6 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * fetches the associated config record
-	 *
-	 * @param object $entity current instance
-	 * @return array client data
-	 */
-	public function configuration($entity) {
-		return $entity->config = Configurations::first($entity->config_id);
-	}
-
-	/**
 	 * fetches the associated record
 	 *
 	 * @param object $entity current instance
@@ -340,11 +330,16 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * fetches the associated configuration
 	 *
+	 * configurations can be attached in two ways: first, you add a field called configuration_id to
+	 * your schema. If it is present and not empty, we use this to fetch a related configuration.
+	 * second way is to
+	 *
 	 * @param object $entity current instance
 	 * @param string $field name of configuration to return
 	 * @return array client data
 	 */
-	public function value($entity, $field = null, array $options = array()) {
+	public function configuration($entity, $field = null, array $options = array()) {
+		$deleted = $params['entity']->schema('deleted');
 		$entity->config = Configurations::first($entity->config_id);
 		return $entity->val($field, $options);
 	}

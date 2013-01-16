@@ -133,25 +133,25 @@ class Configurations extends \radium\models\BaseModel {
 	/**
 	 * load a specific configuration, or retrieve a field from one.
 	 *
-	 * if just given a name, it returns the val() of that record. If you
+	 * if just given a slug, it returns the val() of that record. If you
 	 * pass in a default, you will return that, if nothing is found.
 	 * You can also use $options to request a certain field, see val()
 	 *
-	 * @see sy_core\model\Configs::val()
-	 * @param string $name name of configuration to retrieve
+	 * @see radium\model\Configurations::val()
+	 * @param string $slug slug of configuration to retrieve
 	 * @param string $default what to return, if nothing is found
 	 * @param array $options an array of options, currently all of
-	 *              Configs::val() are supported, see there.
+	 *              Configurations::val() are supported, see there.
 	 * @return mixed
 	 */
-	public static function get($name, $default = null, array $options = array()) {
+	public static function get($slug, $default = null, array $options = array()) {
 		$defaults = array('default' => $default, 'field' => null, 'status' => 'active');
 		$options += $defaults;
-		$entity = static::slug($name);
-		if (!$entity || $entity->status != $options['status']) {
+		$entity = static::loadBySlug($slug, $options['status']);
+		if (!$entity) {
 			return $options['default'];
 		}
-		return $entity->val($options['field']);
+		return $entity->val($options['field'], compact('default'));
 	}
 
 }
