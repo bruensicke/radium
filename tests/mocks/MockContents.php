@@ -1,11 +1,11 @@
 <?php
 
-namespace radium\tests\mocks\data;
+namespace radium\tests\mocks;
 
 use lithium\data\collection\DocumentSet;
 use lithium\data\entity\Document;
 
-class MockConfigurations extends \radium\models\Configurations {
+class MockContents extends \radium\models\Contents {
 
 	protected $_meta = array(
 		'connection' => false,
@@ -13,7 +13,6 @@ class MockConfigurations extends \radium\models\Configurations {
 
 	public static function find($type = 'all', array $options = array()) {
 		$now = date('Y-m-d h:i:s');
-
 		switch ($type) {
 			case 'first':
 				return new Document(array('data' => array(

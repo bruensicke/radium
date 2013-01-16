@@ -2,7 +2,7 @@
 
 namespace radium\tests\cases\models;
 
-use radium\tests\mocks\data\MockConfigurations as Configurations;
+use radium\tests\mocks\MockConfigurations as Configurations;
 
 use lithium\util\Set;
 
