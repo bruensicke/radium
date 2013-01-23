@@ -334,7 +334,7 @@ class BaseModel extends \lithium\data\Model {
 				$return = $entity->$name = $res;
 			}
 		}
-		return $return;
+		return (count($fields) > 1) ? $entity : $return;
 	}
 
 	/**
