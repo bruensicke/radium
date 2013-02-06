@@ -85,7 +85,7 @@ class BaseController extends \lithium\action\Controller {
 		if (!empty($this->request->args)) {
 			foreach ($this->request->args as $param) {
 				if (stristr($param, ':')) {
-					list($key, $val) = explode(':', $param);
+					list($key, $val) = explode(':', $param, 2);
 				} else {
 					$key = $param;
 					$val = true;
