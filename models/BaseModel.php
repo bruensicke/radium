@@ -84,7 +84,7 @@ class BaseModel extends \lithium\data\Model {
 		// auto-update the created and updated fields
 		static::applyFilter('save', function ($self, $params, $chain) {
 			$field = ($params['entity']->exists()) ? 'updated' : 'created';
-			$params['entity']->$field = date(DATE_ATOM);
+			$params['entity']->$field = time();
 			return $chain->next($self, $params, $chain);
 		});
 
@@ -94,7 +94,7 @@ class BaseModel extends \lithium\data\Model {
 			if(is_null($deleted)) {
 				return $chain->next($self, $params, $chain);
 			}
-			$params['entity']->deleted = date(DATE_ATOM);
+			$params['entity']->deleted = time();
 			return $params['entity']->save();
 		});
 	}
@@ -259,7 +259,7 @@ class BaseModel extends \lithium\data\Model {
 		foreach ($data as $id => $value) {
 			$update = array($field => $value);
 			if ($options['updated']) {
-				$update['updated'] = date(DATE_ATOM);
+				$update['updated'] = time();
 			}
 			$result[$id] = static::update($update, array($key => $id));
 		}
