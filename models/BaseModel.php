@@ -102,14 +102,12 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * all types for current model
 	 *
-	 * @return array all types with keys and their name
+	 * @param string $type type to look for
+	 * @return mixed all types with keys and their name, or value of `$type` if given
 	 */
 	public static function types($type = null) {
-		if (!empty($type) && isset(static::$_types[$type])) {
-			return static::$_types[$type];
-		}
 		if (!empty($type)) {
-			return false;
+			return (isset(static::$_types[$type])) ? static::$_types[$type] : false;
 		}
 		return static::$_types;
 	}
@@ -117,14 +115,12 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * all status for current model
 	 *
-	 * @return array all status with keys and their name
+	 * @param string $status status to look for
+	 * @return mixed all status with keys and their name, or value of `$status` if given
 	 */
 	public static function status($status = null) {
-		if (!empty($status) && isset(static::$_status[$status])) {
-			return static::$_status[$status];
-		}
 		if (!empty($status)) {
-			return false;
+			return (isset(static::$_status[$status])) ? static::$_status[$status] : false;
 		}
 		return static::$_status;
 	}
