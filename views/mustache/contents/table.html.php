@@ -22,7 +22,7 @@
 	<tbody>
 	{{^contents}}
 		<tr>
-			<td colspan="8"><h2>No contents found...</h2></td>
+			<td colspan="8"><h4>No contents found...</h4></td>
 		</tr>
 	{{/contents}}
 	{{#contents}}

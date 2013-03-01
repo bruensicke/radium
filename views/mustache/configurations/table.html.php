@@ -22,7 +22,7 @@
 	<tbody>
 	{{^configurations}}
 		<tr>
-			<td colspan="8"><h2>No configurations found...</h2></td>
+			<td colspan="8"><h4>No configurations found...</h4></td>
 		</tr>
 	{{/configurations}}
 	{{#configurations}}
