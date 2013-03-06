@@ -1,5 +1,21 @@
 <?php
 /**
+ * radium: lithium application framework
+ *
+ * @copyright     Copyright 2013, brünsicke.com GmbH (http://bruensicke.com)
+ * @license       http://opensource.org/licenses/BSD-3-Clause The BSD License
+ */
+
+namespace radium\models;
+
+use radium\models\Configurations;
+
+use lithium\core\Libraries;
+use lithium\util\Set;
+use lithium\util\Validator;
+use lithium\util\Inflector;
+
+/**
  * Base class for all Models
  *
  * If you have models in your app, you should extend this class like that:
@@ -11,15 +27,6 @@
  * @see app\models
  * @see lithium\data\Model
  */
-namespace radium\models;
-
-use radium\models\Configurations;
-
-use lithium\core\Libraries;
-use lithium\util\Set;
-use lithium\util\Validator;
-use lithium\util\Inflector;
-
 class BaseModel extends \lithium\data\Model {
 
 	/**
