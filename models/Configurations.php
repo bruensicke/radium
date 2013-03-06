@@ -8,7 +8,11 @@
 
 namespace radium\models;
 
+use radium\util\IniFormat;
+use radium\extensions\errors\IniFormatException;
+
 use lithium\util\Set;
+use Exception;
 
 /**
  * Works as a key-value store with db-backend
@@ -118,7 +122,13 @@ class Configurations extends \radium\models\BaseModel {
 				}
 				return $result;
 			case 'array':
-				$config = Set::expand(parse_ini_string($entity->value));
+				try {
+					$config = IniFormat::parse($entity->value);
+				} catch(IniFormatException $e) {
+					return $options['default'];
+				} catch(Exception $e) {
+					return $options['default'];
+				}
 				if (!empty($field) && is_scalar($field)) {
 					if (array_key_exists($field, $config)) {
 						return $config[$field];
