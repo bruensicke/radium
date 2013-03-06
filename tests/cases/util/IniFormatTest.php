@@ -116,6 +116,21 @@ class IniFormatTest extends \lithium\test\Unit {
 		$this->assertEqual($expected, IniFormat::parse($data, compact('default')));
 	}
 
+	public function testSections() {
+		$data = "[foo]name=bar\nslug=baz";
+		$expected = array('foo' => array('name' => 'bar', 'slug' => 'baz'));
+		$this->assertEqual($expected, IniFormat::parse($data));
+	}
+
+	public function testWeirdValues() {
+		$data = "name=foo\n//slug=bar";
+		$expected = array('name' => 'foo');
+		$this->assertEqual($expected, IniFormat::parse($data));
+		$data = "name=foo\n//strange comment with (brackets)";
+		$expected = array('name' => 'foo');
+		$this->assertEqual($expected, IniFormat::parse($data));
+	}
+
 }
 
 ?>

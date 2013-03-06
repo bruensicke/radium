@@ -33,7 +33,7 @@ class IniFormat {
 	 * @param string|array $data the string to be parsed, or an array thereof
 	 * @param array $options an array of options currently supported are
 	 *        - `default` : what to return, if nothing is found, defaults to an empty array
-	 *        - `process_sections` : to enable process_sections
+	 *        - `process_sections` : to enable process_sections, defaults to true
 	 *        - `scanner_mode` : set scanner_mode to something different than INI_SCANNER_NORMAL
 	 * @return array an associative, eventually multidimensional array or the `default` option.
 	 */
@@ -53,7 +53,7 @@ class IniFormat {
 			}
 			return $data;
 		}
-		$raw = parse_ini_string($data, $options['process_sections'], $options['scanner_mode']);
+		$raw = parse_ini_string(static::filter($data), $options['process_sections'], $options['scanner_mode']);
 		if (empty($raw)) {
 			return $options['default'];
 		}
@@ -66,6 +66,40 @@ class IniFormat {
 			throw $e;
 		}
 		return $result;
+	}
+
+	/**
+	 * filters all lines that are not parsable by parse_ini_string to avoid problems
+	 *
+	 * @see radium\util\IniFormat::_filter()
+	 * @param string $data the ini-string to be inspected
+	 * @return string $data a filtered ini-string that should pass parse_ini_string without errors
+	 */
+	public static function filter($data) {
+		return implode("\n", array_filter(explode("\n", $data), array(__CLASS__, '_filter')));
+	}
+
+	/**
+	 * whitelist all lines to make sure, no nonsense gets in
+	 *
+	 * all lines, that do not comply with our rules will be filtered, rules are:
+	 *
+	 * lines with a = must have keys, that only contains alphanumeric letters and -_. and space.
+	 * lines starting with [ containing alphanumeric letters and end with ] also pass
+	 *
+	 * @see radium\util\IniFormat::parse()
+	 * @see radium\util\IniFormat::filter()
+	 * @param string $line The line to be inspected
+	 * @return bool true, if line passes standards, false otherwise
+	 */
+	protected static function _filter($line) {
+		if (preg_match('/^[ \t]*([a-zA-Z0-9\_\-\. ]*)[ \t]*=[ \t]*(.*)[ \t]*$/', $line)) {
+			return true;
+		}
+		if (preg_match('/^[ \t]*\[([a-zA-Z0-9\_\-\.]*)\][ \t]*/', $line)) {
+			return true;
+		}
+		return false;
 	}
 
 }
