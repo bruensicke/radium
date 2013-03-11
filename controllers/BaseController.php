@@ -104,8 +104,9 @@ class BaseController extends \lithium\action\Controller {
 				$options[$key] = (is_numeric($val)) ? (int)$val : $val;
 			}
 		}
-		if (!empty($this->request->get)) {
-			$options += $this->request->get;
+		if (!empty($this->request->query)) {
+			$options += $this->request->query;
+			unset($options['url']);
 		}
 		$options = array_merge($defaults, $options);
 		return $options;
