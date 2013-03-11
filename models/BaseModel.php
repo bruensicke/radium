@@ -304,7 +304,7 @@ class BaseModel extends \lithium\data\Model {
 				break;
 		}
 
-		$return = true;
+		$return = null;
 		foreach ($fields as $field) {
 			if (preg_match('/^(.+)_id$/', $field, $matches)) {
 				list($attribute, $name) = $matches;
@@ -318,10 +318,9 @@ class BaseModel extends \lithium\data\Model {
 					continue;
 				}
 				$res = $model::first($id);
-				if (!$res) {
-					continue;
+				if ($res) {
+					$return = $entity->$name = $res;
 				}
-				$return = $entity->$name = $res;
 			}
 		}
 		return (count($fields) > 1) ? $entity : $return;
