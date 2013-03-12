@@ -319,7 +319,8 @@ class BaseModel extends \lithium\data\Model {
 				}
 				$res = $model::first($id);
 				if ($res) {
-					$return = $entity->$name = $res;
+					$return = $res;
+					$entity->$name = $res->data();
 				}
 			}
 		}
