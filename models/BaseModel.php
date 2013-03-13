@@ -278,11 +278,15 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * fetches the associated record
+	 * fetches associated records
+	 *
+	 * {{{
+	 *   $post->resolve('user'); // returns user, as defined in $post->user_id
+	 * }}}
 	 *
 	 * @param object $entity current instance
 	 * @param string|array $name name of model to load
-	 * @return array remote object data
+	 * @return array foreign object data
 	 */
 	public function resolve($entity, $fields = null) {
 		$get_class = function($name) {
@@ -292,7 +296,7 @@ class BaseModel extends \lithium\data\Model {
 
 		switch (true) {
 			case is_string($fields):
-				$fields = array("{$fields}_id");
+				$fields = array((stristr($fields, '_id')) ? $fields : "{$fields}_id");
 				break;
 			case empty($fields):
 				$fields = self::fields();
@@ -304,27 +308,23 @@ class BaseModel extends \lithium\data\Model {
 				break;
 		}
 
-		$return = null;
+		$result = array();
 		foreach ($fields as $field) {
-			if (preg_match('/^(.+)_id$/', $field, $matches)) {
-				list($attribute, $name) = $matches;
-				$model = $get_class($name);
-				if (empty($model)) {
-					$entity->$name = null;
-					continue;
-				}
-				$id = (string) $entity->$attribute;
-				if (!$id) {
-					continue;
-				}
-				$res = $model::first($id);
-				if ($res) {
-					$return = $res;
-					$entity->$name = $res->data();
-				}
+			if (!preg_match('/^(.+)_id$/', $field, $matches)) {
+				continue;
 			}
+			list($attribute, $name) = $matches;
+			$model = $get_class($name);
+			if (empty($model)) {
+				continue;
+			}
+			$foreign_id = (string) $entity->$attribute;
+			if (!$foreign_id) {
+				continue;
+			}
+			$result[$name] = $model::first($foreign_id);
 		}
-		return (count($fields) > 1) ? $entity : $return;
+		return (count($fields) > 1) ? $result : array_shift($result);
 	}
 
 	/**
