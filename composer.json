@@ -1,0 +1,26 @@
+{
+	"name": "bruensicke/radium",
+	"description": "lithium application framework",
+	"keywords": ["lithium", "li3", "radium", "cms", "configuration", "content", "util"],
+	"type": "lithium-library",
+	"homepage": "https://github.com/bruensicke/radium/blob/master/README.md",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "d1rk",
+			"email": "d1rk@gmx.de",
+			"homepage": "https://github.com/bruensicke"
+		}
+	],
+	"suggest": {
+		"UnionOfRAD/lithium": "Lithium is required for this plugin."
+	},
+	"support": {
+		"issues": "https://github.com/bruensicke/radium/issues"
+	},
+	"require": {
+		"php": ">=5.3",
+		"composer/installers": "*"
+	},
+	"minimum-stability": "dev"
+}
