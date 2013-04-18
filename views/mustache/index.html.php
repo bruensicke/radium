@@ -32,7 +32,7 @@
 				{{#type}}<span class="label label_{{ type }}">{{ type }}</span>{{/type}}
 			</td>
 			<td>
-				<a href="<?=$this->url('/'); ?>objects/view/{{ _id }}">
+				<a href="<?=$this->url(array('action' => 'view')); ?>/{{ _id }}">
 					{{#name}}{{ name }}{{/name}}
 					{{^name}}{{ _id }}{{/name}}
 				</a>
