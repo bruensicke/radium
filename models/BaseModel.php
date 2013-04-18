@@ -9,6 +9,7 @@
 namespace radium\models;
 
 use radium\models\Configurations;
+use radium\util\IniFormat;
 
 use lithium\core\Libraries;
 use lithium\util\Set;
@@ -325,6 +326,29 @@ class BaseModel extends \lithium\data\Model {
 			$result[$name] = $model::first($foreign_id);
 		}
 		return (count($fields) > 1) ? $result : array_shift($result);
+	}
+
+	/**
+	 * allows easy output of IniFormat into a property
+	 *
+	 * @param object $entity instance of current Record
+	 * @param string $field name of property to retrieve data for
+	 * @return array an empty array in case of errors or the saved data decoded
+	 * @filter
+	 */
+	public function _ini($entity, $field) {
+		$params = compact('entity', 'field');
+		return $this->_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			if (empty($entity->$field)) {
+				return array();
+			}
+			$data = IniFormat::parse($entity->$field);
+			if (!is_array($data)) {
+				return array();
+			}
+			return $data;
+		});
 	}
 
 	/**
