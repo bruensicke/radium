@@ -20,6 +20,14 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->library = $this->request->library;
 
 		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
+		if ($this->request->is('ajax')) {
+			return;
+		}
+		$model = $this->_model();
+		$plural = $this->_model('table');
+		$human = $this->_model('human');
+		$singular = $this->_model('singular');
+		$this->set(compact('model', 'plural', 'singular', 'human'));
 	}
 
 	public function index() {
@@ -34,7 +42,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$result = $model::find('all', compact('conditions'));
 			return array($plural => $result, 'types' => $types);
 		}
-		return array($plural => $result, 'types' => $types, 'plural' => $plural, 'human' => $human);
+		return array($plural => $result, 'types' => $types);
 	}
 
 	public function view() {

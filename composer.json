@@ -13,6 +13,8 @@
 		}
 	],
 	"suggest": {
+		"bruensicke/li3_bootstrap": "most templates use twitter boostrap markup.",
+		"bruensicke/li3_mustache": "li3_mustache makes scaffold-usage much easier.",
 		"UnionOfRAD/lithium": "Lithium is required for this plugin."
 	},
 	"support": {
