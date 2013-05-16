@@ -8,8 +8,6 @@
 
 namespace radium\models;
 
-use lithium\util\Set;
-
 class Pages extends \radium\models\BaseModel {
 
 	/**

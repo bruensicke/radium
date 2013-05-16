@@ -8,8 +8,6 @@
 
 namespace radium\models;
 
-use lithium\util\Set;
-
 class Contents extends \radium\models\BaseModel {
 
 	/**

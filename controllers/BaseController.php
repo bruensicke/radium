@@ -8,8 +8,6 @@
 
 namespace radium\controllers;
 
-use lithium\util\Inflector;
-
 class BaseController extends \lithium\action\Controller {
 
 	public $model = null;
