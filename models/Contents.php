@@ -61,7 +61,11 @@ class Contents extends \radium\models\BaseModel {
 		),
 	);
 
-
+	/**
+	 * finder definitions
+	 *
+	 * @var array
+	 */
 	public $_finders = array(
 		'pages' => array(
 			'conditions' => array('type' => 'page'),

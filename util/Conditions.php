@@ -44,7 +44,7 @@ class Conditions extends \lithium\core\StaticObject {
 		$params = compact('field', 'operator', 'value');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
-			return eval("return (boolean)($field ".$operator." $value);");
+			return eval("return (boolean)($field " . $operator . " $value);");
 		});
 	}
 

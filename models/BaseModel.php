@@ -79,7 +79,7 @@ class BaseModel extends \lithium\data\Model {
 		if (!Validator::rules('isUnique')) {
 			Validator::add('isUnique', function ($value, $format, $options) {
 				$conditions = array($options['field'] => $value);
-				foreach((array) $options['model']::meta('key') as $field) {
+				foreach ((array) $options['model']::meta('key') as $field) {
 					if (!empty($options['values'][$field])) {
 						$conditions[$field] = array('!=' => $options['values'][$field]);
 					}
@@ -89,17 +89,15 @@ class BaseModel extends \lithium\data\Model {
 			});
 		}
 
-		// auto-update the created and updated fields
 		static::applyFilter('save', function ($self, $params, $chain) {
 			$field = ($params['entity']->exists()) ? 'updated' : 'created';
 			$params['entity']->$field = time();
 			return $chain->next($self, $params, $chain);
 		});
 
-		// soft-delete on all rows, that have a 'deleted' field in schema
 		static::applyFilter('delete', function ($self, $params, $chain) {
 			$deleted = $params['entity']->schema('deleted');
-			if(is_null($deleted)) {
+			if (is_null($deleted)) {
 				return $chain->next($self, $params, $chain);
 			}
 			$params['entity']->deleted = time();
@@ -201,7 +199,7 @@ class BaseModel extends \lithium\data\Model {
 			if (!$result) {
 				return false;
 			}
-			if ($result->status != $status) {
+			if ($result->status !== $status) {
 				return false;
 			}
 			if (!empty($result->deleted)) {
@@ -290,7 +288,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return array foreign object data
 	 */
 	public function resolve($entity, $fields = null) {
-		$get_class = function($name) {
+		$getClass = function($name) {
 			$modelname = Inflector::pluralize(Inflector::classify($name));
 			return Libraries::locate('models', $modelname);
 		};
@@ -315,7 +313,7 @@ class BaseModel extends \lithium\data\Model {
 				continue;
 			}
 			list($attribute, $name) = $matches;
-			$model = $get_class($name);
+			$model = $getClass($name);
 			if (empty($model)) {
 				continue;
 			}
