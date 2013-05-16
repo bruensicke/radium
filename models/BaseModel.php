@@ -271,6 +271,38 @@ class BaseModel extends \lithium\data\Model {
 			return $result;
 		});
 	}
+
+	/**
+	 * updates one or more fields per entity
+	 *
+	 * {{{$entity->updateFields(array('fieldname' => $value));}}}
+	 *
+	 * @see lithium\data\Model::update()
+	 * @param object $entity current instance
+	 * @param array $values an array of values to be changed
+	 * @param array $options Possible options are:
+	 *     - `updated`: set to false to supress automatic updating of the `updated` field
+	 * @return array all updated fields as array
+	 * @filter
+	 */
+	public function updateFields($entity, array $values, array $options = array()) {
+		$defaults = array('updated' => true);
+		$options += $defaults;
+		$params = compact('entity', 'values', 'options');
+		return $this->_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$key = $self::key();
+			$conditions = array($key => $entity->id());
+			$success = $self::update($values, $conditions);
+			if (!$success) {
+				$model = $entity->model();
+				$msg = sprintf('Update of %s [%s] returned false', $model, $entity->id());
+				$data = compact('values', 'conditions', 'model');
+				Logger::warning('FAILED ' . $msg, compact('data'));
+				return false;
+			}
+			return $entity->set($values);
+		});
 	}
 
 	/**
