@@ -234,25 +234,43 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * updates fields for records, specified by key => value
+	 * updates fields for multiple records, specified by key => value
 	 *
-	 * @param array $data array keys are primary keys, values will be set
+	 * You can update the same field for more than on record with one call, like this:
+	 *
+	 * {{{
+	 *   $data = array(
+	 *     'id1' => 1,
+	 *     'id2' => 2,
+	 *   );
+	 *   Model::multiUpdate('order', $data);
+	 * }}}
+	 *
 	 * @param string $field name of field to update
+	 * @param array $data array keys are primary keys, values will be set
+	 * @param array $options Possible options are:
+	 *     - `updated`: set to false to supress automatic updating of the `updated` field
 	 * @return array an array containing all results
+	 * @filter
 	 */
-	public static function updateFields($data, $field, array $options = array()) {
+	public static function multiUpdate($field, array $data, array $options = array()) {
 		$defaults = array('updated' => true);
 		$options += $defaults;
-		$key = static::key();
-		$result = array();
-		foreach ($data as $id => $value) {
-			$update = array($field => $value);
-			if ($options['updated']) {
-				$update['updated'] = time();
+		$params = compact('field', 'data', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$key = static::key();
+			$result = array();
+			foreach ($data as $id => $value) {
+				$update = array($field => $value);
+				if ($options['updated']) {
+					$update['updated'] = time();
+				}
+				$result[$id] = static::update($update, array($key => $id));
 			}
-			$result[$id] = static::update($update, array($key => $id));
-		}
-		return $result;
+			return $result;
+		});
+	}
 	}
 
 	/**
