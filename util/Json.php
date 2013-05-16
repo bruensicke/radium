@@ -10,7 +10,21 @@ namespace radium\util;
 
 use radium\extensions\errors\JsonException;
 
-class JSON {
+class Json {
+
+	/**
+	 * JSON error codes
+	 *
+	 * @see http://de1.php.net/json_last_error
+	 * @var array
+	 */
+	public static $errors = array(
+		JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+		JSON_ERROR_STATE_MISMATCH => 'State mismatch',
+		JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
+		JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON',
+		JSON_ERROR_UTF8 => 'Encoding error occured'
+	);
 
 	/**
 	 * encodes an object or array to json
@@ -36,32 +50,16 @@ class JSON {
 			return array();
 		}
 		$result = json_decode($json, $assoc, $depth);
-		switch (json_last_error()) {
-			case JSON_ERROR_DEPTH:
-				$error = 'Maximum stack depth exceeded';
-				break;
-			case JSON_ERROR_STATE_MISMATCH:
-				$error = 'State mismatch';
-				break;
-			case JSON_ERROR_CTRL_CHAR:
-				$error = 'Unexpected control character found';
-				break;
-			case JSON_ERROR_SYNTAX:
-				$error = 'Syntax error, malformed JSON';
-				break;
-			case JSON_ERROR_UTF8:
-				$error = 'Encoding error occured';
-				break;
-			case JSON_ERROR_NONE:
-			default:
-				$error = false;
+		$errorCode = json_last_error();
+		if ($errorCode == JSON_ERROR_NONE) {
+			return $result;
 		}
-		if ($error) {
-			$e = new JsonException(sprintf('JSON Error: %s', $error));
-			$e->setData($json);
-			throw $e;
-		}
-		return $result;
+		$msg = (isset(static::$errors[$errorCode]))
+			? static::$errors[$errorCode]
+			: 'Unknown error occured';
+		$e = new JsonException(sprintf('JSON Error: %s', $msg));
+		$e->setData($json);
+		throw $e;
 	}
 }
 
