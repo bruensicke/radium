@@ -33,11 +33,6 @@ class BaseController extends \lithium\action\Controller {
 				RADIUM_PATH . '/views/elements/{:template}.{:type}.php',
 				'{:library}/views/elements/{:template}.{:type}.php',
 			),
-			'mustache' => array(
-				LITHIUM_APP_PATH . '/views/mustache/{:template}.{:type}.php',
-				RADIUM_PATH . '/views/mustache/{:template}.{:type}.php',
-				'{:library}/views/mustache/{:template}.{:type}.php',
-			),
 		);
 	}
 
