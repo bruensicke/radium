@@ -1,6 +1,6 @@
 <table class="table table-striped table-condensed">
 	<colgroup>
-		<col width="100" />
+		<col width="70" />
 		<col width="100" />
 		<col width="*" />
 		<col width="120" />

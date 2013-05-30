@@ -14,6 +14,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 	public $model = null;
 
+	public $scaffold = null;
+
 	public function _init() {
 		parent::_init();
 		$this->controller = $this->request->controller;
@@ -23,39 +25,31 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if ($this->request->is('ajax')) {
 			return;
 		}
-		$model = $this->_model();
-		$plural = $this->_model('table');
-		$human = $this->_model('human');
-		$singular = $this->_model('singular');
-		$this->set(compact('model', 'plural', 'singular', 'human'));
+		$this->_scaffold();
+		$this->set(array('scaffold' => $this->scaffold));
 	}
 
 	public function index() {
-		$model = $this->_model();
-		$plural = $this->_model('table');
-		$human = $this->_model('human');
+		$model = $this->scaffold['model'];
+		$plural = $this->scaffold['plural'];
 		$conditions = $this->_options();
 		$result = $model::find('all', compact('conditions'));
-		$types = $model::types();
-		if ($this->request->is('ajax')) {
-			$conditions = $this->_options();
-			$result = $model::find('all', compact('conditions'));
-			return array($plural => $result, 'types' => $types);
-		}
+		$types = is_callable(array($model, 'types')) ? $model::types() : array();
 		return array($plural => $result, 'types' => $types);
 	}
 
-	public function view() {
-		$model = $this->_model();
-		$singular = $this->_model('singular');
+	public function view($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
 
-		$result = $model::first($this->request->id);
+		$result = $model::first($id);
 		return array($singular => $result);
 	}
 
 	public function slug($slug) {
-		$model = $this->_model();
-		$singular = $this->_model('singular');
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
 
 		$result = $model::slug($slug);
 		if (!$result) {
@@ -67,8 +61,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	}
 
 	public function add() {
-		$model = $this->_model();
-		$singular = $this->_model('singular');
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
 		$object = $model::create($this->_options());
 
 		if (($this->request->data) && $object->save($this->request->data)) {
@@ -78,10 +72,11 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $object, 'errors' => $object->errors());
 	}
 
-	public function edit() {
-		$model = $this->_model();
-		$singular = $this->_model('singular');
-		$object = $model::first($this->request->id);
+	public function edit($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
+		$object = $model::first($id);
 		if (!$object) {
 			return $this->redirect(array('action' => 'index'));
 		}
@@ -93,10 +88,11 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $object, 'errors' => $object->errors());
 	}
 
-	public function duplicate() {
-		$model = $this->_model();
-		$singular = $this->_model('singular');
-		$object = $model::first($this->request->id);
+	public function duplicate($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
+		$object = $model::first($id);
 		if (!$object) {
 			return $this->redirect(array('action' => 'add'));
 		}
@@ -114,25 +110,28 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $object, 'errors' => $object->errors());
 	}
 
-	public function delete() {
-		$model = $this->_model();
-		$model::find($this->request->id)->delete();
+	public function delete($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$model::find($id)->delete();
 		return $this->redirect(array('action' => 'index'));
 	}
 
-	public function remove() {
-		$model = $this->_model();
+	public function remove($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
 		$conditions = array();
-		if (!empty($this->request->id)) {
-			$conditions[$model::key()] = $this->request->id;
+		if (!empty($id)) {
+			$conditions[$model::key()] = $id;
 		}
 		$model::remove($conditions);
 		return $this->redirect(array('action' => 'index'));
 	}
 
-	public function undelete() {
-		$model = $this->_model();
-		$model::find($this->request->id)->undelete();
+	public function undelete($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$model::find($id)->undelete();
 		return $this->redirect(array('action' => 'index'));
 	}
 
@@ -140,26 +139,29 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	 * Generates different variations of the configured $this->model property name
 	 *
 	 * @param string $type type defines, what variation of the default you want to have
-	 *               available are 'singular', 'plural' and 'table', if omitted, returns
-	 *               the full qualified modelname, as defined in $this->model.
-	 * @return string
+	 *               available are 'class', 'model', 'singular', 'plural' and 'table' and 'human'.
+	 *               if omitted, returns array containing all of them.
+	 * @return array|string
 	 **/
-	protected function _model($type = 'class') {
-		$class_name = basename(str_replace('\\', '/', $this->model));
-		switch ($type) {
-			case 'singular':
-				return Inflector::underscore(Inflector::singularize($class_name));
-			case 'plural':
-				return Inflector::pluralize($class_name);
-			case 'table':
-				return Inflector::tableize($class_name);
-			case 'human':
-				return Inflector::humanize($class_name);
-			default:
-				return $this->model;
+	protected function _scaffold($field = null) {
+		if (is_null($this->scaffold)) {
+			$class = basename(str_replace('\\', '/', $this->model));
+			$this->scaffold = array(
+				'controller' => $this->controller,
+				'library' => $this->library,
+				'class' => $class,
+				'model' => $this->model,
+				'singular' => Inflector::underscore(Inflector::singularize($class)),
+				'plural' => strtolower(Inflector::pluralize($class)),
+				'table' => Inflector::tableize($class),
+				'human' => Inflector::humanize(Inflector::singularize($class)),
+			);
 		}
+		if (!is_null($field)) {
+			return (isset($this->scaffold[$field])) ? $this->scaffold[$field] : false;
+		}
+		return $this->scaffold;
 	}
-
 
 }
 

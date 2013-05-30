@@ -1,17 +1,26 @@
 <?php
 use lithium\util\String;
-$url = $this->url(array('controller' => $plural));
+$url = $this->url(array('controller' => $scaffold['plural']));
 $content = array();
-$template = <<<html
+$content[] = <<<html
 		<tr>
-			<td class="key">{:key}</td>
-			<td class="value">{:value}</td>
+			<td colspan="2"><h5>No data found...</h5></td>
 		</tr>
 html;
 
-$fields = $$singular->data();
-foreach ($fields as $key => $value) {
-	$content[] = String::insert($template, compact('key', 'value'), array('clean' => true));
+$template = <<<html
+		<tr>
+			<td class="key" data-key="{:key}">{:key}</td>
+			<td class="value" data-value="{:value}">{:value}</td>
+		</tr>
+html;
+
+$fields = $$scaffold['singular']->data();
+if (!empty($fields)) {
+	$content = array();
+	foreach ($fields as $key => $value) {
+		$content[] = String::insert($template, compact('key', 'value'), array('clean' => true));
+	}
 }
 ?>
 <table class="table table-striped table-condensed">

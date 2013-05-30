@@ -1,6 +1,7 @@
 <?php
 use lithium\util\String;
-$url = $this->url(array('controller' => $plural));
+
+$url = $this->url(array('controller' => $scaffold['plural']));
 $content = array();
 $content[] = <<<html
 		<tr>
@@ -39,9 +40,9 @@ $template = <<<html
 		</tr>
 html;
 
-if (count($$plural) > 0) {
+if (count($$scaffold['plural']) > 0) {
 	$content = array();
-	foreach ($$plural as $item) {
+	foreach ($$scaffold['plural'] as $item) {
 		$content[] = String::insert($template, $item->data(), array('clean' => true));
 	}
 }

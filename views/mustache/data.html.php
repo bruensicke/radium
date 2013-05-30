@@ -12,13 +12,13 @@
 	<tbody>
 	{{^data}}
 		<tr>
-			<td colspan="8"><h5>No data found...</h5></td>
+			<td colspan="2"><h5>No data found...</h5></td>
 		</tr>
 	{{/data}}
 	{{#data}}
 		<tr>
-			<td class="key">{{ key }}</td>
-			<td class="value">{{ value }}</td>
+			<td class="key" data-key="{{ key }}">{{ key }}</td>
+			<td class="value" data-value="{{ value }}">{{ value }}</td>
 		</tr>
 	{{/data}}
 	</tbody>
