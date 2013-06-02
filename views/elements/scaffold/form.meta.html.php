@@ -1,4 +1,6 @@
 <?php
+use radium\models\Configurations;
+
 $binding = $this->form->binding();
 $schema = $binding->schema();
 $fields = $schema->names();

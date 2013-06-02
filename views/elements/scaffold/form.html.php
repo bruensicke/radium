@@ -1,5 +1,4 @@
 <?php
-use radium\models\Contents;
 use radium\models\Configurations;
 use lithium\util\Inflector;
 
