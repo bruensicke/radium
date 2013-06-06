@@ -51,7 +51,10 @@ class Scaffold extends \lithium\template\Helper {
 		if ($this->mustache && $options['mustache']) {
 			switch ($name) {
 				case 'index':
-					$data['objects'] = array_values($data[$scaffold['plural']]->data());
+					$data['objects'] = (isset($data[$scaffold['plural']])
+										&& is_callable(array($data[$scaffold['plural']], 'data')))
+						? array_values($data[$scaffold['plural']]->data())
+						: array();
 				break;
 				case 'form':
 				case 'form.meta':
@@ -59,7 +62,9 @@ class Scaffold extends \lithium\template\Helper {
 					$options['mustache'] = false;
 				break;
 				case 'errors':
-					$data['errors'] = $this->data($data['errors'], array('flatten' => false));
+					$data['errors'] = (isset($data['errors']))
+						? $this->data($data['errors'], array('flatten' => false))
+						: array();
 				break;
 			}
 		}
@@ -68,11 +73,16 @@ class Scaffold extends \lithium\template\Helper {
 			$method = ($this->mustache && $options['mustache']) ? '_mustache' : '_element';
 			return $this->$method($template, $data, $options);
 		} catch (TemplateException $e) {
+			// $options['library'] = 'radium';
 			if ($this->mustache && $options['mustache']) {
 				if ($name === 'view') {
 					$data['data'] = $this->data($data[$scaffold['singular']]->data());
 				}
-				return $this->_mustache($name, $data, $options);
+				try {
+					return $this->_mustache($name, $data, $options);
+				} catch (TemplateException $e) {
+
+				}
 			}
 			$element = sprintf('scaffold/%s', $name);
 			$options['library'] = 'radium';
