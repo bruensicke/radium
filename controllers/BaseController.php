@@ -69,10 +69,7 @@ class BaseController extends \lithium\action\Controller {
 	 * @param mixed $url The location including the library parameter
 	 */
 	protected function _url($url) {
-		if (is_string($url)) {
-			$url = array($url);
-		}
-		if (!empty($this->library) && empty($url['library'])) {
+		if (is_array($url) && !empty($this->library) && empty($url['library'])) {
 			$url['library'] = $this->library;
 		}
 		return $url;
