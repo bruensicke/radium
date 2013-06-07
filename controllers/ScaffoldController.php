@@ -22,10 +22,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->library = $this->request->library;
 
 		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
+		$this->_scaffold();
 		if ($this->request->is('ajax')) {
 			return;
 		}
-		$this->_scaffold();
 		$this->set(array('scaffold' => $this->scaffold));
 	}
 
