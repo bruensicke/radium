@@ -173,6 +173,17 @@ class BaseModel extends \lithium\data\Model {
 		return static::$_status;
 	}
 
+	public static function filters() {
+		$params = compact('slug', 'status', 'options');
+		return static::_filter(__METHOD__, $params, function($self, $params) {
+			extract($params);
+			$type = is_callable(array($self, 'types')) ? $self::types() : array();
+			$status = is_callable(array($self, 'status')) ? $self::status() : array();
+			return compact('type', 'status');
+		});
+	}
+
+
 	/**
 	 * finds and loads entities that match slug subpattern
 	 *

@@ -34,8 +34,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$plural = $this->scaffold['plural'];
 		$conditions = $this->_options();
 		$result = $model::find('all', compact('conditions'));
-		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return array($plural => $result, 'types' => $types);
+
+		// $filters = $this->_filters();
+		return array($plural => $result);
+		// return array($plural => $result, 'filters' => $filters);
 	}
 
 	public function view($id = null) {
@@ -132,6 +134,11 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$model = $this->scaffold['model'];
 		$model::find($id)->undelete();
 		return $this->redirect(array('action' => 'index'));
+	}
+
+	protected function _filters() {
+		$model = $this->_scaffold('model');
+		return is_callable(array($model, 'filters')) ? $model::filters() : array();
 	}
 
 	/**

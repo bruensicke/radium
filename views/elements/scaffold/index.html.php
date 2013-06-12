@@ -47,6 +47,13 @@ if (count($$scaffold['plural']) > 0) {
 	}
 }
 
+if (count($types) > 10) {
+	$content = array();
+	foreach ($$scaffold['plural'] as $item) {
+		$content[] = String::insert($template, $item->data(), array('clean' => true));
+	}
+}
+
 ?>
 <table class="table table-striped table-condensed">
 	<colgroup>

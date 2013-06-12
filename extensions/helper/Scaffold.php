@@ -75,6 +75,12 @@ class Scaffold extends \lithium\template\Helper {
 				case 'form.config':
 					$options['mustache'] = false;
 				break;
+				case 'filter':
+					$options['mustache'] = false;
+					// $data['filter'] = (isset($data['types']))
+					// 	? $this->data($data['types'], array('flatten' => false))
+					// 	: array();
+				break;
 				case 'errors':
 					$data['errors'] = (isset($data['errors']))
 						? $this->data($data['errors'], array('flatten' => false))
