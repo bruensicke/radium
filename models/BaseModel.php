@@ -67,6 +67,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return void
 	 */
 	public static function __init() {
+		Inflector::rules('uninflected', 'status');
 		if (!Validator::rules('slug')) {
 			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
 		}
