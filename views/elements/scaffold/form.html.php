@@ -1,7 +1,4 @@
 <?php
-use radium\models\Configurations;
-use lithium\util\Inflector;
-
 echo $this->scaffold->render('form.config');
 $binding = $this->form->binding();
 $schema = $binding->schema();

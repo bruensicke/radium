@@ -1,5 +1,6 @@
 <?php
 use lithium\util\Inflector;
+use radium\models\Configurations;
 
 $binding = $this->form->binding();
 $schema = $binding->schema();
@@ -12,7 +13,6 @@ $skip = isset($skip)
 $readonly = isset($readonly)
 	? $readonly
 	: array();
-	$readonly[]= 'type';
 
 foreach ($fields as $index => $field) {
 	if (in_array($field, $skip)) {
@@ -40,7 +40,7 @@ foreach ($fields as $index => $field) {
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
-				$options['class'] .= ' uneditable-input';
+				$options['class'] .= ' uneditable-textarea';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -54,7 +54,7 @@ foreach ($fields as $index => $field) {
 				'list' => $scaffold['model']::$method()
 			);
 			if (in_array($field, $readonly)) {
-				$options['type'] = 'input';
+				$options['type'] = 'text';
 				$options['value'] = $scaffold['model']::$method($this->scaffold->object->$field);
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
@@ -91,6 +91,7 @@ foreach ($fields as $index => $field) {
 
 		case 'integer':
 			$options = array(
+				'type' => 'number',
 				'class' => 'input-mini numeric',
 			);
 			if (in_array($field, $readonly)) {
