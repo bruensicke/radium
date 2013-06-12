@@ -23,6 +23,10 @@ use lithium\template\TemplateException;
  */
 class Scaffold extends \lithium\template\Helper {
 
+	protected $_data = array();
+
+	protected $_scaffold = array();
+
 	/**
 	 * initialize and check for li3_mustache library
 	 *
@@ -30,6 +34,16 @@ class Scaffold extends \lithium\template\Helper {
 	protected function _init() {
 		parent::_init();
 		$this->mustache = (bool) Libraries::get('li3_mustache');
+		$this->_data = $this->_context->data();
+		if (isset($this->_data['scaffold'])) {
+			$this->_scaffold = $this->_data['scaffold'];
+		}
+		if (isset($this->_data[$this->_scaffold['singular']])) {
+			$this->_scaffold['object'] = $this->_data[$this->_scaffold['singular']];
+		}
+		if (isset($this->_data[$this->_scaffold['plural']])) {
+			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
+		}
 	}
 
 	/**
@@ -90,6 +104,15 @@ class Scaffold extends \lithium\template\Helper {
 		}
 	}
 
+	public function action($action = 'view', array $args = array()) {
+		if (isset($this->_scaffold['object'])) {
+			$args += array('id' => $this->_scaffold['object']->id());
+		}
+		return compact('action', 'args');
+	}
+
+
+
 	/**
 	 * Parses an associative array into an array, containing one
 	 * array for each row, that has 'key' and 'value' filled
@@ -110,6 +133,19 @@ class Scaffold extends \lithium\template\Helper {
 		return array_map(function($key, $value) {
 			return compact('key', 'value');
 		}, array_keys($data), $data);
+	}
+
+	/**
+	 * magic method to access scaffold properties in view
+	 *
+	 * @param string $name Property name.
+	 * @return mixed Result.
+	 */
+	public function __get($name) {
+		if (isset($this->_scaffold[$name])) {
+			return $this->_scaffold[$name];
+		}
+		return null;
 	}
 
 	/**
