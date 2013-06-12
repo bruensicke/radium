@@ -39,7 +39,8 @@ foreach ($fields as $index => $field) {
 				'rows' => 3,
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -54,11 +55,9 @@ foreach ($fields as $index => $field) {
 			);
 			if (in_array($field, $readonly)) {
 				$options['type'] = 'input';
-				$options['class'] .= ' uneditable-input';
 				$options['value'] = $scaffold['model']::$method($this->scaffold->object->$field);
-				$options += array(
-					'disabled' => 'disabled',
-				);
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -71,7 +70,8 @@ foreach ($fields as $index => $field) {
 				'list' => Configurations::find('list')
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -83,7 +83,8 @@ foreach ($fields as $index => $field) {
 				'rows' => 10,
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -93,7 +94,8 @@ foreach ($fields as $index => $field) {
 				'class' => 'input-mini numeric',
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 		break;
@@ -104,7 +106,8 @@ foreach ($fields as $index => $field) {
 				'class' => 'input-block-level date',
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 		break;
 
@@ -113,7 +116,8 @@ foreach ($fields as $index => $field) {
 				'class' => 'input-block-level',
 			);
 			if (in_array($field, $readonly)) {
-				$options += array('disabled' => 'disabled');
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
 	}
