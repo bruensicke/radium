@@ -88,22 +88,54 @@ class BaseModel extends \lithium\data\Model {
 				return is_null($options['model']::find('first', compact('fields', 'conditions')));
 			});
 		}
-
-		static::applyFilter('save', function ($self, $params, $chain) {
-			$field = ($params['entity']->exists()) ? 'updated' : 'created';
-			$params['entity']->$field = time();
-			return $chain->next($self, $params, $chain);
-		});
-
-		static::applyFilter('delete', function ($self, $params, $chain) {
-			$deleted = $params['entity']->schema('deleted');
-			if (is_null($deleted)) {
-				return $chain->next($self, $params, $chain);
-			}
-			$params['entity']->deleted = time();
-			return $params['entity']->save();
-		});
 	}
+
+	/**
+	 * overwritten to allow for soft-deleting a record
+	 *
+	 * The schema of the relevant model needs a field defined in schema called `deleted`.
+	 * As soon as this is the case, the record does not get deleted right away but instead
+	 * marked for deletion, i.e. setting a timestamp into the `deleted` field. Unless you make
+	 * use of the `force` option, then the record will get deleted without further ado.
+	 *
+	 * @param object $entity current instance
+	 * @param array $options Possible options are:
+	 *     - `force`: set to true to delete record, anyway
+	 * @return boolean true on success, false otherwise
+	 */
+	public function delete($entity, array $options = array()) {
+		$options += array('force' => false);
+		$deleted = $entity->schema('deleted');
+		if (is_null($deleted) || $options['force']) {
+			unset($options['force']);
+			return parent::delete($entity, $options);
+		}
+		$entity->deleted = time();
+		return $entity->save();
+	}
+
+	/**
+	 * automatically adds timestamps on saving.
+	 *
+	 * In case of creation it correctly fills the `created` field with a unix timestamp.
+	 * Same holds true for `updated` on updates, accordingly.
+	 *
+	 * @see lithium\data\Model
+	 * @param object $entity current instance
+	 * @param array $data Any data that should be assigned to the record before it is saved.
+	 * @param array $options additional options
+	 * @return boolean true on success, false otherwise
+	 * @filter
+	 */
+	public function save($entity, $data = array(), array $options = array()) {
+		if (!empty($data)) {
+			$entity->set($data);
+		}
+		$field = ($entity->exists()) ? 'updated' : 'created';
+		$entity->set(array($field => time()));
+		return parent::save($entity, null, $options);
+	}
+
 
 	/**
 	 * all types for current model
