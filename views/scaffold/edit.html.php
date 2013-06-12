@@ -8,7 +8,7 @@
 	<li><?= $this->html->link($scaffold['human'], array('action' => 'index'));?> <span class="divider">/</span></li>
 	<li class="active"><?= $this->title($$scaffold['singular']->title()); ?></li>
 	<li class="pull-right">
-		<?= $this->html->link('cancel', array('action' => 'view', 'args' => array('id' => (string) $$scaffold['singular']->_id)));?>
+		<?= $this->html->link('cancel', $this->scaffold->action('view'));?>
 		<?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?>
 	</li>
 </ul>

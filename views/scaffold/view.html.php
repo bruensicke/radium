@@ -11,7 +11,7 @@
 		<?php endif; ?>
 	</li>
 	<li class="pull-right">
-		<?= $this->html->link('edit', array('action' => 'edit', 'args' => array('id' => (string) $$scaffold['singular']->_id)));?>
+		<?= $this->html->link('edit', $this->scaffold->action('edit'));?>
 	</li>
 </ul>
 
