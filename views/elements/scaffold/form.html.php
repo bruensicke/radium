@@ -6,66 +6,28 @@ echo $this->scaffold->render('form.config');
 $binding = $this->form->binding();
 $schema = $binding->schema();
 $fields = $schema->names();
-$special = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
+$meta = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
+$skip = isset($skip)
+	? $skip
+	: array();
+$readonly = isset($readonly)
+	? $readonly
+	: array();
 ?>
 <div class="row">
 
 	<div class="span4">
-		<legend><?= Inflector::singularize($scaffold['human']) ?> details</legend>
+		<legend><?= $this->scaffold->human ?> meta</legend>
 		<div class="well">
-			<?= $this->scaffold->render('form.meta'); ?>
+			<?= $this->scaffold->render('form.meta', compact('skip', 'readonly')); ?>
 		</div>
 	</div>
 
 	<div class="span8">
-		<legend><?= $scaffold['human'] ?> content</legend>
+		<legend><?= $this->scaffold->human ?> details</legend>
 		<div class="well">
-			<?php
-			foreach ($fields as $index => $field) {
-				if (in_array($field, $special)) {
-					continue;
-				}
-				$type = $schema->type($field);
-				switch($type) {
-					case 'configuration':
-						$options = array(
-							'type' => 'select',
-							'class' => 'input-xlarge',
-							'data-switch' => 'configuration',
-							'list' => Configurations::find('list')
-						);
-						echo $this->form->field($field, $options);
-						break;
-
-					case 'ini':
-						$options = array(
-							'type' => 'textarea',
-							'class' => 'input-xxlarge autogrow',
-							'rows' => 10,
-						);
-						echo $this->form->field($field, $options);
-						break;
-
-					case 'integer':
-						$options = array(
-							'class' => 'input-mini numeric',
-						);
-						echo $this->form->field($field, $options);
-						break;
-					case 'date':
-						$options = array(
-							'class' => 'input-xlarge',
-						);
-						break;
-					case 'string':
-						$options = array(
-							'class' => 'input-xxlarge',
-						);
-						echo $this->form->field($field, $options);
-						break;
-				}
-			}
-			?>
+			<?php $fields = $schema->names(); $skip += $meta; ?>
+			<?= $this->scaffold->render('form.fields', compact('fields', 'skip', 'readonly')); ?>
 		</div>
 	</div>
 
