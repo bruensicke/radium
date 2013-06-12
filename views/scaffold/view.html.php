@@ -18,7 +18,7 @@
 <div class="page-header">
 	<h1>
 		<?= $this->title(); ?>
-		<?php if (isset($$scaffold['singular']->notes)): ?>
+		<?php if (!empty($$scaffold['singular']->notes)): ?>
 			<small><?= $$scaffold['singular']->notes ?></small>
 		<?php else: ?>
 			<small>View details.</small>
