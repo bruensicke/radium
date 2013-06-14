@@ -1,6 +1,4 @@
 <?php
-use radium\models\Configurations;
-
 $skip = isset($skip)
 	? $skip
 	: array();
