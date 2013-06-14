@@ -1,5 +1,4 @@
 <?php
-echo $this->scaffold->render('form.config');
 $binding = $this->form->binding();
 $schema = $binding->schema();
 $fields = $schema->names();

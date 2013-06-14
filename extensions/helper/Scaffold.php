@@ -73,7 +73,6 @@ class Scaffold extends \lithium\template\Helper {
 				case 'form':
 				case 'form.meta':
 				case 'form.fields':
-				case 'form.config':
 					$options['mustache'] = false;
 				break;
 				case 'errors':
