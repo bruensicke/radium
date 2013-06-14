@@ -80,6 +80,9 @@ class Scaffold extends \lithium\template\Helper {
 					$data['errors'] = (isset($data['errors']))
 						? $this->data($data['errors'], array('flatten' => false))
 						: array();
+					if (empty($data['errors'])) {
+						return;
+					}
 				break;
 			}
 		}
