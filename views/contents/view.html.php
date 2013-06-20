@@ -25,6 +25,8 @@ switch($content->type) {
 		echo sprintf('<div class="markdown">%s</div>', $content->body());
 	break;
 	case 'mustache':
+		echo $content->body($this->_data);
+	break;
 	case 'html':
 	default:
 		echo $content->body();

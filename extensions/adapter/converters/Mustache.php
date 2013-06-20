@@ -8,6 +8,8 @@
 
 namespace radium\extensions\adapter\converters;
 
+use li3_mustache\libraries\Mustache as Renderer;
+
 class Mustache extends \lithium\core\Object {
 
 	/**
@@ -24,8 +26,8 @@ class Mustache extends \lithium\core\Object {
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
 		return $this->_filter(__METHOD__, $params, function($self, $params) {
-			// TODO: parse with markdown parser
-			return $params['content'];
+			$renderer = new Renderer($params['content'], $params['data']);
+			return $renderer->render();
 		});
 	}
 

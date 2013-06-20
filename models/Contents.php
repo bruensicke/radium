@@ -20,8 +20,8 @@ class Contents extends \radium\models\BaseModel {
 	public static $_types = array(
 		'plain' => 'Plain text',
 		'html' => 'Html Markup',
-		// 'mustache' => 'Mustache',
-		// 'markdown' => 'Markdown',
+		'mustache' => 'Mustache',
+		'markdown' => 'Markdown',
 	);
 
 	/**

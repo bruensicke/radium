@@ -17,6 +17,12 @@ Converter::config(array(
 	'html' => array(
 		'adapter' => 'Html',
 	),
+	'mustache' => array(
+		'adapter' => 'Mustache',
+	),
+	'markdown' => array(
+		'adapter' => 'Markdown',
+	),
 ));
 
 
