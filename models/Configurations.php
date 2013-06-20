@@ -14,15 +14,6 @@ use radium\extensions\errors\IniFormatException;
 use lithium\util\Set;
 use Exception;
 
-/**
- * Works as a key-value store with db-backend
- *
- * Use like this:
- *
- * Configurations::write('title', 'Application'); // writes Application to title
- * Configurations::read('title', 'unnamed App'); // 'unnamed App' will be default fallback
- *
- */
 class Configurations extends \radium\models\BaseModel {
 
 	/**
