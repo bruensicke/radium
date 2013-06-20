@@ -8,6 +8,8 @@
 
 namespace radium\models;
 
+use radium\data\Converter;
+
 class Contents extends \radium\models\BaseModel {
 
 	/**
@@ -16,12 +18,10 @@ class Contents extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	public static $_types = array(
-		'page' => 'page',
-		'post' => 'post',
-		'news' => 'news',
-		'wiki' => 'wiki',
-		'faq' => 'faq',
-		'term' => 'term',
+		'plain' => 'Plain text',
+		'html' => 'Html Markup',
+		// 'mustache' => 'Mustache',
+		// 'markdown' => 'Markdown',
 	);
 
 	/**
@@ -34,7 +34,7 @@ class Contents extends \radium\models\BaseModel {
 		'_id' => array('type' => 'id'),
 		'name' => array('type' => 'string', 'default' => '', 'null' => false),
 		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
-		'type' => array('type' => 'string', 'default' => 'page'),
+		'type' => array('type' => 'string', 'default' => 'plain'),
 		'body' => array('type' => 'string'),
 		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
 		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
@@ -61,37 +61,10 @@ class Contents extends \radium\models\BaseModel {
 		),
 	);
 
-	/**
-	 * finder definitions
-	 *
-	 * @var array
-	 */
-	public $_finders = array(
-		'pages' => array(
-			'conditions' => array('type' => 'page'),
-			'order' => array('slug' => 'ASC'),
-		),
-		'posts' => array(
-			'conditions' => array('type' => 'post'),
-			'order' => array('created' => 'DESC'),
-		),
-		'news' => array(
-			'conditions' => array('type' => 'news'),
-			'order' => array('created' => 'DESC'),
-		),
-		'wikis' => array(
-			'conditions' => array('type' => 'wiki'),
-			'order' => array('title' => 'ASC'),
-		),
-		'faqs' => array(
-			'conditions' => array('type' => 'faq'),
-			'order' => array('title' => 'ASC'),
-		),
-		'terms' => array(
-			'conditions' => array('type' => 'term'),
-			'order' => array('title' => 'ASC'),
-		),
-	);
+	public function body($content, $data = array(), array $options = array()) {
+		return Converter::get($content->type, $content->body, $data, $options);
+	}
+
 }
 
 ?>
