@@ -1,4 +1,11 @@
 <?php
+/**
+ * radium: lithium application framework
+ *
+ * @copyright     Copyright 2013, brünsicke.com GmbH (http://bruensicke.com)
+ * @license       http://opensource.org/licenses/BSD-3-Clause The BSD License
+ */
+
 use lithium\net\http\Router;
 
 Router::connect('/radium/api/{:args}', array('type' => 'json', 'library' => 'radium'), array('continue' => true));
