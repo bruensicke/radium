@@ -26,6 +26,7 @@ class Configurations extends \radium\models\BaseModel {
 		'string' => 'string',
 		'list' => 'list',
 		'array' => 'array',
+		'ini' => 'ini',
 	);
 
 	/**
@@ -101,6 +102,7 @@ class Configurations extends \radium\models\BaseModel {
 					}
 				}
 				return $result;
+			case 'ini':
 			case 'array':
 				try {
 					$config = IniFormat::parse($entity->value);
