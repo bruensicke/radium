@@ -19,13 +19,6 @@ class ContentsController extends \radium\controllers\ScaffoldController {
 		$this->set(compact('template', 'name'));
 	}
 
-	public function index($type = 'all') {
-		$model = $this->scaffold['model'];
-		$plural = $this->scaffold['plural'];
-		$conditions = $this->_options();
-		$result = $model::$type();
-		return array($plural => $result);
-	}
 }
 
 ?>
