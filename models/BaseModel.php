@@ -325,7 +325,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @param array $values an array of values to be changed
 	 * @param array $options Possible options are:
 	 *     - `updated`: set to false to supress automatic updating of the `updated` field
-	 * @return array all updated fields as array
+	 * @return true on success, false otherwise
 	 * @filter
 	 */
 	public function updateFields($entity, array $values, array $options = array()) {
@@ -344,7 +344,8 @@ class BaseModel extends \lithium\data\Model {
 				Logger::warning('FAILED ' . $msg, compact('data'));
 				return false;
 			}
-			return $entity->set($values);
+			$entity->set($values);
+			return true;
 		});
 	}
 
