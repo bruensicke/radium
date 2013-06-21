@@ -11,6 +11,15 @@ use radium\data\Converter;
 define('RADIUM_PATH', dirname(__DIR__));
 
 Converter::config(array(
+	'array' => array(
+		'adapter' => 'Ini',
+	),
+	'ini' => array(
+		'adapter' => 'Ini',
+	),
+	'neon' => array(
+		'adapter' => 'Neon',
+	),
 	'plain' => array(
 		'adapter' => 'Plain',
 	),
