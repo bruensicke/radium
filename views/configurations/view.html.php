@@ -18,6 +18,8 @@
 
 <?php
 switch($configuration->type) {
+	case 'ini':
+	case 'neon':
 	case 'array':
 		echo $this->mustache->render('data', array('data' => $this->mustache->data($configuration->val())));
 		break;
