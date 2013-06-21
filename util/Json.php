@@ -15,7 +15,7 @@ class Json {
 	/**
 	 * JSON error codes
 	 *
-	 * @see http://de1.php.net/json_last_error
+	 * @see http://php.net/json_last_error
 	 * @var array
 	 */
 	public static $errors = array(
