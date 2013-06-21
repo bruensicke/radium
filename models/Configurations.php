@@ -8,8 +8,7 @@
 
 namespace radium\models;
 
-use radium\util\IniFormat;
-use radium\extensions\errors\IniFormatException;
+use radium\data\Converter;
 
 use lithium\util\Set;
 use Exception;
@@ -27,6 +26,7 @@ class Configurations extends \radium\models\BaseModel {
 		'list' => 'list',
 		'array' => 'array',
 		'ini' => 'ini',
+		'neon' => 'neon',
 	);
 
 	/**
@@ -40,6 +40,8 @@ class Configurations extends \radium\models\BaseModel {
 		'name' => array('type' => 'string', 'default' => '', 'null' => false),
 		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
 		'type' => array('type' => 'string', 'default' => 'string'),
+		'visible' => array('type' => 'bool', 'default' => true),
+		'category' => array('type' => 'string', 'default' => 'configuration'),
 		'value' => array('type' => 'string'),
 		'data' => array('type' => 'array'),
 		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
@@ -102,28 +104,10 @@ class Configurations extends \radium\models\BaseModel {
 					}
 				}
 				return $result;
+			case 'neon':
 			case 'ini':
 			case 'array':
-				try {
-					$config = IniFormat::parse($entity->value);
-				} catch(IniFormatException $e) {
-					return $options['default'];
-				} catch(Exception $e) {
-					return $options['default'];
-				}
-				if (!empty($field) && is_scalar($field)) {
-					if (array_key_exists($field, $config)) {
-						return $config[$field];
-					}
-				}
-				$field = '/'.str_replace('.', '/', $field).'/.';
-				$result = current(Set::extract($config, $field));
-				if (!empty($result)) {
-					return $result;
-				}
-				return ($options['flat'])
-					? Set::flatten($config)
-					: $config;
+				return Converter::get($entity->type, $entity->value, $field, $options);
 		}
 		return $options['default'];
 	}
