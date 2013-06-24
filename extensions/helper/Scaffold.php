@@ -23,17 +23,26 @@ use lithium\template\TemplateException;
  */
 class Scaffold extends \lithium\template\Helper {
 
+	/**
+	 * holds a copy of all view-data from context
+	 *
+	 * @var array
+	 */
 	protected $_data = array();
 
+	/**
+	 * holds all scaffold-relevant data
+	 *
+	 * @var array
+	 */
 	protected $_scaffold = array();
 
 	/**
-	 * initialize and check for li3_mustache library
+	 * initialize and check for scaffold data
 	 *
 	 */
 	protected function _init() {
 		parent::_init();
-		$this->mustache = (bool) Libraries::get('li3_mustache');
 		$this->_data = $this->_context->data();
 		if (isset($this->_data['scaffold'])) {
 			$this->_scaffold = $this->_data['scaffold'];
@@ -44,98 +53,6 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_data[$this->_scaffold['plural']])) {
 			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
 		}
-	}
-
-	/**
-	 * render scaffold-templates
-	 *
-	 * @param string $name name of template to render, possible options are:
-	 *        `index`, `form`, `form.meta`, `form.config`, `errors`, `view`
-	 * @param array $data additional data to be passed into template
-	 * @param array $options additional options
-	 *        - `mustache`: set to false to disable mustache-rendering, defaults to true
-	 * @return string rendered html of template
-	 */
-	public function render($name, array $data = array(), array $options = array()) {
-		$defaults = array('mustache' => true);
-		$options += $defaults;
-		$data = $this->_data($data);
-		$scaffold = $data['scaffold'];
-
-		if ($this->mustache && $options['mustache']) {
-			switch ($name) {
-				case 'index':
-					$data['objects'] = (isset($data[$scaffold['plural']])
-										&& is_callable(array($data[$scaffold['plural']], 'data')))
-						? array_values($data[$scaffold['plural']]->data())
-						: array();
-				break;
-				case 'form':
-				case 'form.meta':
-				case 'form.fields':
-					$options['mustache'] = false;
-				break;
-				case 'errors':
-					$data['errors'] = (isset($data['errors']))
-						? $this->data($data['errors'], array('flatten' => false))
-						: array();
-					if (empty($data['errors'])) {
-						return;
-					}
-				break;
-			}
-		}
-		try {
-			$template = sprintf('%s/%s', $scaffold['plural'], $name);
-			$method = ($this->mustache && $options['mustache']) ? '_mustache' : '_element';
-			return $this->$method($template, $data, $options);
-		} catch (TemplateException $e) {
-			// $options['library'] = 'radium';
-			if ($this->mustache && $options['mustache']) {
-				if ($name === 'view') {
-					$data['data'] = $this->data($data[$scaffold['singular']]->data());
-				}
-				try {
-					return $this->_mustache($name, $data, $options);
-				} catch (TemplateException $e) {
-
-				}
-			}
-			$element = sprintf('scaffold/%s', $name);
-			$options['library'] = 'radium';
-			return $this->_element($element, $data, $options);
-		}
-	}
-
-	public function action($action = 'view', array $args = array()) {
-		if (isset($this->_scaffold['object'])) {
-			$args += array('id' => $this->_scaffold['object']->id());
-		}
-		return compact('action', 'args');
-	}
-
-
-
-	/**
-	 * Parses an associative array into an array, containing one
-	 * array for each row, that has 'key' and 'value' filled
-	 * as expected. That makes rendering of arbitrary meta-data
-	 * much simpler, e.g. if you do not know, what data you are
-	 * about to retrieve.
-	 *
-	 * @param array $data an associative array containing mixed data
-	 * @return array an numerical indexed array with arrays for each
-	 *         item in $data, having 'key' and 'value' set accordingly
-	 */
-	public function data(array $data = array(), array $options = array()) {
-		$defaults = array('flatten' => true);
-		$options += $defaults;
-		if ($options['flatten']) {
-			$data = Set::flatten($data);
-		}
-		return array_map(function($key, $value) {
-			return compact('key', 'value');
-		}, array_keys($data), $data);
 	}
 
 	/**
@@ -169,12 +86,70 @@ class Scaffold extends \lithium\template\Helper {
 	}
 
 	/**
+	 * render scaffold-templates
+	 *
+	 * @param string $name name of template to render, possible options are:
+	 *        `index`, `form`, `form.meta`, `form.config`, `errors`, `view`
+	 * @param array $data additional data to be passed into template
+	 * @param array $options additional options
+	 *        - `merge`: set to false to disable merging view data with context
+	 * @return string rendered html of template
+	 */
+	public function render($name, array $data = array(), array $options = array()) {
+		$data = $this->_data($data, $options);
+		return $this->element($name, $data, $options);
+	}
+
+	/**
+	 * renders an array used for actions with the correct url
+	 *
+	 * @param string $action name of action to call
+	 * @param array $args additional arguments for that action call
+	 * @return array an array containing all relevant information in an array to build a url
+	 */
+	public function action($action = 'view', array $args = array()) {
+		if (isset($this->_scaffold['object'])) {
+			$args += array('id' => $this->_scaffold['object']->id());
+		}
+		return compact('action', 'args');
+	}
+
+	/**
+	 * Parses an associative array into an array, containing one
+	 * array for each row, that has 'key' and 'value' filled
+	 * as expected. That makes rendering of arbitrary meta-data
+	 * much simpler, e.g. if you do not know, what data you are
+	 * about to retrieve.
+	 *
+	 * @param array $data an associative array containing mixed data
+	 * @return array an numerical indexed array with arrays for each
+	 *         item in $data, having 'key' and 'value' set accordingly
+	 */
+	public function data(array $data = array(), array $options = array()) {
+		$defaults = array('flatten' => true);
+		$options += $defaults;
+		if ($options['flatten']) {
+			$data = Set::flatten($data);
+		}
+		return array_map(function($key, $value) {
+			return compact('key', 'value');
+		}, array_keys($data), $data);
+	}
+
+	/**
 	 * allows merging of data from context with given data
 	 *
 	 * @param array $data additional data to be put into view
+	 * @param array $options additional options
+	 *        - `merge`: set to false to disable merging view data with context
 	 * @return array
 	 */
-	public function _data($data = array()) {
+	public function _data($data = array(), array $options = array()) {
+		$defaults = array('merge' => true);
+		$options += $defaults;
+		if ($options['merge'] === false) {
+			return $data;
+		}
 		if (!empty($data)) {
 			return Set::merge($this->_context->data(), $data);
 		}
@@ -184,24 +159,48 @@ class Scaffold extends \lithium\template\Helper {
 	/**
 	 * shortcut function to use mustache-helper to render mustache-based templates
 	 *
+	 * it looks by default into `views/mustache/<plural_model>/<name>`, first at app-level
+	 * and falling back to `views/mustache/scaffold/<name>`, also first at app-level.
+	 *
+	 * if at app-level nothing is found, radium is used as fallback.
+	 *
 	 * @param string $name which template to render
 	 * @param array $data additional data to be put into mustache template
 	 * @param array $options additional options to be put into mustache->render call
 	 * @return string rendered html of mustache template
 	 */
-	public function _mustache($name, array $data = array(), array $options = array()) {
-		return $this->_context->mustache->render($name, $data, $options);
+	public function mustache($name, array $data = array(), array $options = array()) {
+		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		try {
+			return $this->_context->mustache->render($element, $data, $options);
+		} catch (TemplateException $e) {
+			$element = sprintf('scaffold/%s', $name);
+			return $this->_context->mustache->render($element, $data, $options);
+		}
+		return '';
 	}
 
 	/**
 	 * shortcut function to render elements with current view context
 	 *
-	 * @param string $element name of element template to render
+	 * it looks by default into `views/elements/<plural_model>/<name>`, first at app-level
+	 * and falling back to `views/elements/scaffold/<name>`, also first at app-level.
+	 *
+	 * if at app-level nothing is found, radium is used as fallback.
+	 *
+	 * @param string $name name of element template to render
 	 * @param array $data additional data to be put into view context
 	 * @param array $options additional options to be put into view->render() call
 	 * @return string rendered html of element template
 	 */
-	public function _element($element, array $data = array(), array $options = array()) {
-		return $this->_context->view()->render(compact('element'), $data, $options);
+	public function element($name, array $data = array(), array $options = array()) {
+		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		try {
+			return $this->_context->view()->render(compact('element'), $data, $options);
+		} catch (TemplateException $e) {
+			$element = sprintf('scaffold/%s', $name);
+			return $this->_context->view()->render(compact('element'), $data, $options);
+		}
+		return '';
 	}
 }
