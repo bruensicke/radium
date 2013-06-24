@@ -50,6 +50,7 @@
 						<li><a href="<?=$this->url(array('action' => 'view')); ?>/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
 						<li><a href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
 						<li><a href="<?=$this->url(array('action' => 'duplicate')); ?>/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>
+						<li><a href="<?=$this->url(array('action' => 'export')); ?>/{{ _id }}"><i class="icon-download-alt"></i> Export</a></li>
 						<li class="divider"></li>
 						{{^deleted}}
 							<li><a href="<?=$this->url(array('action' => 'delete')); ?>/{{ _id }}"><i class="icon-trash"></i> Delete</a></li>
