@@ -19,8 +19,10 @@
 		<?= $this->title(sprintf('Create: %s', $this->scaffold->human)); ?>
 	</li>
 	<li class="pull-right">
-		<?= $this->html->link('cancel', array('action' => 'index'));?>
-		<?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?>
+		<ul class="actions">
+			<li><?= $this->html->link('cancel', $this->scaffold->action('index'));?></li>
+			<li><?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?></li>
+		</ul>
 	</li>
 </ul>
 

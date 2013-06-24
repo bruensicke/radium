@@ -13,7 +13,11 @@
 		<?= $this->title($this->scaffold->human); ?>
 	</li>
 	<li class="pull-right">
-		<?= $this->html->link('create', array('action' => 'add'));?>
+		<ul class="actions">
+			<li><?= $this->html->link('import', $this->scaffold->action('import'));?></li>
+			<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
+			<li><?= $this->html->link('create', $this->scaffold->action('add'), array('class' => 'btn btn-success btn-mini'));?></li>
+		</ul>
 	</li>
 </ul>
 

@@ -20,7 +20,11 @@
 		<?php endif; ?>
 	</li>
 	<li class="pull-right">
-		<?= $this->html->link('edit', $this->scaffold->action('edit'));?>
+		<ul class="actions">
+			<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
+			<li><?= $this->html->link('delete', $this->scaffold->action('delete'));?></li>
+			<li><?= $this->html->link('edit', $this->scaffold->action('edit'));?></li>
+		</ul>
 	</li>
 </ul>
 

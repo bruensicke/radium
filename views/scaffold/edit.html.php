@@ -19,8 +19,10 @@
 		<?= $this->title(sprintf('Edit: %s', $this->scaffold->object->title())); ?>
 	</li>
 	<li class="pull-right">
-		<?= $this->html->link('cancel', $this->scaffold->action('view'));?>
-		<?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?>
+		<ul class="actions">
+			<li><?= $this->html->link('cancel', $this->scaffold->action('view'));?></li>
+			<li><?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?></li>
+		</ul>
 	</li>
 </ul>
 
