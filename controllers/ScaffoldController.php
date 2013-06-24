@@ -89,6 +89,31 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return array($singular => $object, 'errors' => $object->errors());
 	}
 
+	public function export($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
+		$plural = $this->scaffold['plural'];
+
+		if (is_null($id)) {
+			$limit = 0;
+			$conditions = $this->_options();
+			$result = $model::find('all', compact('limit', 'conditions'));
+			$data = array($plural => $result);
+			$suffix = (!empty($conditions))
+				? http_build_query($conditions, '', '-')
+				: 'all';
+			$name = sprintf('%s-%s.json', $plural, $suffix);
+		} else {
+			$result = $model::first($id);
+			$data = array($singular => $result);
+			$name = sprintf('%s-%s.json', $singular, $id);
+		}
+		$this->response->headers('download', $name);
+		$this->_render['hasRendered'] = true;
+		return Media::render($this->response, $data, array('type' => 'json'));
+	}
+
 	public function duplicate($id = null) {
 		$id = (!is_null($id)) ? $id : $this->request->id;
 		$model = $this->scaffold['model'];
