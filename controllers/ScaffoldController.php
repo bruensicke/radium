@@ -8,13 +8,20 @@
 
 namespace radium\controllers;
 
+use Exception;
+
 use lithium\util\Inflector;
+use lithium\net\http\Media;
+use lithium\net\http\Router;
+use lithium\analysis\Logger;
 
 class ScaffoldController extends \radium\controllers\BaseController {
 
 	public $model = null;
 
 	public $scaffold = null;
+
+	public $uploadPath = null;
 
 	public function _init() {
 		parent::_init();
@@ -158,6 +165,69 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$model = $this->scaffold['model'];
 		$model::find($id)->undelete();
 		return $this->redirect(array('action' => 'index'));
+	}
+
+	public function import() {
+		if (!$this->request->is('ajax')) {
+			return array();
+		}
+		$this->_render['type'] = 'json';
+		$upload = $this->_upload(array('allowed' => 'json'));
+		if (isset($upload['error'])) {
+			return $upload;
+		}
+		try {
+			$content = file_get_contents($upload['tmp']);
+			$content = Media::decode($upload['ext'], $content);
+		} catch(Exception $e) {
+			return array('error' => 'data could not be decoded.');
+		}
+		$data = $this->_import($content);
+		return $data;
+	}
+
+	protected function _import($data) {
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
+		$plural = $this->scaffold['plural'];
+
+		if (!is_array($data)) {
+			return array('error' => 'could not read content.');
+		}
+		if (!isset($data[$singular]) && !isset($data[$plural])) {
+			return array('error' => 'content does not fit context.');
+		}
+		if (isset($data[$singular])) {
+			$object = $model::create($data[$singular]);
+			$success = $object->save(null, array('callbacks' => false));
+			if (!$success) {
+				$errors = $object->errors();
+				$error = 'validation errors.';
+				return compact('error', 'errors');
+			}
+			$message = sprintf('%s "%s" imported.', $singular, $object->title());
+			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+			$url = Router::match($url, $this->request);
+			return compact('success', 'url', 'message');
+		}
+		if (isset($data[$plural])) {
+			$errors = $valids = array();
+			$data = $data[$plural];
+			foreach ($data as $idx => $row) {
+				$object = $model::create($row);
+				$success = $object->save(null, array('callbacks' => false));
+				if (!$success) {
+					$errors[$idx] = $object->errors();
+				} else {
+					$valids[] = $idx;
+				}
+			}
+			$success = true; #(bool) (count($valids) == count($data));
+			$message = sprintf('%s %s imported', count($valids), $plural);
+			$url = Router::match(array('action' => 'index'), $this->request);
+			return compact('success', 'url', 'message', 'errors');
+		}
+		return array('error' => 'content not valid.');
 	}
 
 	/**

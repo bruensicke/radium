@@ -1,27 +1,14 @@
-<?php
-$binding = $this->form->binding();
-$schema = $binding->schema();
-$fields = $schema->names();
-$meta = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
-$skip = isset($skip)
-	? $skip
-	: array();
-$readonly = isset($readonly)
-	? $readonly
-	: array();
-?>
 <div class="row">
 
 	<div class="span8">
 		<div id="uploader"></div>
-		<div class="well">
-			<div id="uploadResult"></div>
-		</div>
+		<div id="uploadResult"></div>
 	</div>
 
 	<div class="span4">
 		<div class="well">
-			<?php #echo $this->form->file('import'); ?>
+			<h3>Data import</h3>
+			<p>Select and upload files that you exported.</p>
 		</div>
 	</div>
 
@@ -34,7 +21,9 @@ head.js(
 	{ uploader: "<?php echo $this->path('/radium/js/import.js'); ?>"}
 );
 head.ready(function() {
-	uploader.api = "<?php echo $this->	url($this->scaffold->action('import')); ?>";
+	uploader.api = "<?php echo $this->url($this->scaffold->action('import')); ?>";
+	uploader.template = '<?php echo implode(explode("\n", $this->_render('element', 'import'))); ?>';
+	uploader.button = '<div><i class="icon-upload-alt icon-white"></i> import files</div>';
 	uploader.init();
 });
 </script>
