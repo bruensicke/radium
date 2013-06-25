@@ -133,7 +133,9 @@ class BaseModel extends \lithium\data\Model {
 			$entity->set($data);
 		}
 		$field = ($entity->exists()) ? 'updated' : 'created';
-		$entity->set(array($field => time()));
+		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
+			$entity->set(array($field => time()));
+		}
 		return parent::save($entity, null, $options);
 	}
 
