@@ -195,7 +195,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return array('error' => 'could not read content.');
 		}
 		if (!isset($data[$singular]) && !isset($data[$plural])) {
-			return array('error' => 'content does not fit context.');
+			return array('error' => sprintf('file does not contain %s.', $plural));
 		}
 		if (isset($data[$singular])) {
 			$object = $model::create($data[$singular]);
