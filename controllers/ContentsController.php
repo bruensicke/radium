@@ -12,13 +12,6 @@ class ContentsController extends \radium\controllers\ScaffoldController {
 
 	public $model = 'radium\models\Contents';
 
-	public function _init() {
-		parent::_init();
-		$template = 'table';
-		$name = 'contents';
-		$this->set(compact('template', 'name'));
-	}
-
 }
 
 ?>
