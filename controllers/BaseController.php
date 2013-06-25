@@ -8,10 +8,21 @@
 
 namespace radium\controllers;
 
+use lithium\core\Libraries;
+use lithium\analysis\Logger;
+
 class BaseController extends \lithium\action\Controller {
 
+	/**
+	 * fully namespaced name of Model class to scaffold for
+	 *
+	 * @var string
+	 */
 	public $model = null;
 
+	/**
+	 * adds additional view template folders
+	 */
 	public function _init() {
 		parent::_init();
 		$this->controller = $this->request->controller;
@@ -100,6 +111,50 @@ class BaseController extends \lithium\action\Controller {
 		}
 		$options = array_merge($defaults, $options);
 		return $options;
+	}
+
+	/**
+	 * allows ajaxified upload of files
+	 *
+	 * @see
+	 * @filter
+	 * @param array $options [description]
+	 * @return [type] [description]
+	 */
+	protected function _upload(array $options = array()) {
+		$defaults = array(
+			'allowed' => '*',
+			'path' => Libraries::get(true, 'resources') . '/tmp/cache',
+			'chmod' => 0644,
+		);
+		$options += $defaults;
+		if (!$this->request->is('ajax')) {
+			return array('error' => 'only ajax upload allowed.');
+		}
+		$pathinfo = pathinfo($_GET['qqfile']);
+		$filename = $pathinfo['filename'];
+		$ext = isset($pathinfo['extension']) ? $pathinfo['extension'] : '';
+		if (!in_array($ext, (array) $options['allowed']) || $options['allowed'] == '*') {
+			$error = 'file-extension not allowed.';
+			return compact('error', 'filename', 'ext');
+		}
+		$tmp = tempnam($options['path'], __FUNCTION__); // TODO: make configurable
+		$input = fopen('php://input', 'r');
+		$temp = fopen($tmp, 'w');
+		$size = stream_copy_to_stream($input, $temp);
+		@chmod($tmp, $options['chmod']);
+		fclose($input);
+		$msg = sprintf('upload of file %s.%s', $filename, $ext);
+		$success = (bool) ($size == (int) $_SERVER['CONTENT_LENGTH']);
+		if (!$success) {
+			$msg = $error = $msg . ' failed.';
+		} else {
+			$msg = 'succesful ' . $msg;
+		}
+		$data = compact('success', 'error', 'filename', 'ext', 'size', 'tmp');
+		$priority = (isset($error)) ? 'warning' : 'debug';
+		Logger::write($priority, $msg);
+		return $data;
 	}
 }
 
