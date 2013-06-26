@@ -21,7 +21,7 @@
 				<span class="add-on"><?= $this->form->checkbox('value');?></span>
 			</div>
 		</div>
-		<div class="well type_string type_list type_array type_ini type_neon">
+		<div class="well type_string type_json type_list type_array type_ini type_neon">
 			<?= $this->form->field('value', array(
 				'type' => 'textarea',
 				'class' => 'input-block-level autogrow',

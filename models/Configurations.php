@@ -23,6 +23,7 @@ class Configurations extends \radium\models\BaseModel {
 	public static $_types = array(
 		'boolean' => 'boolean',
 		'string' => 'string',
+		'json' => 'json',
 		'list' => 'list',
 		'array' => 'array',
 		'ini' => 'ini',
@@ -104,6 +105,7 @@ class Configurations extends \radium\models\BaseModel {
 					}
 				}
 				return $result;
+			case 'json':
 			case 'neon':
 			case 'ini':
 			case 'array':

@@ -41,6 +41,9 @@ Converter::config(array(
 	'ini' => array(
 		'adapter' => 'Ini',
 	),
+	'json' => array(
+		'adapter' => 'Json',
+	),
 	'neon' => array(
 		'adapter' => 'Neon',
 	),

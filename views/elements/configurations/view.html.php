@@ -1,9 +1,10 @@
 <?php
 switch($configuration->type) {
 	case 'ini':
+	case 'json':
 	case 'neon':
 	case 'array':
-		echo $this->scaffold->mustache('data', array('data' => $this->mustache->data($configuration->val())));
+		echo $this->scaffold->mustache('data', array('data' => $this->mustache->data((array) $configuration->val())));
 		break;
 	case 'list':
 		echo '<div class="well">';
