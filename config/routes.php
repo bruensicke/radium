@@ -8,14 +8,23 @@
 
 use lithium\net\http\Router;
 use lithium\action\Response;
+use lithium\core\Libraries;
 
-Router::connect('/radium/api/{:args}', array('type' => 'json', 'library' => 'radium'), array('continue' => true));
-Router::connect('/radium/{:controller}/{:action}/{:id:[0-9a-f]{24}}/{:args}', array('library' => 'radium'));
-Router::connect('/radium/{:controller}/{:action}/{:id:[0-9a-f]{24}}', array('library' => 'radium'));
-Router::connect('/radium/{:controller}/{:action}/{:args}', array('library' => 'radium'));
-Router::connect('/radium/{:controller}/{:action}', array('library' => 'radium'));
-Router::connect('/radium/{:controller}', array('library' => 'radium'));
-Router::connect('/radium', array('library' => 'radium', 'controller' => 'pages', 'action' => 'file'));
+/**
+ * In case you want to change the url-prefix to something different than `radium`
+ * just specify the url_prefix like that:
+ *
+ * Libraries::add('radium', array('url_prefix' => 'admin'));
+ */
+$prefix = Libraries::get('radium', 'url_prefix') ? : 'radium';
+
+Router::connect("/$prefix/api/{:args}", array('type' => 'json', 'library' => 'radium'), array('continue' => true));
+Router::connect("/$prefix/{:controller}/{:action}/{:id:[0-9a-f]{24}}/{:args}", array('library' => 'radium'));
+Router::connect("/$prefix/{:controller}/{:action}/{:id:[0-9a-f]{24}}", array('library' => 'radium'));
+Router::connect("/$prefix/{:controller}/{:action}/{:args}", array('library' => 'radium'));
+Router::connect("/$prefix/{:controller}/{:action}", array('library' => 'radium'));
+Router::connect("/$prefix/{:controller}", array('library' => 'radium'));
+Router::connect("/$prefix", array('library' => 'radium', 'controller' => 'pages', 'action' => 'file'));
 
 /*
  we encourage you to add routes to your app-routes file, that look like this:
