@@ -13,8 +13,6 @@
 		}
 	],
 	"suggest": {
-		"bruensicke/li3_bootstrap": "most templates use twitter boostrap markup.",
-		"bruensicke/li3_mustache": "li3_mustache makes scaffold-usage much easier.",
 		"UnionOfRAD/lithium": "Lithium is required for this plugin."
 	},
 	"support": {
@@ -22,7 +20,9 @@
 	},
 	"require": {
 		"php": ">=5.3",
-		"composer/installers": "*"
+		"composer/installers": "*",
+		"bruensicke/li3_bootstrap": "dev-master",
+		"bruensicke/li3_mustache": "dev-master"
 	},
 	"minimum-stability": "dev"
 }
