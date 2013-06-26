@@ -20,12 +20,12 @@ class Neon extends \lithium\core\Object {
 	 * returns rendered content
 	 *
 	 * @param string $content input content
-	 * @param array $data additional data to be passed into render context
+	 * @param string $data field to retrieve from configuration
 	 * @param array $options an array with additional options
 	 * @return string content as given
 	 * @filter
 	 */
-	public function get($content, $data = array(), array $options = array()) {
+	public function get($content, $data = null, array $options = array()) {
 		$defaults = array('default' => array(), 'flat' => false);
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
