@@ -1,5 +1,10 @@
+<?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 <?= $this->form->create($this->scaffold->object, array('class' => 'form')); ?>
 
+<ul class="actions pull-right nav nav-pills">
+	<li><?= $this->html->link('cancel', $this->scaffold->action('index'));?></li>
+	<li><?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?></li>
+</ul>
 <ul class="breadcrumb">
 	<li>
 		<?= $this->html->link('Home', '/');?>
@@ -17,12 +22,6 @@
 	</li>
 	<li class="active">
 		<?= $this->title(sprintf('Create: %s', $this->scaffold->human)); ?>
-	</li>
-	<li class="pull-right">
-		<ul class="actions">
-			<li><?= $this->html->link('cancel', $this->scaffold->action('index'));?></li>
-			<li><?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?></li>
-		</ul>
 	</li>
 </ul>
 

@@ -1,3 +1,10 @@
+<?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
+
+<ul class="actions pull-right nav nav-pills">
+	<li><?= $this->html->link('import', $this->scaffold->action('import'));?></li>
+	<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
+	<li><?= $this->html->link('create', $this->scaffold->action('add'));?></li>
+</ul>
 <ul class="breadcrumb">
 	<li>
 		<?= $this->html->link('Home', '/');?>
@@ -11,13 +18,6 @@
 	<?php endif; ?>
 	<li class="active">
 		<?= $this->title($this->scaffold->human); ?>
-	</li>
-	<li class="pull-right">
-		<ul class="actions">
-			<li><?= $this->html->link('import', $this->scaffold->action('import'));?></li>
-			<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
-			<li><?= $this->html->link('create', $this->scaffold->action('add'), array('class' => 'btn btn-success btn-mini'));?></li>
-		</ul>
 	</li>
 </ul>
 

@@ -1,3 +1,10 @@
+<?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
+
+<ul class="actions pull-right nav nav-pills">
+	<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
+	<li><?= $this->html->link('delete', $this->scaffold->action('delete'));?></li>
+	<li><?= $this->html->link('edit', $this->scaffold->action('edit'));?></li>
+</ul>
 <ul class="breadcrumb">
 	<li>
 		<?= $this->html->link('Home', '/');?>
@@ -18,13 +25,6 @@
 		<?php if (isset($this->scaffold->object->status)): ?>
 			<span class="label label_<?= $this->scaffold->object->status ?>"><?= $this->scaffold->object->status ?></span>
 		<?php endif; ?>
-	</li>
-	<li class="pull-right">
-		<ul class="actions">
-			<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
-			<li><?= $this->html->link('delete', $this->scaffold->action('delete'));?></li>
-			<li><?= $this->html->link('edit', $this->scaffold->action('edit'));?></li>
-		</ul>
 	</li>
 </ul>
 
