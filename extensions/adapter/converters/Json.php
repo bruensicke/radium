@@ -8,7 +8,7 @@
 
 namespace radium\extensions\adapter\converters;
 
-use radium\util\Json as JsonFormatter;
+use radium\util\Json as JsonFormat;
 use radium\extensions\errors\JsonException;
 use Exception;
 
@@ -32,7 +32,7 @@ class Json extends \lithium\core\Object {
 		return $this->_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
 			try {
-				$config = JsonFormatter::decode($content, $options['assoc'], $options['depth']);
+				$config = JsonFormat::decode($content, $options['assoc'], $options['depth']);
 			} catch(JsonException $e) {
 				return $options['default'];
 			} catch(Exception $e) {
@@ -46,7 +46,7 @@ class Json extends \lithium\core\Object {
 			if (is_scalar($data) && isset($config[$data])) {
 				return $config[$data];
 			}
-			$data = '/'.str_replace('.', '/', $data).'/.';
+			$data = '/'.str_replace('.', '/', (string) $data).'/.';
 			$result = current(Set::extract((array) $config, $data));
 			if (!empty($result)) {
 				return $result;
