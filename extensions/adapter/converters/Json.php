@@ -20,12 +20,12 @@ class Json extends \lithium\core\Object {
 	 * returns rendered content
 	 *
 	 * @param string $content input content
-	 * @param array $data additional data to be passed into render context
+	 * @param string $data field to retrieve from configuration
 	 * @param array $options an array with additional options
 	 * @return string content as given
 	 * @filter
 	 */
-	public function get($content, $data = array(), array $options = array()) {
+	public function get($content, $data = null, array $options = array()) {
 		$defaults = array('assoc' => true, 'depth' => 512, 'default' => array(), 'flat' => false);
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
@@ -38,19 +38,20 @@ class Json extends \lithium\core\Object {
 			} catch(Exception $e) {
 				return $options['default'];
 			}
-			if (!empty($data) && is_scalar($data)) {
-				if (array_key_exists($data, $config)) {
-					return $config[$data];
-				}
+			if (empty($data)) {
+				return ($options['flat'])
+					? Set::flatten($config)
+					: $config;
+			}
+			if (is_scalar($data) && isset($config[$data])) {
+				return $config[$data];
 			}
 			$data = '/'.str_replace('.', '/', $data).'/.';
-			$result = current(Set::extract($config, $data));
+			$result = current(Set::extract((array) $config, $data));
 			if (!empty($result)) {
 				return $result;
 			}
-			return ($options['flat'])
-				? Set::flatten($config)
-				: $config;
+			return $options['default'];
 		});
 	}
 
