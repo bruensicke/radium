@@ -37,19 +37,20 @@ class Ini extends \lithium\core\Object {
 			} catch(Exception $e) {
 				return $options['default'];
 			}
-			if (!empty($data) && is_scalar($data)) {
-				if (array_key_exists($data, $config)) {
-					return $config[$data];
-				}
+			if (empty($data)) {
+				return ($options['flat'])
+					? Set::flatten($config)
+					: $config;
 			}
-			$data = '/'.str_replace('.', '/', $data).'/.';
-			$result = current(Set::extract($config, $data));
+			if (is_scalar($data) && isset($config[$data])) {
+				return $config[$data];
+			}
+			$data = '/'.str_replace('.', '/', (string) $data).'/.';
+			$result = current(Set::extract((array) $config, $data));
 			if (!empty($result)) {
 				return $result;
 			}
-			return ($options['flat'])
-				? Set::flatten($config)
-				: $config;
+			return $options['default'];
 		});
 	}
 
