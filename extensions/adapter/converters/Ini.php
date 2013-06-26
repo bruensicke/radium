@@ -50,8 +50,6 @@ class Ini extends \lithium\core\Object {
 			return ($options['flat'])
 				? Set::flatten($config)
 				: $config;
-
-			return $params['content'];
 		});
 	}
 

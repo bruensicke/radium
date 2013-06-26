@@ -12,6 +12,8 @@ use radium\util\Json as JsonFormatter;
 use radium\extensions\errors\JsonException;
 use Exception;
 
+use lithium\util\Set;
+
 class Json extends \lithium\core\Object {
 
 	/**
@@ -24,21 +26,31 @@ class Json extends \lithium\core\Object {
 	 * @filter
 	 */
 	public function get($content, $data = array(), array $options = array()) {
-		$defaults = array('assoc' => true, 'depth' => 512, 'default' => array());
+		$defaults = array('assoc' => true, 'depth' => 512, 'default' => array(), 'flat' => false);
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
 		return $this->_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
 			try {
 				$config = JsonFormatter::decode($content, $options['assoc'], $options['depth']);
-				// TODO: evaluate $data as $field-request
-				return $config;
 			} catch(JsonException $e) {
 				return $options['default'];
 			} catch(Exception $e) {
 				return $options['default'];
 			}
-			return $options['default'];
+			if (!empty($data) && is_scalar($data)) {
+				if (array_key_exists($data, $config)) {
+					return $config[$data];
+				}
+			}
+			$data = '/'.str_replace('.', '/', $data).'/.';
+			$result = current(Set::extract($config, $data));
+			if (!empty($result)) {
+				return $result;
+			}
+			return ($options['flat'])
+				? Set::flatten($config)
+				: $config;
 		});
 	}
 

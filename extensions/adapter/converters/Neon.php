@@ -9,6 +9,10 @@
 namespace radium\extensions\adapter\converters;
 
 use radium\util\Neon as NeonFormatter;
+use Neon\NeonException;
+use Exception;
+
+use lithium\util\Set;
 
 class Neon extends \lithium\core\Object {
 
@@ -22,11 +26,31 @@ class Neon extends \lithium\core\Object {
 	 * @filter
 	 */
 	public function get($content, $data = array(), array $options = array()) {
-		$defaults = array();
+		$defaults = array('default' => array(), 'flat' => false);
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
 		return $this->_filter(__METHOD__, $params, function($self, $params) {
-			return NeonFormatter::decode($params['content']);
+			extract($params);
+			try {
+				$config = NeonFormatter::decode($content);
+			} catch(NeonException $e) {
+				return $options['default'];
+			} catch(Exception $e) {
+				return $options['default'];
+			}
+			if (!empty($data) && is_scalar($data)) {
+				if (array_key_exists($data, $config)) {
+					return $config[$data];
+				}
+			}
+			$data = '/'.str_replace('.', '/', $data).'/.';
+			$result = current(Set::extract($config, $data));
+			if (!empty($result)) {
+				return $result;
+			}
+			return ($options['flat'])
+				? Set::flatten($config)
+				: $config;
 		});
 	}
 
