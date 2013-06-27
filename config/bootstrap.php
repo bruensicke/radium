@@ -18,7 +18,7 @@ use radium\data\Converter;
  * this filter allows automatic linking and loading of assets from `webroot` folder
  */
 Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
-	list($library, $asset) = explode('/', $params['request']->url, 2) + array("", "");
+	list($library, $asset) = explode('/', ltrim($params['request']->url, '/'), 2) + array("", "");
 	if ($asset && $library == 'radium' && ($path = Media::webroot($library)) && file_exists($file = "{$path}/{$asset}")) {
 		return function() use ($file) {
 			$info = pathinfo($file);
