@@ -129,7 +129,7 @@ class Configurations extends \radium\models\BaseModel {
 	 * @return mixed
 	 */
 	public static function get($name, $default = null, array $options = array()) {
-		$defaults = array('default' => $default, 'field' => null, 'status' => 'active', 'flat' => false);
+		$defaults = array('default' => $default, 'field' => null, 'status' => 'active');
 		$options += $defaults;
 		$entity = static::slug($name);
 		if (!$entity || $entity->status != $options['status']) {
