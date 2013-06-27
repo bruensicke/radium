@@ -79,7 +79,7 @@ class Configurations extends \radium\models\BaseModel {
 	 * val(array('field' => 'parentkey'))
 	 * val(array('field' => 'parentkey.subkey'))
 	 *
-	 * @see sy_core\model\Configs::get()
+	 * @see radium\model\Configurations::get()
 	 * @param object $entity instance of current Record
 	 * @param string $field what field (in case of array) to return
 	 * @param array $options an array of options currently supported are
@@ -121,21 +121,21 @@ class Configurations extends \radium\models\BaseModel {
 	 * pass in a default, you will return that, if nothing is found.
 	 * You can also use $options to request a certain field, see val()
 	 *
-	 * @see sy_core\model\Configs::val()
+	 * @see radium\model\Configurations::val()
 	 * @param string $name name of configuration to retrieve
 	 * @param string $default what to return, if nothing is found
 	 * @param array $options an array of options, currently all of
-	 *              Configs::val() are supported, see there.
+	 *              Configurations::val() are supported, see there.
 	 * @return mixed
 	 */
 	public static function get($name, $default = null, array $options = array()) {
-		$defaults = array('default' => $default, 'field' => null, 'status' => 'active');
+		$defaults = array('default' => $default, 'field' => null, 'status' => 'active', 'flat' => false);
 		$options += $defaults;
 		$entity = static::slug($name);
 		if (!$entity || $entity->status != $options['status']) {
 			return $options['default'];
 		}
-		return $entity->val($options['field']);
+		return $entity->val($options['field'], $options);
 	}
 
 }
