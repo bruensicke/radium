@@ -229,6 +229,7 @@ class BaseModel extends \lithium\data\Model {
 	 * finds and loads active entity for given id
 	 *
 	 * @param string $id id of entity to load
+	 * @param string|array $status expected status of record, can be string or an array of strings
 	 * @return object|boolean entity if found and active, false otherwise
 	 * @filter
 	 */
@@ -244,7 +245,7 @@ class BaseModel extends \lithium\data\Model {
 			if (!$result) {
 				return false;
 			}
-			if ($result->status !== $status) {
+			if (!in_array($result->status, (array) $status)) {
 				return false;
 			}
 			if (!empty($result->deleted)) {
