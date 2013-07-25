@@ -1,9 +1,9 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
 <ul class="actions pull-right nav nav-pills">
-	<li><?= $this->html->link('export', $this->scaffold->action('export'));?></li>
-	<li><?= $this->html->link('delete', $this->scaffold->action('delete'));?></li>
-	<li><?= $this->html->link('edit', $this->scaffold->action('edit'));?></li>
+	<li><?= $this->html->link('export', $this->scaffold->action('export'), array('icon' => 'download-alt'));?></li>
+	<li><?= $this->html->link('delete', $this->scaffold->action('delete'), array('icon' => 'remove-sign'));?></li>
+	<li><?= $this->html->link('edit', $this->scaffold->action('edit'), array('icon' => 'edit'));?></li>
 </ul>
 <ul class="breadcrumb">
 	<li>

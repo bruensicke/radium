@@ -53,7 +53,7 @@
 						<li><a href="<?=$this->url(array('action' => 'export')); ?>/{{ _id }}"><i class="icon-download-alt"></i> Export</a></li>
 						<li class="divider"></li>
 						{{^deleted}}
-							<li><a href="<?=$this->url(array('action' => 'delete')); ?>/{{ _id }}"><i class="icon-trash"></i> Delete</a></li>
+							<li><a href="<?=$this->url(array('action' => 'delete')); ?>/{{ _id }}"><i class="icon-remove-sign"></i> Delete</a></li>
 						{{/deleted}}
 						{{#deleted}}
 							<li><a href="<?=$this->url(array('action' => 'remove')); ?>/{{ _id }}"><i class="icon-trash"></i> Remove physically</a></li>
