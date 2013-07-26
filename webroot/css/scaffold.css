@@ -1,6 +1,12 @@
-ul.actions input.btn {
+ul.actions input.btn,
+ul.actions button.btn {
 	margin: 3px 10px 0 0;
 }
-ul.actions input.btn-mini {
+ul.actions input.btn-small,
+ul.actions button.btn-small {
+	margin: 5px 10px 0 0;
+}
+ul.actions input.btn-mini,
+ul.actions button.btn-mini {
 	margin: 6px 10px 0 0;
 }

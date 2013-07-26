@@ -3,7 +3,7 @@
 
 <ul class="actions pull-right nav nav-pills">
 	<li><?= $this->html->link('cancel', $this->scaffold->action('view'));?></li>
-	<li><?= $this->form->submit('Save', array('class' => 'btn btn-success btn-mini')); ?></li>
+	<li><?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-info btn-small', 'icon' => 'save')); ?></li>
 </ul>
 <ul class="breadcrumb">
 	<li>
