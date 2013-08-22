@@ -52,6 +52,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$singular = $this->scaffold['singular'];
 
 		$result = $model::first($id);
+		if (!$result) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
 		return array($singular => $result);
 	}
 
