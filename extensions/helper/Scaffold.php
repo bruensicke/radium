@@ -108,7 +108,7 @@ class Scaffold extends \lithium\template\Helper {
 	 * @return array an array containing all relevant information in an array to build a url
 	 */
 	public function action($action = 'view', array $args = array()) {
-		if (isset($this->_scaffold['object'])) {
+		if (isset($this->_scaffold['object']) && is_a($this->_scaffold['object'], 'lithium\data\Entity')) {
 			$args += array('id' => $this->_scaffold['object']->id());
 		}
 		return compact('action', 'args');
