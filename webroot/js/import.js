@@ -14,7 +14,7 @@ uploader.msg = function(type, text, target) {
 };
 uploader.message = function(message) {
 	target = typeof target !== 'undefined' ? target : '#uploadResult';
-	$(target).append('<div class="alert alert-error">huhu' + message + '</div>');
+	$(target).append('<div class="alert alert-error">' + message + '</div>');
 };
 uploader.completed = function(id, file, res) {
 	console.log(id);
