@@ -100,6 +100,14 @@ class BaseModel extends \lithium\data\Model {
 			});
 		}
 
+		if (!static::finder('random')) {
+			static::finder('random', function($self, $params, $chain){
+				$amount = $self::find('count', $params['options']);
+				$offset = rand(0, $amount-1);
+				$params['options']['offset'] = $offset;
+				return $self::find('first', $params['options']);
+			});
+		}
 	}
 
 	/**
