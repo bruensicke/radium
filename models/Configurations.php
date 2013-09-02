@@ -84,7 +84,7 @@ class Configurations extends \radium\models\BaseModel {
 	 * @param string $field what field (in case of array) to return
 	 * @param array $options an array of options currently supported are
 	 *              - `default` : what to return, if nothing is found
-	 *              - `type`    : to force a certain type, ie. boolean
+	 *              - `flat`    : to flatten the result, if object/array-ish, defaults to false
 	 * @return mixed whatever can be returned
 	 */
 	public function val($entity, $field = null, array $options = array()) {
