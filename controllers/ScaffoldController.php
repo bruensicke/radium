@@ -226,8 +226,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 					$valids[] = $idx;
 				}
 			}
-			$success = true; #(bool) (count($valids) == count($data));
-			$message = sprintf('%s %s imported', count($valids), $plural);
+			$success = (bool) (count($valids) == count($data));
+			$message = ($success)
+				? sprintf('%s %s imported', count($valids), $plural)
+				: sprintf('%s from %s %s imported', count($valids), count($data), $plural);
 			$url = Router::match(array('action' => 'index'), $this->request);
 			return compact('success', 'url', 'message', 'errors');
 		}
