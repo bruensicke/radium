@@ -89,6 +89,17 @@ class BaseModel extends \lithium\data\Model {
 				return is_null($options['model']::find('first', compact('fields', 'conditions')));
 			});
 		}
+		if (!Validator::rules('status')) {
+			Validator::add('status', function ($value, $format, $options) {
+				return (bool) $options['model']::status($value);
+			});
+		}
+		if (!Validator::rules('type')) {
+			Validator::add('type', function ($value, $format, $options) {
+				return (bool) $options['model']::type($value);
+			});
+		}
+
 	}
 
 	/**
