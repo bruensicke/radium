@@ -258,7 +258,9 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$key = $self::key();
+			$key = (strlen($id) == 24)
+				? $self::key()
+				: 'slug';
 			$options['conditions'] = array($key => $id);
 			$result = $self::find('first', $options);
 			if (!$result) {
