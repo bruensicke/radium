@@ -348,13 +348,24 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * fetches the associated config record
+	 * fetches the associated configuration record
 	 *
 	 * @param object $entity current instance
-	 * @return array client data
+	 * @param string $field what field (in case of array) to return
+	 * @param array $options an array of options currently supported are
+	 *              - `default` : what to return, if nothing is found
+	 *              - `flat`    : to flatten the result, if object/array-ish, defaults to false
+	 * @return mixed configuration value
 	 */
-	public function configuration($entity) {
-		return $entity->config = Configurations::first($entity->config_id);
+	public function configuration($entity, $field = null, array $options = array()) {
+		if (empty($entity->config_id)) {
+			return null;
+		}
+		$config = Configurations::load($entity->config_id);
+		if (!$config) {
+			return null;
+		}
+		return $config->val($field, $options);
 	}
 
 	/**
@@ -428,18 +439,6 @@ class BaseModel extends \lithium\data\Model {
 			}
 			return $data;
 		});
-	}
-
-	/**
-	 * fetches the associated configuration
-	 *
-	 * @param object $entity current instance
-	 * @param string $field name of configuration to return
-	 * @return array client data
-	 */
-	public function value($entity, $field = null, array $options = array()) {
-		$entity->config = Configurations::first($entity->config_id);
-		return $entity->val($field, $options);
 	}
 
 }
