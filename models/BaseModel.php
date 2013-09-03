@@ -417,7 +417,7 @@ class BaseModel extends \lithium\data\Model {
 			if (!$foreign_id) {
 				continue;
 			}
-			$result[$name] = $model::first($foreign_id);
+			$result[$name] = $model::load($foreign_id);
 		}
 		return (count($fields) > 1) ? $result : array_shift($result);
 	}
