@@ -223,28 +223,6 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * finds and loads entity with given slug
-	 *
-	 * @param string $slug short unique string to identify entity
-	 * @param string $status status entity must have
-	 * @return object|boolean found entity entity or false, if none found
-	 * @filter
-	 */
-	public static function slug($slug, $status = 'active', array $options = array()) {
-		$params = compact('slug', 'status', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
-			extract($params);
-			$deleted = array('<=' => null); // only not deleted
-			$options['conditions'] = compact('slug', 'status', 'deleted');
-			$result = $self::find('first', $options);
-			if (!$result) {
-				return false;
-			}
-			return $result;
-		});
-	}
-
-	/**
 	 * finds and loads active entity for given id
 	 *
 	 * @param string $id id of entity to load
