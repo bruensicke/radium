@@ -255,20 +255,6 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * Allows to pass in a query to do, what a man needs to do.
-	 * Make sure, you are not trying to be james bond, without
-	 * beeing sure, you know what you are doing.
-	 *
-	 * Returns a lithium\data\source\database\adapter\my_sql\Result object
-	 *
-	 * @param string $sql
-	 * @return object
-	 */
-	public static function execute($sql) {
-		return static::connection()->invokeMethod('_execute', array($sql));
-	}
-
-	/**
 	 * Returns all schema-fields, without their types
 	 *
 	 * @return array
@@ -343,7 +329,6 @@ class BaseModel extends \lithium\data\Model {
 				$model = $entity->model();
 				$msg = sprintf('Update of %s [%s] returned false', $model, $entity->id());
 				$data = compact('values', 'conditions', 'model');
-				Logger::warning('FAILED ' . $msg, compact('data'));
 				return false;
 			}
 			$entity->set($values);
