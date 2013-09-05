@@ -151,9 +151,13 @@ class BaseModel extends \lithium\data\Model {
 		if (!empty($data)) {
 			$entity->set($data);
 		}
-		$field = ($entity->exists()) ? 'updated' : 'created';
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
+			$field = ($entity->exists()) ? 'updated' : 'created';
 			$entity->set(array($field => time()));
+			$version = static::meta('versions');
+			if (empty($versions) && $version !== false) {
+				Versions::add($entity);
+			}
 		}
 		return parent::save($entity, null, $options);
 	}
