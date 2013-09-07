@@ -12,8 +12,6 @@ use lithium\action\Dispatcher;
 use lithium\action\Response;
 use lithium\net\http\Media;
 
-use radium\data\Converter;
-
 /*
  * this filter allows automatic linking and loading of assets from `webroot` folder
  */
@@ -33,33 +31,5 @@ Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
 	}
 	return $chain->next($self, $params, $chain);
 });
-
-Converter::config(array(
-	'array' => array(
-		'adapter' => 'Ini',
-	),
-	'ini' => array(
-		'adapter' => 'Ini',
-	),
-	'json' => array(
-		'adapter' => 'Json',
-	),
-	'neon' => array(
-		'adapter' => 'Neon',
-	),
-	'plain' => array(
-		'adapter' => 'Plain',
-	),
-	'html' => array(
-		'adapter' => 'Html',
-	),
-	'mustache' => array(
-		'adapter' => 'Mustache',
-	),
-	'markdown' => array(
-		'adapter' => 'Markdown',
-	),
-));
-
 
 ?>

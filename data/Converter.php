@@ -11,6 +11,38 @@ namespace radium\data;
 class Converter extends \lithium\core\Adaptable {
 
 	/**
+	 * holds configuration per adapter
+	 *
+	 * @var array
+	 */
+	protected static $_configurations = array(
+		'array' => array(
+			'adapter' => 'Ini',
+		),
+		'ini' => array(
+			'adapter' => 'Ini',
+		),
+		'json' => array(
+			'adapter' => 'Json',
+		),
+		'neon' => array(
+			'adapter' => 'Neon',
+		),
+		'plain' => array(
+			'adapter' => 'Plain',
+		),
+		'html' => array(
+			'adapter' => 'Html',
+		),
+		'mustache' => array(
+			'adapter' => 'Mustache',
+		),
+		'markdown' => array(
+			'adapter' => 'Markdown',
+		),
+	);
+
+	/**
 	 * Libraries::locate() compatible path to adapters for this class.
 	 *
 	 * @see lithium\core\Libraries::locate()
@@ -36,6 +68,24 @@ class Converter extends \lithium\core\Adaptable {
 			extract($params);
 			return $self::adapter($name)->get($content, $data, $options);
 		});
+	}
+
+	/**
+	 * A stub method called by `_config()` which allows `Adaptable` subclasses to automatically
+	 * assign or auto-generate additional configuration data, once a configuration is first
+	 * accessed. This allows configuration data to be lazy-loaded from adapters or other data
+	 * sources.
+	 *
+	 * @param string $name The name of the configuration which is being accessed. This is the key
+	 *               name containing the specific set of configuration passed into `config()`.
+	 * @param array $config Contains the configuration assigned to `$name`. If this configuration is
+	 *              segregated by environment, then this will contain the configuration for the
+	 *              current environment.
+	 * @return array Returns the final array of settings for the given named configuration.
+	 */
+	protected static function _initConfig($name, $config) {
+		$defaults = array('adapter' => ucwords($name), 'filters' => array());
+		return (array) $config + $defaults;
 	}
 
 }
