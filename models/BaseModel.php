@@ -359,6 +359,9 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$key = $self::key();
 			$conditions = array($key => $entity->id());
+			if ($options['updated']) {
+				$values['updated'] = time();
+			}
 			$success = $self::update($values, $conditions);
 			if (!$success) {
 				$model = $entity->model();
