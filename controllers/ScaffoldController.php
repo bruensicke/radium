@@ -190,6 +190,19 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		return $data;
 	}
 
+	protected function _call($method, $id = null, $args = array()) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+		$singular = $this->scaffold['singular'];
+
+		$result = $model::first($id);
+		if (!$result) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
+		return call_user_func_array(array($result, $method), $args);
+	}
+
 	protected function _import($data) {
 		$model = $this->scaffold['model'];
 		$singular = $this->scaffold['singular'];
