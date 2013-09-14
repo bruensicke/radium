@@ -197,8 +197,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 		$result = $model::first($id);
 		if (!$result) {
-			$url = array('action' => 'index');
-			return $this->redirect($url);
+			return false;
 		}
 		return call_user_func_array(array($result, $method), $args);
 	}
