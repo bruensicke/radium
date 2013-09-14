@@ -41,7 +41,7 @@ class Versions extends \radium\models\BaseModel {
 	protected $_schema = array(
 		'_id' => array('type' => 'id'),
 		'model' => array('type' => 'string', 'default' => '', 'null' => false),
-		'model_id' => array('type' => 'string', 'default' => '', 'null' => false),
+		'foreign_id' => array('type' => 'string', 'default' => '', 'null' => false),
 		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
 		'type' => array('type' => 'string', 'null' => true),
 		'content' => array('type' => 'string'),
@@ -64,10 +64,10 @@ class Versions extends \radium\models\BaseModel {
 		'model' => array(
 			array('notEmpty', 'message' => 'a model is required.'),
 		),
-		'model_id' => array(
-			array('notEmpty', 'message' => 'a model id is required.'),
+		'foreign_id' => array(
+			array('notEmpty', 'message' => 'a foreign id is required.'),
 		),
-		'content' => array(
+		'data' => array(
 			array('notEmpty', 'message' => 'content is required.'),
 		),
 	);
@@ -90,33 +90,65 @@ class Versions extends \radium\models\BaseModel {
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
 			$model = $entity->model();
+			if ($model == $self) {
+				return false;
+			}
 			$key = $model::meta('key');
+			$foreign_id = (string) $entity->$key;
+
 			$export = $entity->export();
 			$updated = Set::diff($self::cleanData($export['update']), $self::cleanData($export['data']));
+			if (empty($updated)) {
+				return false;
+			}
+
+			$self::update(array('status' => 'outdated'), compact('model', 'foreign_id'));
+
 			$data = array(
 				'model' => $model,
-				'model_id' => (string) $entity->$key,
+				'foreign_id' => $foreign_id,
+				'status' => 'active',
+				'name' => (string) $entity->title(),
+				'fields' => array_keys($updated),
 				'updated' => json_encode($updated),
 				'data' => json_encode($entity->data()),
 				'created' => time(),
 			);
+
 			$version = $self::create($data);
-			return $version->save();
+			if (!$version->save()) {
+				return false;
+			}
+			return $version->id();
 		});
 	}
 
 	public static function restore($id, array $options = array()) {
-		$defaults = array('validate' => false);
+		$defaults = array('validate' => false, 'callbacks' => false);
 		$options += $defaults;
 		$params = compact('id', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
+		return static::_filter(__METHOD__, $params, function($self, $params) use ($defaults) {
 			extract($params);
-			$version = static::first($id);
+			$version = $self::first($id);
 			if (!$version) {
 				return false;
 			}
-			// TODO: restore data for $version->model with $version->id
-			return true;
+			$model = $version->model;
+			$foreign_id = $version->foreign_id;
+			$data = json_decode($version->data, true);
+			$data['version_id'] = $version->id();
+
+			$entity = $model::first($foreign_id);
+			if (!$entity) {
+				$entity = $model::create($data);
+			}
+
+			if(!$entity->save($data, $options)) {
+				return false;
+			}
+
+			$self::update(array('status' => 'outdated'), compact('model', 'foreign_id'));
+			return $version->save(array('status' => 'active'), $defaults);
 		});
 	}
 
