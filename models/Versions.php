@@ -72,6 +72,14 @@ class Versions extends \radium\models\BaseModel {
 		),
 	);
 
+	/**
+	 * Returns list of available Versions for a given model.
+	 *
+	 * @param string $model full-namespaced class-name to search for Versions
+	 * @param string $id optional, to only show Versions for objects with this `$id`
+	 * @param array $options additional find-options
+	 * @return object A Collection object of all found Versions
+	 */
 	public static function available($model, $id = 'null', array $options = array()) {
 		$conditions = compact('model');
 		if (!empty($id)) {
@@ -83,6 +91,52 @@ class Versions extends \radium\models\BaseModel {
 		return $versions;
 	}
 
+
+	/**
+	 * This method generates a new version.
+	 *
+	 * It creates a duplication of the object, to allow restoring. It marks all prior
+	 * versions as `outdated` and the new one as `active`.
+	 *
+	 * You probably want to create a new version of an entity, whenever save is called. To achieve
+	 * this, you have to take care, all data is set into the entity and Versions::add with updated
+	 * entity is called.
+	 *
+	 * In the following example you can see, how a meta-field, `versions` is used, to decide if
+	 * a version needs to be created, or not.
+	 *
+	 * {{{
+	 *	public function save($entity, $data = array(), array $options = array()) {
+	 *		if (!empty($data)) {
+	 *			$entity->set($data);
+	 *		}
+	 *		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
+	 *			$versions = static::meta('versions');
+	 *			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+	 *				$version_id = Versions::add($entity, $options);
+	 *				if ($version_id) {
+	 *					$entity->set(compact('version_id'));
+	 *				}
+	 *			}
+	 *		}
+	 *		return parent::save($entity, null, $options);
+	 *	}
+	 * }}}
+	 *
+	 * You have to set `versions` to true, in meta like this:
+	 *
+	 * {{{
+	 *  $model::meta('versions', true);
+	 * // OR
+	 *  static::meta('versions', function($entity, $options){
+	 *		return (bool) Environment::is('production');
+	 *	});
+	 * }}}
+	 *
+	 * @param object $entity the instance, that needs to created a new version for
+	 * @param array $options additional options
+	 * @filter
+	 */
 	public static function add($entity, array $options = array()) {
 		$defaults = array();
 		$options += $defaults;
@@ -123,6 +177,17 @@ class Versions extends \radium\models\BaseModel {
 		});
 	}
 
+	/**
+	 * Restores a version from history and updates the corresponding record with stored data.
+	 *
+	 * All versions will be marked as `outdated` with the new version becoming `active`.
+	 *
+	 * @see radium\models\Versions::add()
+	 * @param string $id Id of version to restore
+	 * @param array $options additional options to be passed into $model::save()
+	 * @return true on success, false otherwise
+	 * @filter
+	 */
 	public static function restore($id, array $options = array()) {
 		$defaults = array('validate' => false, 'callbacks' => false);
 		$options += $defaults;
@@ -151,20 +216,6 @@ class Versions extends \radium\models\BaseModel {
 			return $version->save(array('status' => 'active'), $defaults);
 		});
 	}
-
-	/**
-	 * returns content of entity data
-	 *
-	 * @see radium\data\Converter::get()
-	 * @param object $version instance of current record
-	 * @param array $data additional data to be passed into render context
-	 * @param array $options additional options to be passed into `Converter::get()`
-	 * @return array restored entity data
-	 */
-	public function content($version, $data = array(), array $options = array()) {
-		return Converter::get('json', $version->content, $data, $options);
-	}
-
 
 	/**
 	 * only use data of objects, in case they are contained within data
