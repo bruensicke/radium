@@ -61,6 +61,15 @@ class Contents extends \radium\models\BaseModel {
 		),
 	);
 
+	/**
+	 * returns parsed content of Contents body
+	 *
+	 * @see radium\data\Converter::get()
+	 * @param object $content instance of current record
+	 * @param array $data additional data to be passed into render context
+	 * @param array $options additional options to be passed into `Converter::get()`
+	 * @return array parsed content of Contents body
+	 */
 	public function body($content, $data = array(), array $options = array()) {
 		return Converter::get($content->type, $content->body, $data, $options);
 	}
