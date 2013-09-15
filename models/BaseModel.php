@@ -171,16 +171,37 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * generic method to retrieve a list or an entry of an array of a static property
+	 *
+	 * This method is used to allow an easy addition of key/value pairs, mainly for usage
+	 * in a dropdown for a specific model.
+	 *
+	 * If you want to provide a list of available options, declare your properties in the same
+	 * manner as `$_types` or `$_status`.
+	 *
+	 * @see radium\models\BaseModel::types()
+	 * @see radium\models\BaseModel::status()
+	 * @param string $property name of property to look for.
+	 *               automatically prepended by an underscore: `_`. Must be static and public
+	 * @param string $type type to look for, optional
+	 * @return mixed all types with keys and their name, or value of `$type` if given
+	 */
+	public static function _group($property, $type = null) {
+		$field = sprintf('_%s', $property);
+		if (!empty($type)) {
+			return (isset(static::$$field[$type])) ? static::$$field[$type] : false;
+		}
+		return static::$$field;
+	}
+
+	/**
 	 * all types for current model
 	 *
 	 * @param string $type type to look for
 	 * @return mixed all types with keys and their name, or value of `$type` if given
 	 */
 	public static function types($type = null) {
-		if (!empty($type)) {
-			return (isset(static::$_types[$type])) ? static::$_types[$type] : false;
-		}
-		return static::$_types;
+		return static::_group(__FUNCTION__, $type);
 	}
 
 	/**
@@ -190,10 +211,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return mixed all status with keys and their name, or value of `$status` if given
 	 */
 	public static function status($status = null) {
-		if (!empty($status)) {
-			return (isset(static::$_status[$status])) ? static::$_status[$status] : false;
-		}
-		return static::$_status;
+		return static::_group(__FUNCTION__, $status);
 	}
 
 	/**
