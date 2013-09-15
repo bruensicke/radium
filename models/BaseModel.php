@@ -126,6 +126,7 @@ class BaseModel extends \lithium\data\Model {
 	public function delete($entity, array $options = array()) {
 		$options += array('force' => false);
 		$deleted = $entity->schema('deleted');
+		// TODO: use $deleted = $entity->hasField('deleted');
 		if (is_null($deleted) || $options['force']) {
 			unset($options['force']);
 			return parent::delete($entity, $options);
@@ -324,6 +325,9 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$key = $self::key();
 			$conditions = array($key => $entity->id());
+			if ($options['updated']) {
+				$values['updated'] = time();
+			}
 			$success = $self::update($values, $conditions);
 			if (!$success) {
 				$model = $entity->model();

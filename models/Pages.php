@@ -8,6 +8,8 @@
 
 namespace radium\models;
 
+use radium\data\Converter;
+
 class Pages extends \radium\models\BaseModel {
 
 	/**
