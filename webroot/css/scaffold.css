@@ -2,11 +2,11 @@ ul.actions input.btn,
 ul.actions button.btn {
 	margin: 3px 10px 0 0;
 }
-ul.actions input.btn-small,
-ul.actions button.btn-small {
+ul.actions input.btn-sm,
+ul.actions button.btn-sm {
 	margin: 5px 10px 0 0;
 }
-ul.actions input.btn-mini,
-ul.actions button.btn-mini {
+ul.actions input.btn-xs,
+ul.actions button.btn-xs {
 	margin: 6px 10px 0 0;
 }

@@ -8,17 +8,14 @@
 <ul class="breadcrumb">
 	<li>
 		<?= $this->html->link('Home', '/');?>
-		<span class="divider">/</span>
 	</li>
 	<?php if ($scaffold['library'] === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
-			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li>
 		<?= $this->html->link($this->scaffold->human, array('action' => 'index'));?>
-		<span class="divider">/</span>
 	</li>
 	<li class="active">
 		<?= $this->title($this->scaffold->object->title()); ?>

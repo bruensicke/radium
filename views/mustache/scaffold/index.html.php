@@ -43,10 +43,10 @@
 			<td data-datetime="{{ created }}"></td>
 			<td data-datetime="{{ updated }}"></td>
 			<td>
-				<div class="btn-group">
-					<a class="btn btn-mini" href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a>
-					<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-					<ul class="dropdown-menu">
+				<div class="btn-group btn-group-xs">
+					<a class="btn btn-default btn-xs" href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a>
+					<a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 						<li><a href="<?=$this->url(array('action' => 'view')); ?>/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
 						<li><a href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
 						<li><a href="<?=$this->url(array('action' => 'duplicate')); ?>/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>

@@ -1,18 +1,18 @@
 <div class="row">
 
-	<div class="span4">
+	<div class="col-md-4">
 		<legend><?= $this->scaffold->human ?> meta</legend>
 		<div class="well">
 			<?= $this->scaffold->render('form.meta'); ?>
 		</div>
 	</div>
 
-	<div class="span8">
+	<div class="col-md-8">
 		<legend><?= $this->scaffold->human ?> details</legend>
 		<div class="well">
 			<?= $this->form->field('body', array(
 				'type' => 'textarea',
-				'class' => 'input-block-level',
+				'class' => 'form-control input-block-level',
 				'style' => 'height: 370px;',
 			));?>
 		</div>

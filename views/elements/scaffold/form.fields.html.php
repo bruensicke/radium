@@ -35,7 +35,7 @@ foreach ($fields as $index => $field) {
 		case 'textarea':
 			$options = array(
 				'type' => 'textarea',
-				'class' => "input-block-level autogrow $field",
+				'class' => "form-control input-block-level autogrow $field",
 				'rows' => 3,
 			);
 			if (in_array($field, $readonly)) {
@@ -49,7 +49,7 @@ foreach ($fields as $index => $field) {
 			$method = Inflector::pluralize($field);
 			$options = array(
 				'type' => 'select',
-				'class' => "input-block-level $field",
+				'class' => "form-control input-block-level $field",
 				'data-switch' => $field,
 				'list' => $scaffold['model']::$method()
 			);
@@ -65,7 +65,7 @@ foreach ($fields as $index => $field) {
 		case 'configuration':
 			$options = array(
 				'type' => 'select',
-				'class' => "input-block-level $field",
+				'class' => "form-control input-block-level $field",
 				'data-switch' => 'configuration',
 				'list' => Configurations::find('list')
 			);
@@ -79,7 +79,7 @@ foreach ($fields as $index => $field) {
 		case 'ini':
 			$options = array(
 				'type' => 'textarea',
-				'class' => 'input-block-level autogrow',
+				'class' => 'form-control input-block-level autogrow',
 				'rows' => 10,
 			);
 			if (in_array($field, $readonly)) {
@@ -92,7 +92,7 @@ foreach ($fields as $index => $field) {
 		case 'integer':
 			$options = array(
 				'type' => 'number',
-				'class' => 'input-mini numeric',
+				'class' => 'form-control input-mini numeric',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
@@ -104,7 +104,7 @@ foreach ($fields as $index => $field) {
 		case 'date':
 			// TODO: datepicker
 			$options = array(
-				'class' => 'input-block-level date',
+				'class' => 'form-control input-block-level date',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
@@ -114,7 +114,7 @@ foreach ($fields as $index => $field) {
 
 		case 'string':
 			$options = array(
-				'class' => 'input-block-level',
+				'class' => 'form-control input-block-level',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';

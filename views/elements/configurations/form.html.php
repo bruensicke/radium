@@ -1,6 +1,6 @@
 <div class="row">
 
-	<div class="span4">
+	<div class="col-md-4">
 		<legend><?= $this->scaffold->human ?> meta</legend>
 		<div class="well">
 			<p>Visibility in settings page</p>
@@ -12,7 +12,7 @@
 		</div>
 	</div>
 
-	<div class="span8">
+	<div class="col-md-8">
 		<legend><?= $this->scaffold->human ?> details</legend>
 		<div class="well type_boolean">
 			<p class="muted">Do you want to enable this setting?</p>
@@ -24,7 +24,7 @@
 		<div class="well type_string type_json type_list type_array type_ini type_neon">
 			<?= $this->form->field('value', array(
 				'type' => 'textarea',
-				'class' => 'input-block-level autogrow',
+				'class' => 'form-control input-block-level autogrow',
 				'style' => 'height: 370px;',
 			));?>
 		</div>

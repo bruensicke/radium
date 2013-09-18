@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-	<li><?= $this->html->link('Home', '/');?> <span class="divider">/</span></li>
+	<li><?= $this->html->link('Home', '/');?> </li>
 	<li class="active"><?= $this->title('radium'); ?></li>
 </ul>
 
