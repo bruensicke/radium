@@ -1,6 +1,6 @@
 <table class="table table-striped table-condensed">
 	<colgroup>
-		<col width="140" />
+		<col width="170" />
 		<col width="*" />
 	</colgroup>
 	<thead>
@@ -16,9 +16,9 @@
 		</tr>
 	{{/data}}
 	{{#data}}
-		<tr>
-			<td class="key" data-key="{{ key }}">{{ key }}</td>
-			<td class="value" data-value="{{ value }}">{{ value }}</td>
+		<tr data-key="{{ key }}" data-value="{{ value }}">
+			<td class="key">{{ key }}</td>
+			<td class="value">{{ value }}</td>
 		</tr>
 	{{/data}}
 	</tbody>
