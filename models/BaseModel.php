@@ -61,6 +61,21 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
+	 * Default query parameters.
+	 *
+	 * @var array
+	 */
+	protected $_query = array(
+		'order' => array(
+			'updated' => 'DESC',
+			'created' => 'DESC',
+		),
+		'conditions' => array(
+			'deleted' => 'IS NULL',
+		),
+	);
+
+	/**
 	 * initialize method
 	 *
 	 * @see lithium\data\Model
@@ -108,6 +123,7 @@ class BaseModel extends \lithium\data\Model {
 				return $self::find('first', $params['options']);
 			});
 		}
+		static::meta('versions', true);
 	}
 
 	/**
@@ -152,9 +168,16 @@ class BaseModel extends \lithium\data\Model {
 		if (!empty($data)) {
 			$entity->set($data);
 		}
-		$field = ($entity->exists()) ? 'updated' : 'created';
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
+			$field = ($entity->exists()) ? 'updated' : 'created';
 			$entity->set(array($field => time()));
+			$versions = static::meta('versions');
+			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+				$version_id = Versions::add($entity, $options);
+				if ($version_id) {
+					$entity->set(compact('version_id'));
+				}
+			}
 		}
 		return parent::save($entity, null, $options);
 	}
