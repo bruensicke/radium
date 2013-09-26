@@ -422,13 +422,18 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @param object $entity current instance
 	 * @param string|array $name name of model to load
+	 * @param array $options an array of options currently supported are
+	 *              - `resolver` : closure that takes $name as parameter and returns full qualified
+	 *                 model name.
 	 * @return array foreign object data
 	 */
 	public function resolve($entity, $fields = null) {
-		$getClass = function($name) {
+		$resolver = function($name) {
 			$modelname = Inflector::pluralize(Inflector::classify($name));
 			return Libraries::locate('models', $modelname);
 		};
+		$defaults = compact('resolver');
+		$options += $defaults;
 
 		switch (true) {
 			case is_string($fields):
@@ -450,7 +455,7 @@ class BaseModel extends \lithium\data\Model {
 				continue;
 			}
 			list($attribute, $name) = $matches;
-			$model = $getClass($name);
+			$model = $options['resolver']($name);
 			if (empty($model)) {
 				continue;
 			}
