@@ -52,10 +52,10 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @var array
 	 */
-	public static $__finders = array(
+	public $_finders = array(
 		'deleted' => array(
 			'conditions' => array(
-				'deleted' => 'IS NOT NULL',
+				'deleted' => array('>=' => 1),
 			)
 		)
 	);
@@ -71,7 +71,7 @@ class BaseModel extends \lithium\data\Model {
 			'created' => 'DESC',
 		),
 		'conditions' => array(
-			'deleted' => 'IS NULL',
+			'deleted' => null,
 		),
 	);
 
