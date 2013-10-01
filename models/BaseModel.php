@@ -427,7 +427,7 @@ class BaseModel extends \lithium\data\Model {
 	 *                 model name.
 	 * @return array foreign object data
 	 */
-	public function resolve($entity, $fields = null) {
+	public function resolve($entity, $fields = null, array $options = array()) {
 		$resolver = function($name) {
 			$modelname = Inflector::pluralize(Inflector::classify($name));
 			return Libraries::locate('models', $modelname);
