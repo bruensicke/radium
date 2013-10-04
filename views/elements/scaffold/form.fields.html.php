@@ -112,6 +112,23 @@ foreach ($fields as $index => $field) {
 			}
 		break;
 
+		case 'list':
+			$value = (is_object($binding->$field))
+				? $binding->$field->data()
+				: (array) $binding->$field;
+			$options = array(
+				'type' => 'textarea',
+				'class' => "input-block-level autogrow $field",
+				'rows' => 3,
+				'value' => implode("\n", $value),
+			);
+			if (in_array($field, $readonly)) {
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-textarea';
+			}
+			echo $this->form->field($field, $options);
+		break;
+
 		case 'string':
 			$options = array(
 				'class' => 'input-block-level',
@@ -121,6 +138,7 @@ foreach ($fields as $index => $field) {
 				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
+		break;
 	}
 }
 ?>
