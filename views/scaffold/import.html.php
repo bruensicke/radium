@@ -8,7 +8,7 @@
 		<?= $this->html->link('Home', '/');?>
 		<span class="divider">/</span>
 	</li>
-	<?php if ($scaffold['library'] === 'radium'): ?>
+	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
 			<span class="divider">/</span>

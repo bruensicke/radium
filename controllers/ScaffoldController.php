@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use Exception;
 
+use lithium\core\Environment;
 use lithium\util\Inflector;
 use lithium\net\http\Media;
 use lithium\net\http\Router;
@@ -31,10 +32,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->_render['paths']['template'][] = '{:library}/views/scaffold/{:template}.{:type}.php';
 		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
 		$this->_scaffold();
-		if ($this->request->is('ajax')) {
-			return;
-		}
-		$this->set(array('scaffold' => $this->scaffold));
 	}
 
 	public function index() {
@@ -273,6 +270,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if (!is_null($field)) {
 			return (isset($this->scaffold[$field])) ? $this->scaffold[$field] : false;
 		}
+		Environment::set(Environment::get(), array('scaffold' => $this->scaffold));
 		return $this->scaffold;
 	}
 

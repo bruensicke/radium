@@ -2,6 +2,7 @@
 use lithium\util\Inflector;
 use radium\models\Configurations;
 
+$model = $this->scaffold->model;
 $binding = $this->form->binding();
 $schema = $binding->schema();
 $fields = isset($fields)
@@ -51,11 +52,11 @@ foreach ($fields as $index => $field) {
 				'type' => 'select',
 				'class' => "input-block-level $field",
 				'data-switch' => $field,
-				'list' => $scaffold['model']::$method()
+				'list' => $model::$method()
 			);
 			if (in_array($field, $readonly)) {
 				$options['type'] = 'text';
-				$options['value'] = $scaffold['model']::$method($this->scaffold->object->$field);
+				$options['value'] = $model::$method($this->scaffold->object->$field);
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}

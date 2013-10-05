@@ -10,6 +10,7 @@ namespace radium\extensions\helper;
 
 use lithium\util\Set;
 use lithium\core\Libraries;
+use lithium\core\Environment;
 use lithium\template\TemplateException;
 
 /**
@@ -43,10 +44,8 @@ class Scaffold extends \lithium\template\Helper {
 	 */
 	protected function _init() {
 		parent::_init();
+		$this->_scaffold = Environment::get('scaffold');
 		$this->_data = $this->_context->data();
-		if (isset($this->_data['scaffold'])) {
-			$this->_scaffold = $this->_data['scaffold'];
-		}
 		if (isset($this->_data[$this->_scaffold['singular']])) {
 			$this->_scaffold['object'] = $this->_data[$this->_scaffold['singular']];
 		}
