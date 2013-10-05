@@ -264,10 +264,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,
-				'singular' => Inflector::underscore(Inflector::singularize($class)),
-				'plural' => strtolower(Inflector::pluralize($class)),
+				'singular' => Inflector::singularize($class),
+				'plural' => Inflector::pluralize($class),
 				'table' => Inflector::tableize($class),
-				'human' => Inflector::humanize(Inflector::singularize($class)),
+				'human' => Inflector::humanize($class),
 			);
 		}
 		if (!is_null($field)) {
