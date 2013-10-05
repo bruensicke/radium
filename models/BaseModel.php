@@ -168,6 +168,13 @@ class BaseModel extends \lithium\data\Model {
 		if (!empty($data)) {
 			$entity->set($data);
 		}
+		$schema = $entity->schema();
+		foreach ($schema->fields() as $name => $meta) {
+			if (isset($meta['type']) && $meta['type'] !== 'list') {
+				continue;
+			}
+			$entity->$name = explode("\n", $entity->$name);
+		}
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
 			$field = ($entity->exists()) ? 'updated' : 'created';
 			$entity->set(array($field => time()));

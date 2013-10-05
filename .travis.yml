@@ -1,12 +1,19 @@
 language: php
+
+services:
+  - mongodb
+
 php:
   - 5.3
   - 5.4
+  - 5.5
+
 before_script:
   # install lithium
   - cd ../
   - git clone git://github.com/UnionOfRAD/framework.git
   - sed -i -e 's|// Libraries::add('li3_docs');|Libraries::add('radium');|' framework/app/config/bootstrap/libraries.php
+  - sed -i -e 's|// Connections::add('default', array(|Connections::add('default', array('type' => 'MongoDb'));|' framework/app/config/bootstrap/connections.php
   - mv radium/ framework/app/libraries/radium
   - cd framework
   - git submodule update --init --recursive
