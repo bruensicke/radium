@@ -36,7 +36,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 	public function index() {
 		$model = $this->scaffold['model'];
-		$plural = $this->scaffold['plural'];
+		$plural = $this->scaffold['table'];
 		$conditions = $this->_options();
 		$result = $model::find('all', compact('conditions'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
@@ -101,7 +101,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$id = (!is_null($id)) ? $id : $this->request->id;
 		$model = $this->scaffold['model'];
 		$singular = $this->scaffold['singular'];
-		$plural = $this->scaffold['plural'];
+		$plural = $this->scaffold['table'];
 
 		if (is_null($id)) {
 			$limit = 0;
@@ -202,7 +202,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	protected function _import($data) {
 		$model = $this->scaffold['model'];
 		$singular = $this->scaffold['singular'];
-		$plural = $this->scaffold['plural'];
+		$plural = $this->scaffold['table'];
 
 		if (!is_array($data)) {
 			return array('error' => 'could not read content.');
