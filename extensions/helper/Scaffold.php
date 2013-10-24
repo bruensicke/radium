@@ -185,7 +185,7 @@ class Scaffold extends \lithium\template\Helper {
 			if ($e->getMessage() == 'Helper `mustache` not found.') {
 				return $this->element('../radium/errors/li3_bootstrap_required');
 			}
-			return $this->_context->mustache->render($element, $data, $options);
+			return '';
 		} catch (TemplateException $e) {
 			$element = sprintf('scaffold/%s', $name);
 			return $this->_context->mustache->render($element, $data, $options);
