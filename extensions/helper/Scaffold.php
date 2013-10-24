@@ -12,6 +12,8 @@ use lithium\util\Set;
 use lithium\core\Libraries;
 use lithium\template\TemplateException;
 
+use RuntimeException;
+
 /**
  * Scaffold helper allows easy rendering of CRUD functionality
  *
@@ -178,6 +180,11 @@ class Scaffold extends \lithium\template\Helper {
 	public function mustache($name, array $data = array(), array $options = array()) {
 		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
 		try {
+			return $this->_context->mustache->render($element, $data, $options);
+		} catch (RuntimeException $e) {
+			if ($e->getMessage() == 'Helper `mustache` not found.') {
+				return $this->element('../radium/errors/li3_bootstrap_required');
+			}
 			return $this->_context->mustache->render($element, $data, $options);
 		} catch (TemplateException $e) {
 			$element = sprintf('scaffold/%s', $name);
