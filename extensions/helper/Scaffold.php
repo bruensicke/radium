@@ -111,7 +111,13 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_scaffold['object']) && is_a($this->_scaffold['object'], 'lithium\data\Entity')) {
 			$args += array('id' => $this->_scaffold['object']->id());
 		}
-		return compact('action', 'args');
+		$library = (!empty($this->_scaffold['library']))
+			? $this->_scaffold['library']
+			: null;
+		$controller = (!empty($this->_scaffold['controller']))
+			? $this->_scaffold['controller']
+			: null;
+		return compact('library', 'controller', 'action', 'args');
 	}
 
 	/**
