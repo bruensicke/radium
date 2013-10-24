@@ -55,6 +55,7 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_data[$this->_scaffold['plural']])) {
 			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
 		}
+		$this->_scaffold['base'] = $this->url();
 	}
 
 	/**
@@ -100,6 +101,17 @@ class Scaffold extends \lithium\template\Helper {
 	public function render($name, array $data = array(), array $options = array()) {
 		$data = $this->_data($data, $options);
 		return $this->element($name, $data, $options);
+	}
+
+	/**
+	 * renders a url, fitting for current scaffold-context
+	 *
+	 * @param string $action name of action to call
+	 * @param array $args additional arguments for that action call
+	 * @return array an array containing all relevant information in an array to build a url
+	 */
+	public function url($action = null, array $args = array()) {
+		return $this->_context->url($this->action($action));
 	}
 
 	/**
@@ -179,6 +191,7 @@ class Scaffold extends \lithium\template\Helper {
 	 */
 	public function mustache($name, array $data = array(), array $options = array()) {
 		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		$data['scaffold'] = $this->_scaffold;
 		try {
 			return $this->_context->mustache->render($element, $data, $options);
 		} catch (TemplateException $e) {
