@@ -55,7 +55,6 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_data[$this->_scaffold['plural']])) {
 			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
 		}
-		$this->_scaffold['base'] = $this->url();
 	}
 
 	/**
