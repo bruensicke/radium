@@ -137,25 +137,12 @@ class Scaffold extends \lithium\template\Helper {
 	}
 
 	/**
-	 * Parses an associative array into an array, containing one
-	 * array for each row, that has 'key' and 'value' filled
-	 * as expected. That makes rendering of arbitrary meta-data
-	 * much simpler, e.g. if you do not know, what data you are
-	 * about to retrieve.
+	 * returns all scaffolded data, taken from Environment
 	 *
-	 * @param array $data an associative array containing mixed data
-	 * @return array an numerical indexed array with arrays for each
-	 *         item in $data, having 'key' and 'value' set accordingly
+	 * @return array an array containing all scaffold data
 	 */
-	public function data(array $data = array(), array $options = array()) {
-		$defaults = array('flatten' => true);
-		$options += $defaults;
-		if ($options['flatten']) {
-			$data = Set::flatten($data);
-		}
-		return array_map(function($key, $value) {
-			return compact('key', 'value');
-		}, array_keys($data), $data);
+	public function data() {
+		return $this->_scaffold;
 	}
 
 	/**
