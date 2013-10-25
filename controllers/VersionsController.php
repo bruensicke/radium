@@ -12,6 +12,16 @@ class VersionsController extends \radium\controllers\ScaffoldController {
 
 	public $model = 'radium\models\Versions';
 
+	// @todo: add filter for additional id per model given
+	public function available() {
+		$for = implode('\\', func_get_args());
+		$model = $this->scaffold['model'];
+		$plural = $this->scaffold['plural'];
+		$result = $model::available($for);
+		$this->_render['template'] = 'index';
+		return array($plural => $result, 'types' => $types);
+	}
+
 	public function restore($id = null) {
 		$result = $this->_call(__FUNCTION__, $id);
 		if (!$result) {
