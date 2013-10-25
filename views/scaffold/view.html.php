@@ -17,7 +17,7 @@
 		</li>
 	<?php endif; ?>
 	<li>
-		<?= $this->html->link($this->scaffold->human, array('action' => 'index'));?>
+		<?= $this->html->link($this->scaffold->human, $this->scaffold->base);?>
 		<span class="divider">/</span>
 	</li>
 	<li class="active">
