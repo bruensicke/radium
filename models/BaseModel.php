@@ -188,7 +188,15 @@ class BaseModel extends \lithium\data\Model {
 				}
 			}
 		}
-		return parent::save($entity, null, $options);
+		$result = parent::save($entity, null, $options);
+		if ($result && $field == 'created') {
+			$version_id = Versions::add($entity, array('force' => true));
+			if ($version_id) {
+				$entity->set(compact('version_id'));
+				return $entity->save(null, array('callbacks' => false));
+			}
+		}
+		return $result;
 	}
 
 
