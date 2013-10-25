@@ -32,7 +32,7 @@
 				{{#type}}<span class="label label_{{ type }}">{{ type }}</span>{{/type}}
 			</td>
 			<td>
-				<a href="<?=$this->url(array('action' => 'view')); ?>/{{ _id }}">
+				<a href="{{ scaffold.base }}/view/{{ _id }}">
 					{{#name}}{{ name }}{{/name}}
 					{{^name}}{{ _id }}{{/name}}
 				</a>
@@ -44,20 +44,20 @@
 			<td data-datetime="{{ updated }}"></td>
 			<td>
 				<div class="btn-group">
-					<a class="btn btn-mini" href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a>
+					<a class="btn btn-mini" href="{{ scaffold.base }}/edit/{{ _id }}"><i class="icon-pencil"></i> Edit</a>
 					<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="<?=$this->url(array('action' => 'view')); ?>/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
-						<li><a href="<?=$this->url(array('action' => 'edit')); ?>/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
-						<li><a href="<?=$this->url(array('action' => 'duplicate')); ?>/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>
-						<li><a href="<?=$this->url(array('action' => 'export')); ?>/{{ _id }}"><i class="icon-download-alt"></i> Export</a></li>
+						<li><a href="{{ scaffold.base }}/view/{{ _id }}"><i class="icon-info-sign"></i> View</a></li>
+						<li><a href="{{ scaffold.base }}/edit/{{ _id }}"><i class="icon-pencil"></i> Edit</a></li>
+						<li><a href="{{ scaffold.base }}/duplicate/{{ _id }}"><i class="icon-refresh"></i> Clone</a></li>
+						<li><a href="{{ scaffold.base }}/export/{{ _id }}"><i class="icon-download-alt"></i> Export</a></li>
 						<li class="divider"></li>
 						{{^deleted}}
-							<li><a href="<?=$this->url(array('action' => 'delete')); ?>/{{ _id }}"><i class="icon-remove-sign"></i> Delete</a></li>
+							<li><a href="{{ scaffold.base }}/delete/{{ _id }}"><i class="icon-remove-sign"></i> Delete</a></li>
 						{{/deleted}}
 						{{#deleted}}
-							<li><a href="<?=$this->url(array('action' => 'remove')); ?>/{{ _id }}"><i class="icon-trash"></i> Remove physically</a></li>
-							<li><a href="<?=$this->url(array('action' => 'undelete')); ?>/{{ _id }}"><i class="icon-retweet"></i> Restore</a></li>
+							<li><a href="{{ scaffold.base }}/remove/{{ _id }}"><i class="icon-trash"></i> Remove physically</a></li>
+							<li><a href="{{ scaffold.base }}/undelete/{{ _id }}"><i class="icon-retweet"></i> Restore</a></li>
 						{{/deleted}}
 					</ul>
 				</div>

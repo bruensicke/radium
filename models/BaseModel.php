@@ -45,7 +45,26 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @var array
 	 */
-	public static $_types = array();
+	public static $_types = array(
+		'default' => 'default',
+	);
+
+	/**
+	 * Stores the minimum data schema.
+	 *
+	 * @see lithium\data\source\MongoDb::$_schema
+	 * @var array
+	 */
+	protected $_schema = array(
+		'_id' => array('type' => 'id'),
+		'name' => array('type' => 'string', 'default' => '', 'null' => false),
+		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
+		'type' => array('type' => 'string', 'default' => 'default'),
+		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
+		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
+		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
+		'updated' => array('type' => 'datetime'),
+	);
 
 	/**
 	 * Custom find query properties, indexed by name.
@@ -145,7 +164,16 @@ class BaseModel extends \lithium\data\Model {
 		// TODO: use $deleted = $entity->hasField('deleted');
 		if (is_null($deleted) || $options['force']) {
 			unset($options['force']);
-			return parent::delete($entity, $options);
+			$result = parent::delete($entity, $options);
+			$versions = static::meta('versions');
+			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+				if ($entity->version_id) {
+					$key = Versions::key();
+					$conditions = array($key => $entity->version_id);
+					Versions::update(array('status' => 'deleted'), $conditions);
+				}
+			}
+			return $result;
 		}
 		$entity->deleted = time();
 		return $entity->save();
@@ -186,7 +214,15 @@ class BaseModel extends \lithium\data\Model {
 				}
 			}
 		}
-		return parent::save($entity, null, $options);
+		$result = parent::save($entity, null, $options);
+		if ($result && $field == 'created') {
+			$version_id = Versions::add($entity, array('force' => true));
+			if ($version_id) {
+				$entity->set(compact('version_id'));
+				return $entity->save(null, array('callbacks' => false));
+			}
+		}
+		return $result;
 	}
 
 
