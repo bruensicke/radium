@@ -147,7 +147,16 @@ class BaseModel extends \lithium\data\Model {
 		// TODO: use $deleted = $entity->hasField('deleted');
 		if (is_null($deleted) || $options['force']) {
 			unset($options['force']);
-			return parent::delete($entity, $options);
+			$result = parent::delete($entity, $options);
+			$versions = static::meta('versions');
+			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+				if ($entity->version_id) {
+					$key = Versions::key();
+					$conditions = array($key => $entity->version_id);
+					Versions::update(array('status' => 'deleted'), $conditions);
+				}
+			}
+			return $result;
 		}
 		$entity->deleted = time();
 		return $entity->save();
