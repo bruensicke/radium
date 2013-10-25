@@ -48,11 +48,11 @@ class Scaffold extends \lithium\template\Helper {
 		parent::_init();
 		$this->_scaffold = Environment::get('scaffold');
 		$this->_data = $this->_context->data();
-		if (isset($this->_data[$this->_scaffold['singular']])) {
-			$this->_scaffold['object'] = $this->_data[$this->_scaffold['singular']];
+		if (isset($this->_data['object'])) {
+			$this->_scaffold['object'] = $this->_data['object'];
 		}
-		if (isset($this->_data[$this->_scaffold['table']])) {
-			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['table']];
+		if (isset($this->_data['objects'])) {
+			$this->_scaffold['objects'] = $this->_data['objects'];
 		}
 	}
 

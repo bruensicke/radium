@@ -1,4 +1,5 @@
 <?php
+$content = $this->scaffold->object;
 switch($content->type) {
 	case 'plain':
 		echo sprintf('<div class="plaintext"><pre>%s</pre></div>', $content->body());
