@@ -45,7 +45,9 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @var array
 	 */
-	public static $_types = array();
+	public static $_types = array(
+		'default' => 'default',
+	);
 
 	/**
 	 * Custom find query properties, indexed by name.
