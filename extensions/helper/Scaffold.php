@@ -51,8 +51,8 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_data[$this->_scaffold['singular']])) {
 			$this->_scaffold['object'] = $this->_data[$this->_scaffold['singular']];
 		}
-		if (isset($this->_data[$this->_scaffold['plural']])) {
-			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
+		if (isset($this->_data[$this->_scaffold['table']])) {
+			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['table']];
 		}
 	}
 
