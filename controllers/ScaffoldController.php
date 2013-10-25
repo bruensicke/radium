@@ -259,7 +259,11 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	protected function _scaffold($field = null) {
 		if (is_null($this->scaffold)) {
 			$class = basename(str_replace('\\', '/', $this->model));
+			$base = (!empty($this->library))
+				? array('controller' => $this->controller, 'library' => $this->library)
+				: array('controller' => $this->controller);
 			$this->scaffold = array(
+				'base' => Router::match($base),
 				'controller' => $this->controller,
 				'library' => $this->library,
 				'class' => $class,
