@@ -50,6 +50,23 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
+	 * Stores the minimum data schema.
+	 *
+	 * @see lithium\data\source\MongoDb::$_schema
+	 * @var array
+	 */
+	protected $_schema = array(
+		'_id' => array('type' => 'id'),
+		'name' => array('type' => 'string', 'default' => '', 'null' => false),
+		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
+		'type' => array('type' => 'string', 'default' => 'default'),
+		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
+		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
+		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
+		'updated' => array('type' => 'datetime'),
+	);
+
+	/**
 	 * Custom find query properties, indexed by name.
 	 *
 	 * @var array
