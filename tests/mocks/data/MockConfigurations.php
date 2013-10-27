@@ -11,24 +11,11 @@ namespace radium\tests\mocks\data;
 use lithium\data\collection\DocumentSet;
 use lithium\data\entity\Document;
 
-use lithium\tests\mocks\data\source\database\adapter\MockAdapter;
-
 class MockConfigurations extends \radium\models\Configurations {
 
 	protected $_meta = array(
 		'connection' => false
 	);
-
-	public static function &connection($records = null) {
-		$mock = new MockAdapter(compact('records') + array(
-			'columns' => array(
-				'lithium\tests\mocks\data\MockModel' => array('_id', 'data')
-			),
-			'autoConnect' => false
-		));
-		static::meta(array('key' => '_id', 'locked' => true));
-		return $mock;
-	}
 
 	public static function find($type = 'all', array $options = array()) {
 		$now = date('Y-m-d h:i:s');

@@ -21,7 +21,6 @@ class ConfigurationsTest extends \lithium\test\Unit {
 	);
 
 	public function setUp() {
-
 	}
 
 	public function tearDown() {
