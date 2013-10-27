@@ -215,7 +215,7 @@ class BaseModel extends \lithium\data\Model {
 			}
 		}
 		$result = parent::save($entity, null, $options);
-		if ($result && $field == 'created') {
+		if ($result && isset($field) && $field == 'created') {
 			$version_id = Versions::add($entity, array('force' => true));
 			if ($version_id) {
 				$entity->set(compact('version_id'));
