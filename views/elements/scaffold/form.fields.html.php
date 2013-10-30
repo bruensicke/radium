@@ -2,6 +2,7 @@
 use lithium\util\Inflector;
 use radium\models\Configurations;
 
+$model = $this->scaffold->model;
 $binding = $this->form->binding();
 $schema = $binding->schema();
 $fields = isset($fields)
@@ -51,11 +52,11 @@ foreach ($fields as $index => $field) {
 				'type' => 'select',
 				'class' => "input-block-level $field",
 				'data-switch' => $field,
-				'list' => $scaffold['model']::$method()
+				'list' => $model::$method()
 			);
 			if (in_array($field, $readonly)) {
 				$options['type'] = 'text';
-				$options['value'] = $scaffold['model']::$method($this->scaffold->object->$field);
+				$options['value'] = $model::$method($this->scaffold->object->$field);
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}
@@ -112,6 +113,23 @@ foreach ($fields as $index => $field) {
 			}
 		break;
 
+		case 'list':
+			$value = (is_object($binding->$field))
+				? $binding->$field->data()
+				: (array) $binding->$field;
+			$options = array(
+				'type' => 'textarea',
+				'class' => "input-block-level autogrow $field",
+				'rows' => 3,
+				'value' => implode("\n", $value),
+			);
+			if (in_array($field, $readonly)) {
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-textarea';
+			}
+			echo $this->form->field($field, $options);
+		break;
+
 		case 'string':
 			$options = array(
 				'class' => 'input-block-level',
@@ -121,6 +139,7 @@ foreach ($fields as $index => $field) {
 				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
+		break;
 	}
 }
 ?>

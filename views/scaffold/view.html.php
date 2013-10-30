@@ -10,14 +10,14 @@
 		<?= $this->html->link('Home', '/');?>
 		<span class="divider">/</span>
 	</li>
-	<?php if ($scaffold['library'] === 'radium'): ?>
+	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
 			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li>
-		<?= $this->html->link($this->scaffold->human, array('action' => 'index'));?>
+		<?= $this->html->link($this->scaffold->human, $this->scaffold->base);?>
 		<span class="divider">/</span>
 	</li>
 	<li class="active">

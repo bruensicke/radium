@@ -3,14 +3,13 @@
 <ul class="actions pull-right nav nav-pills">
 	<li><?= $this->html->link('import', $this->scaffold->action('import'), array('icon' => 'upload-alt'));?></li>
 	<li><?= $this->html->link('export', $this->scaffold->action('export'), array('icon' => 'download-alt'));?></li>
-	<li><?= $this->html->link('create', $this->scaffold->action('add'), array('icon' => 'plus-sign-alt'));?></li>
 </ul>
 <ul class="breadcrumb">
 	<li>
 		<?= $this->html->link('Home', '/');?>
 		<span class="divider">/</span>
 	</li>
-	<?php if ($this->scaffold->library === 'radium'): ?>
+	<?php if ($scaffold['library'] === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
 			<span class="divider">/</span>

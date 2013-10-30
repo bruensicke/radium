@@ -1,4 +1,5 @@
 <?php
+$configuration = $this->scaffold->object;
 switch($configuration->type) {
 	case 'ini':
 	case 'json':

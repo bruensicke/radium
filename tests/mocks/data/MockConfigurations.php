@@ -14,7 +14,7 @@ use lithium\data\entity\Document;
 class MockConfigurations extends \radium\models\Configurations {
 
 	protected $_meta = array(
-		'connection' => false,
+		'connection' => false
 	);
 
 	public static function find($type = 'all', array $options = array()) {
