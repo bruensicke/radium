@@ -86,6 +86,29 @@ class Contents extends \radium\models\BaseModel {
 	}
 
 	/**
+	 * set specific content
+	 *
+	 * if just given a name, it returns the body() of that record. If you
+	 * pass in data, it will be used in the render context.
+	 *
+	 * @see radium\model\Contents::body()
+	 * @param string $name name of configuration to retrieve
+	 * @param array $data additional data to be passed into render context
+	 * @param array $options an array of options, currently all of
+	 *              Contentes::body() are supported, see there.
+	 * @return mixed
+	 */
+	public static function set($name, $data = null, array $options = array()) {
+		$defaults = array('default' => '', 'status' => 'active');
+		$options += $defaults;
+		$entity = static::slug($name);
+		if (!$entity || $entity->status != $options['status']) {
+			return $options['default'];
+		}
+		return $entity->body($data, $options);
+	}
+
+	/**
 	 * returns parsed content of Contents body
 	 *
 	 * @see radium\data\Converter::get()
