@@ -45,17 +45,36 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @var array
 	 */
-	public static $_types = array();
+	public static $_types = array(
+		'default' => 'default',
+	);
+
+	/**
+	 * Stores the minimum data schema.
+	 *
+	 * @see lithium\data\source\MongoDb::$_schema
+	 * @var array
+	 */
+	protected $_schema = array(
+		'_id' => array('type' => 'id'),
+		'name' => array('type' => 'string', 'default' => '', 'null' => false),
+		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
+		'type' => array('type' => 'string', 'default' => 'default'),
+		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
+		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
+		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
+		'updated' => array('type' => 'datetime'),
+	);
 
 	/**
 	 * Custom find query properties, indexed by name.
 	 *
 	 * @var array
 	 */
-	public static $__finders = array(
+	public $_finders = array(
 		'deleted' => array(
 			'conditions' => array(
-				'deleted' => 'IS NOT NULL',
+				'deleted' => array('>=' => 1),
 			)
 		)
 	);
@@ -71,7 +90,7 @@ class BaseModel extends \lithium\data\Model {
 			'created' => 'DESC',
 		),
 		'conditions' => array(
-			'deleted' => 'IS NULL',
+			'deleted' => null,
 		),
 	);
 
@@ -145,7 +164,16 @@ class BaseModel extends \lithium\data\Model {
 		// TODO: use $deleted = $entity->hasField('deleted');
 		if (is_null($deleted) || $options['force']) {
 			unset($options['force']);
-			return parent::delete($entity, $options);
+			$result = parent::delete($entity, $options);
+			$versions = static::meta('versions');
+			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+				if ($entity->version_id) {
+					$key = Versions::key();
+					$conditions = array($key => $entity->version_id);
+					Versions::update(array('status' => 'deleted'), $conditions);
+				}
+			}
+			return $result;
 		}
 		$entity->deleted = time();
 		return $entity->save();
@@ -168,6 +196,13 @@ class BaseModel extends \lithium\data\Model {
 		if (!empty($data)) {
 			$entity->set($data);
 		}
+		$schema = $entity->schema();
+		foreach ($schema->fields() as $name => $meta) {
+			if (isset($meta['type']) && $meta['type'] !== 'list') {
+				continue;
+			}
+			$entity->$name = explode("\n", $entity->$name);
+		}
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
 			$field = ($entity->exists()) ? 'updated' : 'created';
 			$entity->set(array($field => time()));
@@ -179,7 +214,15 @@ class BaseModel extends \lithium\data\Model {
 				}
 			}
 		}
-		return parent::save($entity, null, $options);
+		$result = parent::save($entity, null, $options);
+		if ($result && isset($field) && $field == 'created') {
+			$version_id = Versions::add($entity, array('force' => true));
+			if ($version_id) {
+				$entity->set(compact('version_id'));
+				return $entity->save(null, array('callbacks' => false));
+			}
+		}
+		return $result;
 	}
 
 
@@ -194,16 +237,37 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * generic method to retrieve a list or an entry of an array of a static property
+	 *
+	 * This method is used to allow an easy addition of key/value pairs, mainly for usage
+	 * in a dropdown for a specific model.
+	 *
+	 * If you want to provide a list of available options, declare your properties in the same
+	 * manner as `$_types` or `$_status`.
+	 *
+	 * @see radium\models\BaseModel::types()
+	 * @see radium\models\BaseModel::status()
+	 * @param string $property name of property to look for.
+	 *               automatically prepended by an underscore: `_`. Must be static and public
+	 * @param string $type type to look for, optional
+	 * @return mixed all types with keys and their name, or value of `$type` if given
+	 */
+	public static function _group($property, $type = null) {
+		$field = sprintf('_%s', $property);
+		if (!empty($type)) {
+			return (isset(static::$$field[$type])) ? static::$$field[$type] : false;
+		}
+		return static::$$field;
+	}
+
+	/**
 	 * all types for current model
 	 *
 	 * @param string $type type to look for
 	 * @return mixed all types with keys and their name, or value of `$type` if given
 	 */
 	public static function types($type = null) {
-		if (!empty($type)) {
-			return (isset(static::$_types[$type])) ? static::$_types[$type] : false;
-		}
-		return static::$_types;
+		return static::_group(__FUNCTION__, $type);
 	}
 
 	/**
@@ -213,10 +277,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @return mixed all status with keys and their name, or value of `$status` if given
 	 */
 	public static function status($status = null) {
-		if (!empty($status)) {
-			return (isset(static::$_status[$status])) ? static::$_status[$status] : false;
-		}
-		return static::$_status;
+		return static::_group(__FUNCTION__, $status);
 	}
 
 	/**
@@ -247,28 +308,6 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * finds and loads entity with given slug
-	 *
-	 * @param string $slug short unique string to identify entity
-	 * @param string $status status entity must have
-	 * @return object|boolean found entity entity or false, if none found
-	 * @filter
-	 */
-	public static function slug($slug, $status = 'active', array $options = array()) {
-		$params = compact('slug', 'status', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
-			extract($params);
-			$deleted = array('<=' => null); // only not deleted
-			$options['conditions'] = compact('slug', 'status', 'deleted');
-			$result = $self::find('first', $options);
-			if (!$result) {
-				return false;
-			}
-			return $result;
-		});
-	}
-
-	/**
 	 * finds and loads active entity for given id
 	 *
 	 * @param string $id id of entity to load
@@ -282,7 +321,9 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$key = $self::key();
+			$key = (strlen($id) == 24)
+				? $self::key()
+				: 'slug';
 			$options['conditions'] = array($key => $id);
 			$result = $self::find('first', $options);
 			if (!$result) {
@@ -296,20 +337,6 @@ class BaseModel extends \lithium\data\Model {
 			}
 			return $result;
 		});
-	}
-
-	/**
-	 * Allows to pass in a query to do, what a man needs to do.
-	 * Make sure, you are not trying to be james bond, without
-	 * beeing sure, you know what you are doing.
-	 *
-	 * Returns a lithium\data\source\database\adapter\my_sql\Result object
-	 *
-	 * @param string $sql
-	 * @return object
-	 */
-	public static function execute($sql) {
-		return static::connection()->invokeMethod('_execute', array($sql));
 	}
 
 	/**
@@ -390,7 +417,6 @@ class BaseModel extends \lithium\data\Model {
 				$model = $entity->model();
 				$msg = sprintf('Update of %s [%s] returned false', $model, $entity->id());
 				$data = compact('values', 'conditions', 'model');
-				Logger::warning('FAILED ' . $msg, compact('data'));
 				return false;
 			}
 			$entity->set($values);
@@ -410,13 +436,24 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * fetches the associated config record
+	 * fetches the associated configuration record
 	 *
 	 * @param object $entity current instance
-	 * @return array client data
+	 * @param string $field what field (in case of array) to return
+	 * @param array $options an array of options currently supported are
+	 *              - `default` : what to return, if nothing is found
+	 *              - `flat`    : to flatten the result, if object/array-ish, defaults to false
+	 * @return mixed configuration value
 	 */
-	public function configuration($entity) {
-		return $entity->config = Configurations::first($entity->config_id);
+	public function configuration($entity, $field = null, array $options = array()) {
+		if (empty($entity->config_id)) {
+			return null;
+		}
+		$config = Configurations::load($entity->config_id);
+		if (!$config) {
+			return null;
+		}
+		return $config->val($field, $options);
 	}
 
 	/**
@@ -428,13 +465,18 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @param object $entity current instance
 	 * @param string|array $name name of model to load
+	 * @param array $options an array of options currently supported are
+	 *              - `resolver` : closure that takes $name as parameter and returns full qualified
+	 *                 model name.
 	 * @return array foreign object data
 	 */
-	public function resolve($entity, $fields = null) {
-		$getClass = function($name) {
+	public function resolve($entity, $fields = null, array $options = array()) {
+		$resolver = function($name) {
 			$modelname = Inflector::pluralize(Inflector::classify($name));
 			return Libraries::locate('models', $modelname);
 		};
+		$defaults = compact('resolver');
+		$options += $defaults;
 
 		switch (true) {
 			case is_string($fields):
@@ -456,7 +498,7 @@ class BaseModel extends \lithium\data\Model {
 				continue;
 			}
 			list($attribute, $name) = $matches;
-			$model = $getClass($name);
+			$model = $options['resolver']($name);
 			if (empty($model)) {
 				continue;
 			}
@@ -464,7 +506,7 @@ class BaseModel extends \lithium\data\Model {
 			if (!$foreign_id) {
 				continue;
 			}
-			$result[$name] = $model::first($foreign_id);
+			$result[$name] = $model::load($foreign_id);
 		}
 		return (count($fields) > 1) ? $result : array_shift($result);
 	}
@@ -490,18 +532,6 @@ class BaseModel extends \lithium\data\Model {
 			}
 			return $data;
 		});
-	}
-
-	/**
-	 * fetches the associated configuration
-	 *
-	 * @param object $entity current instance
-	 * @param string $field name of configuration to return
-	 * @return array client data
-	 */
-	public function value($entity, $field = null, array $options = array()) {
-		$entity->config = Configurations::first($entity->config_id);
-		return $entity->val($field, $options);
 	}
 
 }

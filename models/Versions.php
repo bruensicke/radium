@@ -81,7 +81,7 @@ class Versions extends \radium\models\BaseModel {
 	 * @param array $options additional find-options
 	 * @return object A Collection object of all found Versions
 	 */
-	public static function available($model, $id = 'null', array $options = array()) {
+	public static function available($model, $id = null, array $options = array()) {
 		$conditions = compact('model');
 		if (!empty($id)) {
 			$key = $model::meta('key');
@@ -139,13 +139,13 @@ class Versions extends \radium\models\BaseModel {
 	 * @filter
 	 */
 	public static function add($entity, array $options = array()) {
-		$defaults = array();
+		$defaults = array('force' => false);
 		$options += $defaults;
 		$params = compact('entity', 'options');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
 			$model = $entity->model();
-			if ($model == $self) {
+			if ($model == $self || !$entity->exists()) {
 				return false;
 			}
 			$key = $model::meta('key');
@@ -153,8 +153,12 @@ class Versions extends \radium\models\BaseModel {
 
 			$export = $entity->export();
 			$updated = Set::diff($self::cleanData($export['update']), $self::cleanData($export['data']));
+
 			if (empty($updated)) {
-				return false;
+				if (!$options['force']) {
+					return false;
+				}
+				$updated = $entity->data();
 			}
 
 			$self::update(array('status' => 'outdated'), compact('model', 'foreign_id'));

@@ -11,12 +11,9 @@ php:
 before_script:
   # install lithium
   - cd ../
-  - git clone git://github.com/UnionOfRAD/framework.git
-  - sed -i -e 's|// Libraries::add('li3_docs');|Libraries::add('radium');|' framework/app/config/bootstrap/libraries.php
-  - sed -i -e 's|// Connections::add('default', array(|Connections::add('default', array('type' => 'MongoDb'));|' framework/app/config/bootstrap/connections.php
+  - git clone --recursive git://github.com/UnionOfRAD/framework.git
+  - sed -i -e "s|// Libraries::add('li3_docs');|Libraries::add('radium');|" framework/app/config/bootstrap/libraries.php
+  - sed -i -e "s|?>|Connections::add('default', array('type' => 'MongoDb'));|" framework/app/config/bootstrap/connections.php
   - mv radium/ framework/app/libraries/radium
-  - cd framework
-  - git submodule update --init --recursive
-  - cd libraries/lithium && git pull --rebase origin master
-  - cd ../../app/libraries/radium
-script: ../../../libraries/lithium/console/li3 test tests
+  - cd framework/app/libraries/radium
+script: ../../../libraries/lithium/console/li3 --app=../../ test tests

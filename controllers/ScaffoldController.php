@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use Exception;
 
+use lithium\core\Environment;
 use lithium\util\Inflector;
 use lithium\net\http\Media;
 use lithium\net\http\Router;
@@ -31,57 +32,50 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->_render['paths']['template'][] = '{:library}/views/scaffold/{:template}.{:type}.php';
 		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
 		$this->_scaffold();
-		if ($this->request->is('ajax')) {
-			return;
-		}
-		$this->set(array('scaffold' => $this->scaffold));
 	}
 
 	public function index() {
 		$model = $this->scaffold['model'];
-		$plural = $this->scaffold['plural'];
 		$conditions = $this->_options();
-		$result = $model::find('all', compact('conditions'));
+		$objects = $model::find('all', compact('conditions'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return array($plural => $result, 'types' => $types);
+		return compact('objects', 'types');
 	}
 
 	public function view($id = null) {
 		$id = (!is_null($id)) ? $id : $this->request->id;
 		$model = $this->scaffold['model'];
-		$singular = $this->scaffold['singular'];
 
-		$result = $model::first($id);
-		if (!$result) {
+		$object = $model::first($id);
+		if (!$object) {
 			$url = array('action' => 'index');
 			return $this->redirect($url);
 		}
-		return array($singular => $result);
+		return compact('object');
 	}
 
 	public function slug($slug) {
 		$model = $this->scaffold['model'];
-		$singular = $this->scaffold['singular'];
 
-		$result = $model::slug($slug);
-		if (!$result) {
+		$object = $model::slug($slug);
+		if (!$object) {
 			$url = array('action' => 'add', 'args' => array("slug:$slug"));
 			return $this->redirect($url);
 		}
 		$this->_render['template'] = 'view';
-		return array($singular => $result);
+		return compact('object');
 	}
 
 	public function add() {
 		$model = $this->scaffold['model'];
-		$singular = $this->scaffold['singular'];
 		$object = $model::create($this->_options());
 
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
 		}
-		return array($singular => $object, 'errors' => $object->errors());
+		$errors = $object->errors();
+		return compact('object', 'errors');
 	}
 
 	public function edit($id = null) {
@@ -97,14 +91,15 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return $this->redirect($url);
 		}
 		$object->set($this->_options());
-		return array($singular => $object, 'errors' => $object->errors());
+		$errors = $object->errors();
+		return compact('object', 'errors');
 	}
 
 	public function export($id = null) {
 		$id = (!is_null($id)) ? $id : $this->request->id;
 		$model = $this->scaffold['model'];
-		$singular = $this->scaffold['singular'];
-		$plural = $this->scaffold['plural'];
+		$singular = strtolower($this->scaffold['singular']);
+		$plural = $this->scaffold['table'];
 
 		if (is_null($id)) {
 			$limit = 0;
@@ -143,7 +138,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		}
 		$object->set($this->_options());
 		$this->_render['template'] = 'edit';
-		return array($singular => $object, 'errors' => $object->errors());
+		$errors = $object->errors();
+		return compact('object', 'errors');
 	}
 
 	public function delete($id = null) {
@@ -195,17 +191,17 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$model = $this->scaffold['model'];
 		$singular = $this->scaffold['singular'];
 
-		$result = $model::first($id);
-		if (!$result) {
+		$object = $model::first($id);
+		if (!$object) {
 			return false;
 		}
-		return call_user_func_array(array($result, $method), $args);
+		return call_user_func_array(array($object, $method), $args);
 	}
 
 	protected function _import($data) {
 		$model = $this->scaffold['model'];
-		$singular = $this->scaffold['singular'];
-		$plural = $this->scaffold['plural'];
+		$singular = strtolower($this->scaffold['singular']);
+		$plural = $this->scaffold['table'];
 
 		if (!is_array($data)) {
 			return array('error' => 'could not read content.');
@@ -259,20 +255,25 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	protected function _scaffold($field = null) {
 		if (is_null($this->scaffold)) {
 			$class = basename(str_replace('\\', '/', $this->model));
+			$base = (!empty($this->library))
+				? array('controller' => $this->controller, 'library' => $this->library)
+				: array('controller' => $this->controller);
 			$this->scaffold = array(
+				'base' => Router::match($base),
 				'controller' => $this->controller,
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,
-				'singular' => Inflector::underscore(Inflector::singularize($class)),
-				'plural' => strtolower(Inflector::pluralize($class)),
+				'singular' => Inflector::singularize($class),
+				'plural' => Inflector::pluralize($class),
 				'table' => Inflector::tableize($class),
-				'human' => Inflector::humanize(Inflector::singularize($class)),
+				'human' => Inflector::humanize($class),
 			);
 		}
 		if (!is_null($field)) {
 			return (isset($this->scaffold[$field])) ? $this->scaffold[$field] : false;
 		}
+		Environment::set(Environment::get(), array('scaffold' => $this->scaffold));
 		return $this->scaffold;
 	}
 

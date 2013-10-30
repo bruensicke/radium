@@ -10,7 +10,7 @@
 		<?= $this->html->link('Home', '/');?>
 		<span class="divider">/</span>
 	</li>
-	<?php if ($scaffold['library'] === 'radium'): ?>
+	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
 			<span class="divider">/</span>
@@ -21,7 +21,7 @@
 		<span class="divider">/</span>
 	</li>
 	<li class="active">
-		<?= $this->title(sprintf('Create: %s', $this->scaffold->human)); ?>
+		<?= $this->title(sprintf('Create: %s', $this->scaffold->singular)); ?>
 	</li>
 </ul>
 

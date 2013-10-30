@@ -10,7 +10,10 @@ namespace radium\extensions\helper;
 
 use lithium\util\Set;
 use lithium\core\Libraries;
+use lithium\core\Environment;
 use lithium\template\TemplateException;
+
+use RuntimeException;
 
 /**
  * Scaffold helper allows easy rendering of CRUD functionality
@@ -43,15 +46,13 @@ class Scaffold extends \lithium\template\Helper {
 	 */
 	protected function _init() {
 		parent::_init();
+		$this->_scaffold = Environment::get('scaffold');
 		$this->_data = $this->_context->data();
-		if (isset($this->_data['scaffold'])) {
-			$this->_scaffold = $this->_data['scaffold'];
+		if (isset($this->_data['object'])) {
+			$this->_scaffold['object'] = $this->_data['object'];
 		}
-		if (isset($this->_data[$this->_scaffold['singular']])) {
-			$this->_scaffold['object'] = $this->_data[$this->_scaffold['singular']];
-		}
-		if (isset($this->_data[$this->_scaffold['plural']])) {
-			$this->_scaffold['objects'] = $this->_data[$this->_scaffold['plural']];
+		if (isset($this->_data['objects'])) {
+			$this->_scaffold['objects'] = $this->_data['objects'];
 		}
 	}
 
@@ -101,6 +102,17 @@ class Scaffold extends \lithium\template\Helper {
 	}
 
 	/**
+	 * renders a url, fitting for current scaffold-context
+	 *
+	 * @param string $action name of action to call
+	 * @param array $args additional arguments for that action call
+	 * @return array an array containing all relevant information in an array to build a url
+	 */
+	public function url($action = null, array $args = array()) {
+		return $this->_context->url($this->action($action));
+	}
+
+	/**
 	 * renders an array used for actions with the correct url
 	 *
 	 * @param string $action name of action to call
@@ -111,29 +123,25 @@ class Scaffold extends \lithium\template\Helper {
 		if (isset($this->_scaffold['object']) && is_a($this->_scaffold['object'], 'lithium\data\Entity')) {
 			$args += array('id' => $this->_scaffold['object']->id());
 		}
-		return compact('action', 'args');
+		$controller = (!empty($this->_scaffold['controller']))
+			? $this->_scaffold['controller']
+			: null;
+		if (empty($this->_scaffold['library'])) {
+			return compact('controller', 'action', 'args');
+		}
+		$library = (!empty($this->_scaffold['library']))
+			? $this->_scaffold['library']
+			: null;
+		return compact('library', 'controller', 'action', 'args');
 	}
 
 	/**
-	 * Parses an associative array into an array, containing one
-	 * array for each row, that has 'key' and 'value' filled
-	 * as expected. That makes rendering of arbitrary meta-data
-	 * much simpler, e.g. if you do not know, what data you are
-	 * about to retrieve.
+	 * returns all scaffolded data, taken from Environment
 	 *
-	 * @param array $data an associative array containing mixed data
-	 * @return array an numerical indexed array with arrays for each
-	 *         item in $data, having 'key' and 'value' set accordingly
+	 * @return array an array containing all scaffold data
 	 */
-	public function data(array $data = array(), array $options = array()) {
-		$defaults = array('flatten' => true);
-		$options += $defaults;
-		if ($options['flatten']) {
-			$data = Set::flatten($data);
-		}
-		return array_map(function($key, $value) {
-			return compact('key', 'value');
-		}, array_keys($data), $data);
+	public function data() {
+		return $this->_scaffold;
 	}
 
 	/**
@@ -171,11 +179,18 @@ class Scaffold extends \lithium\template\Helper {
 	 */
 	public function mustache($name, array $data = array(), array $options = array()) {
 		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		$data['scaffold'] = $this->_scaffold;
 		try {
 			return $this->_context->mustache->render($element, $data, $options);
 		} catch (TemplateException $e) {
 			$element = sprintf('scaffold/%s', $name);
 			return $this->_context->mustache->render($element, $data, $options);
+		} catch (RuntimeException $e) {
+			if ($e->getMessage() == 'Helper `mustache` not found.') {
+				return $this->element('../radium/errors/li3_bootstrap_required');
+			}
+			$message = $e->getMessage();
+			return $this->element('../radium/errors/generic', compact('message'));
 		}
 		return '';
 	}
