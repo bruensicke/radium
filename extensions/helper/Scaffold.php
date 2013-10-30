@@ -38,6 +38,13 @@ class Scaffold extends \lithium\template\Helper {
 	protected $_scaffold = array();
 
 	/**
+	 * primary actions relevant for current object
+	 *
+	 * @var array
+	 */
+	protected $_actions = array();
+
+	/**
 	 * initialize and check for scaffold data
 	 *
 	 */
@@ -98,6 +105,23 @@ class Scaffold extends \lithium\template\Helper {
 	public function render($name, array $data = array(), array $options = array()) {
 		$data = $this->_data($data, $options);
 		return $this->element($name, $data, $options);
+	}
+
+	/**
+	 * all types for current model
+	 *
+	 * @param string $action action to add into actions
+	 * @return mixed all types with keys and their name, or value of `$type` if given
+	 */
+	public function actions($action = null, array $options = array()) {
+		$defaults = array('replace' => false);
+		if (!empty($action)) {
+			if ($options['replace']) {
+
+			}
+			return (isset(static::$_actions[$action])) ? static::$_actions[$action] : false;
+		}
+		return static::$_actions;
 	}
 
 	/**
