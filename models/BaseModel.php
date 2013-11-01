@@ -94,6 +94,18 @@ class BaseModel extends \lithium\data\Model {
 		),
 	);
 
+
+	/**
+	 * Specifies all meta-information for this model class,
+	 * overwritten to enable versions by default.
+	 *
+	 * @see lithium\data\Connections::add()
+	 * @var array
+	 */
+	protected $_meta = array(
+		'versions' => true,
+	);
+
 	/**
 	 * initialize method
 	 *
@@ -142,7 +154,6 @@ class BaseModel extends \lithium\data\Model {
 				return $self::find('first', $params['options']);
 			});
 		}
-		static::meta('versions', true);
 	}
 
 	/**
