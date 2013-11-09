@@ -1,0 +1,9 @@
+foo:
+  name: valid
+  url: present
+  date: irrelevant
+bar:
+  - one
+  - two
+  - three
+baz: "This is an awesome string"
