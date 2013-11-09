@@ -140,6 +140,7 @@ class StaticContents extends \lithium\core\StaticObject {
 				$result[] = ($options['raw']) ? $file : $file->getFilename();
 			}
 		}
+		asort($result);
 		return $result;
 	}
 }
