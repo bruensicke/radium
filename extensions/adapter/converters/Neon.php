@@ -39,12 +39,12 @@ class Neon extends \lithium\core\Object {
 				return $options['default'];
 			}
 			if (!empty($data) && is_scalar($data)) {
-				if (array_key_exists($data, $config)) {
+				if (array_key_exists($data, (array) $config)) {
 					return $config[$data];
 				}
 			}
 			$data = '/'.str_replace('.', '/', $data).'/.';
-			$result = current(Set::extract($config, $data));
+			$result = current(Set::extract((array) $config, $data));
 			if (!empty($result)) {
 				return $result;
 			}
