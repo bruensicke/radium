@@ -54,8 +54,8 @@ class Converter extends \lithium\core\Adaptable {
 	 * renders content with given configuration/adapter using data
 	 *
 	 * @param string $name The name of the `Parser` configuration
-	 * @param array $data additional data to be passed into render context
 	 * @param string $content content that needs to be rendered
+	 * @param array $data additional data to be passed into render context
 	 * @param array $options Additional options to be forwarded into Adapters render method.
 	 * @return string the rendered content
 	 * @filter
