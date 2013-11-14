@@ -78,7 +78,7 @@ class Contents extends \radium\models\BaseModel {
 	public static function get($name, $data = null, array $options = array()) {
 		$defaults = array('default' => '', 'status' => 'active');
 		$options += $defaults;
-		$entity = static::slug($name);
+		$entity = static::load($name);
 		if (!$entity || $entity->status != $options['status']) {
 			return $options['default'];
 		}

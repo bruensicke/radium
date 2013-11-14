@@ -57,7 +57,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function slug($slug) {
 		$model = $this->scaffold['model'];
 
-		$object = $model::slug($slug);
+		$object = $model::load($slug);
 		if (!$object) {
 			$url = array('action' => 'add', 'args' => array("slug:$slug"));
 			return $this->redirect($url);
