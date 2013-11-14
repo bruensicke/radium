@@ -217,12 +217,12 @@ class BaseModel extends \lithium\data\Model {
 		$result = parent::save($entity, null, $options);
 		if ($result && isset($field) && $field == 'created') {
 			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
-			$version_id = Versions::add($entity, array('force' => true));
-			if ($version_id) {
-				$entity->set(compact('version_id'));
-				return $entity->save(null, array('callbacks' => false));
+				$version_id = Versions::add($entity, array('force' => true));
+				if ($version_id) {
+					$entity->set(compact('version_id'));
+					return $entity->save(null, array('callbacks' => false));
+				}
 			}
-		}
 		}
 		return $result;
 	}
@@ -323,7 +323,7 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$key = (strlen($id) == 24)
+			$key = ((strlen($id) == 24) && (ctype_xdigit($id)))
 				? $self::key()
 				: 'slug';
 			$options['conditions'] = array($key => $id);
