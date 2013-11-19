@@ -281,7 +281,10 @@ class BaseModel extends \lithium\data\Model {
 	 * @return mixed all types with keys and their name, or value of `$type` if given
 	 */
 	public static function types($type = null) {
-		return static::_group(__FUNCTION__, $type);
+		if (!empty($type)) {
+			return (isset(static::$_types[$type])) ? static::$_types[$type] : false;
+	}
+		return static::$_types;
 	}
 
 	/**
@@ -291,7 +294,10 @@ class BaseModel extends \lithium\data\Model {
 	 * @return mixed all status with keys and their name, or value of `$status` if given
 	 */
 	public static function status($status = null) {
-		return static::_group(__FUNCTION__, $status);
+		if (!empty($status)) {
+			return (isset(static::$_status[$status])) ? static::$_status[$status] : false;
+ 		}
+		return static::$_status;
 	}
 
 	/**
