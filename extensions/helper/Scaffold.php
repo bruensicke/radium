@@ -178,7 +178,7 @@ class Scaffold extends \lithium\template\Helper {
 	 * @return string rendered html of mustache template
 	 */
 	public function mustache($name, array $data = array(), array $options = array()) {
-		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		$element = sprintf('%s/%s', $this->_scaffold['table'], $name);
 		$data['scaffold'] = $this->_scaffold;
 		try {
 			return $this->_context->mustache->render($element, $data, $options);
@@ -209,7 +209,7 @@ class Scaffold extends \lithium\template\Helper {
 	 * @return string rendered html of element template
 	 */
 	public function element($name, array $data = array(), array $options = array()) {
-		$element = sprintf('%s/%s', $this->_scaffold['plural'], $name);
+		$element = sprintf('%s/%s', $this->_scaffold['table'], $name);
 		try {
 			return $this->_context->view()->render(compact('element'), $data, $options);
 		} catch (TemplateException $e) {
