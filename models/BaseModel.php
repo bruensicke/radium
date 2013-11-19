@@ -214,10 +214,10 @@ class BaseModel extends \lithium\data\Model {
 			}
 			$entity->$name = explode("\n", $entity->$name);
 		}
+		$versions = static::meta('versions');
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
 			$field = ($entity->exists()) ? 'updated' : 'created';
 			$entity->set(array($field => time()));
-			$versions = static::meta('versions');
 			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
 				$version_id = Versions::add($entity, $options);
 				if ($version_id) {
@@ -227,10 +227,12 @@ class BaseModel extends \lithium\data\Model {
 		}
 		$result = parent::save($entity, null, $options);
 		if ($result && isset($field) && $field == 'created') {
-			$version_id = Versions::add($entity, array('force' => true));
-			if ($version_id) {
-				$entity->set(compact('version_id'));
-				return $entity->save(null, array('callbacks' => false));
+			if (($versions === true) || (is_callable($versions) && $versions($entity, $options))) {
+				$version_id = Versions::add($entity, array('force' => true));
+				if ($version_id) {
+					$entity->set(compact('version_id'));
+					return $entity->save(null, array('callbacks' => false));
+				}
 			}
 		}
 		return $result;
