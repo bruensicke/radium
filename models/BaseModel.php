@@ -335,7 +335,7 @@ class BaseModel extends \lithium\data\Model {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$key = (strlen($id) == 24)
+			$key = ((strlen($id) == 24) && (ctype_xdigit($id)))
 				? $self::key()
 				: 'slug';
 			$options['conditions'] = array($key => $id);
