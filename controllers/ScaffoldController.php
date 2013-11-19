@@ -264,6 +264,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,
+				'slug' => Inflector::underscore($class),
 				'singular' => Inflector::singularize($class),
 				'plural' => Inflector::pluralize($class),
 				'table' => Inflector::tableize($class),
