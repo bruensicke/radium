@@ -266,7 +266,8 @@ class BaseModel extends \lithium\data\Model {
 	public static function _group($property, $type = null) {
 		$field = sprintf('_%s', $property);
 		if (!empty($type)) {
-			return (isset(static::$$field[$type])) ? static::$$field[$type] : false;
+			$var =& static::$$field;
+			return (isset($var[$type])) ? $var[$type] : false;
 		}
 		return static::$$field;
 	}
