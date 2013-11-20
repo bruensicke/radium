@@ -74,6 +74,18 @@ class Versions extends \radium\models\BaseModel {
 	);
 
 	/**
+	 * Default query parameters.
+	 *
+	 * @var array
+	 */
+	protected $_query = array(
+		'limit' => 200,
+		'order' => array(
+			'created' => 'DESC',
+		),
+	);
+
+	/**
 	 * Returns list of available Versions for a given model.
 	 *
 	 * @param string $model full-namespaced class-name to search for Versions
