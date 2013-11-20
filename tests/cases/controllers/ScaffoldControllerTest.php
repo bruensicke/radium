@@ -39,6 +39,7 @@ class ScaffoldControllerTest extends \lithium\test\Unit {
 			'library' => 'radium',
 			'class' => 'MockConfigurations',
 			'model' => 'radium\tests\mocks\data\MockConfigurations',
+			'slug' => Inflector::underscore('MockConfigurations'),
 			'singular' => Inflector::singularize('MockConfigurations'),
 			'plural' => Inflector::pluralize('MockConfigurations'),
 			'table' => Inflector::tableize('MockConfigurations'),
