@@ -9,9 +9,15 @@
 		<div class="well">
 			<h3>Data import</h3>
 			<p>Select and upload files that you exported.</p>
+
+			<ul>
+				<?php foreach($exports as $export): ?>
+					<li><?= $this->html->link($export, array('action' => 'import', 'args' => array($export)), array('class' => 'directimport')); ?></li>
+				<?php endforeach;?>
+			</ul>
+
 		</div>
 	</div>
-
 
 </div>
 <?=$this->html->style('/radium/css/import'); ?>

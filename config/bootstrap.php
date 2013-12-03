@@ -8,9 +8,12 @@
 
 define('RADIUM_PATH', dirname(__DIR__));
 
+use lithium\core\Libraries;
 use lithium\action\Dispatcher;
 use lithium\action\Response;
 use lithium\net\http\Media;
+
+Libraries::paths(array('exports' => array('{:library}\json\{:name}')));
 
 /*
  * this filter allows automatic linking and loading of assets from `webroot` folder

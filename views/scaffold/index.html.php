@@ -1,5 +1,7 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
+<?php #var_dump( $this->scaffold->action('import'));exit; ?>
+
 <ul class="actions pull-right nav nav-pills">
 	<li><?= $this->html->link('import', $this->scaffold->action('import'), array('icon' => 'upload-alt'));?></li>
 	<li><?= $this->html->link('export', $this->scaffold->action('export'), array('icon' => 'download-alt'));?></li>

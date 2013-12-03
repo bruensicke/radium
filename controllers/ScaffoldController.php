@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use Exception;
 
+use lithium\core\Libraries;
 use lithium\core\Environment;
 use lithium\util\Inflector;
 use lithium\net\http\Media;
@@ -168,17 +169,28 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	}
 
 	public function import() {
+		$args = func_get_args();
 		if (!$this->request->is('ajax')) {
-			return array();
+			$exports = $this->_importFiles($this->scaffold['model']);
+			return compact('exports');
 		}
+
 		$this->_render['type'] = 'json';
-		$upload = $this->_upload(array('allowed' => 'json'));
-		if (isset($upload['error'])) {
-			return $upload;
+		if (!empty($args)) {
+			list($namespace, $folder, $name) = $args;
+			$file = sprintf('%s/%s/%sjson', Libraries::get($namespace, 'path'), $folder, $name);
+			$extension = 'json';
+		} else {
+			$upload = $this->_upload(array('allowed' => 'json'));
+			if (isset($upload['error'])) {
+				return $upload;
+			}
+			$file = $upload['tmp'];
+			$extension = $upload['ext'];
 		}
 		try {
-			$content = file_get_contents($upload['tmp']);
-			$content = Media::decode($upload['ext'], $content);
+			$content = file_get_contents($file);
+			$content = Media::decode($extension, $content);
 		} catch(Exception $e) {
 			return array('error' => 'data could not be decoded.');
 		}
@@ -196,6 +208,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return false;
 		}
 		return call_user_func_array(array($object, $method), $args);
+	}
+
+	protected function _importFiles($prefix = null) {
+		return Libraries::locate('exports', null, array('suffix' => ''));
 	}
 
 	protected function _import($data) {

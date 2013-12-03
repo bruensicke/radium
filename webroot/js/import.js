@@ -56,6 +56,16 @@ uploader.importCompleted = function(res) {
 	message += '<span>Saved <strong>'+valid.length+'</strong> entities.</span>';
 	return message;
 };
+uploader.hotlink = function() {
+	$('body').on('click', 'a.directimport', function(e){
+		href = $(this).attr('href');
+		var req = $.getJSON(href)
+			.success(uploader.importCompleted)
+			// .error(tools.error)
+			.complete(tools.render);
+		return false;
+	});
+};
 uploader.create = function(elem) {
 	elem = typeof elem !== 'undefined' ? elem : '#uploader';
 	uploader.obj = new qq.FineUploader({
@@ -79,4 +89,5 @@ uploader.create = function(elem) {
 };
 uploader.init = function() {
 	uploader.create();
+	uploader.hotlink();
 };
