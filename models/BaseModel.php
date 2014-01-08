@@ -338,12 +338,9 @@ class BaseModel extends \lithium\data\Model {
 			$key = ((strlen($id) == 24) && (ctype_xdigit($id)))
 				? $self::key()
 				: 'slug';
-			$options['conditions'] = array($key => $id);
+			$options['conditions'] = array($key => $id, 'status' => $status);
 			$result = $self::find('first', $options);
 			if (!$result) {
-				return false;
-			}
-			if (!in_array($result->status, (array) $status)) {
 				return false;
 			}
 			if (!empty($result->deleted)) {
