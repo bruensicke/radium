@@ -32,4 +32,48 @@ Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
 	return $chain->next($self, $params, $chain);
 });
 
+use lithium\util\Inflector;
+use lithium\util\Validator;
+
+/*
+ * We want to avoid method names like `statuses()` - therefore, we go this route
+ */
+Inflector::rules('uninflected', 'status');
+
+/*
+ * apply new validation rules to the Validator class, because we need them
+ */
+Validator::add(array(
+	'slug' => '/^[a-z0-9\_\-\.]*$/',			// only lowercase, digits and dot
+	'loose_slug' => '/^[a-zA-Z0-9\_\-\.]*$/',	// both cases, digits and dot
+	'strict_slug' => '/^[a-z][a-z0-9\_\-]*$/',  // only lowercase, starting with letter, no dot
+	'isUnique' => function ($value, $format, $options) {
+		$conditions = array($options['field'] => $value);
+		foreach ((array) $options['model']::meta('key') as $field) {
+			if (!empty($options['values'][$field])) {
+				$conditions[$field] = array('!=' => $options['values'][$field]);
+			}
+		}
+		$fields = $options['field'];
+		return is_null($options['model']::find('first', compact('fields', 'conditions')));
+	},
+	'status' => function ($value, $format, $options) {
+		return (bool) $options['model']::status($value);
+	},
+	'type' => function ($value, $format, $options) {
+		return (bool) $options['model']::type($value);
+	},
+));
+
+// use radium\models\BaseModel;
+
+// if (!BaseModel::finder('random')) {
+// 	BaseModel::finder('random', function($self, $params, $chain){
+// 		$amount = $self::find('count', $params['options']);
+// 		$offset = rand(0, $amount-1);
+// 		$params['options']['offset'] = $offset;
+// 		return $self::find('first', $params['options']);
+// 	});
+// }
+
 ?>

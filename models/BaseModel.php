@@ -113,39 +113,6 @@ class BaseModel extends \lithium\data\Model {
 	 * @return void
 	 */
 	public static function __init() {
-		Inflector::rules('uninflected', 'status');
-		if (!Validator::rules('slug')) {
-			Validator::add('slug', '/^[a-z0-9\_\-\.]*$/');
-		}
-		if (!Validator::rules('loose_slug')) {
-			Validator::add('loose_slug', '/^[a-zA-Z0-9\_\-\.]*$/');
-		}
-		if (!Validator::rules('strict_slug')) {
-			Validator::add('strict_slug', '/^[a-z][a-z0-9\_\-]*$/');
-		}
-		if (!Validator::rules('isUnique')) {
-			Validator::add('isUnique', function ($value, $format, $options) {
-				$conditions = array($options['field'] => $value);
-				foreach ((array) $options['model']::meta('key') as $field) {
-					if (!empty($options['values'][$field])) {
-						$conditions[$field] = array('!=' => $options['values'][$field]);
-					}
-				}
-				$fields = $options['field'];
-				return is_null($options['model']::find('first', compact('fields', 'conditions')));
-			});
-		}
-		if (!Validator::rules('status')) {
-			Validator::add('status', function ($value, $format, $options) {
-				return (bool) $options['model']::status($value);
-			});
-		}
-		if (!Validator::rules('type')) {
-			Validator::add('type', function ($value, $format, $options) {
-				return (bool) $options['model']::type($value);
-			});
-		}
-
 		if (!static::finder('random')) {
 			static::finder('random', function($self, $params, $chain){
 				$amount = $self::find('count', $params['options']);
