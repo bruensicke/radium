@@ -11,6 +11,19 @@ define('RADIUM_PATH', dirname(__DIR__));
 use lithium\action\Dispatcher;
 use lithium\action\Response;
 use lithium\net\http\Media;
+use Handlebars\Autoloader;
+
+
+// Libraries::add('Handlebars', array(
+//     // "prefix" => "Handlebars_",
+//     // "includePath" => LITHIUM_LIBRARY_PATH, // or LITHIUM_APP_PATH . '/libraries'
+//     // "bootstrap" => "Loader/Autoloader.php",
+//     // "loader" => array("Handlebars", "register"),
+//     // "transform" => function($class) { return str_replace("_", "/", $class) . ".php"; }
+// ));
+
+require dirname(__DIR__) . '/libraries/Handlebars/Autoloader.php';
+Autoloader::register();
 
 /*
  * this filter allows automatic linking and loading of assets from `webroot` folder

@@ -36,7 +36,7 @@ foreach ($fields as $index => $field) {
 		case 'textarea':
 			$options = array(
 				'type' => 'textarea',
-				'class' => "input-block-level autogrow $field",
+				'class' => "form-control autogrow $field",
 				'rows' => 3,
 			);
 			if (in_array($field, $readonly)) {
@@ -50,7 +50,7 @@ foreach ($fields as $index => $field) {
 			$method = Inflector::pluralize($field);
 			$options = array(
 				'type' => 'select',
-				'class' => "input-block-level $field",
+				'class' => "form-control $field",
 				'data-switch' => $field,
 				'list' => $model::$method()
 			);
@@ -66,7 +66,7 @@ foreach ($fields as $index => $field) {
 		case 'configuration':
 			$options = array(
 				'type' => 'select',
-				'class' => "input-block-level $field",
+				'class' => "form-control $field",
 				'data-switch' => 'configuration',
 				'list' => Configurations::find('list')
 			);
@@ -80,7 +80,7 @@ foreach ($fields as $index => $field) {
 		case 'ini':
 			$options = array(
 				'type' => 'textarea',
-				'class' => 'input-block-level autogrow',
+				'class' => 'form-control autogrow',
 				'rows' => 10,
 			);
 			if (in_array($field, $readonly)) {
@@ -105,7 +105,7 @@ foreach ($fields as $index => $field) {
 		case 'date':
 			// TODO: datepicker
 			$options = array(
-				'class' => 'input-block-level date',
+				'class' => 'form-control date',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
@@ -119,7 +119,7 @@ foreach ($fields as $index => $field) {
 				: (array) $binding->$field;
 			$options = array(
 				'type' => 'textarea',
-				'class' => "input-block-level autogrow $field",
+				'class' => "form-control autogrow $field",
 				'rows' => 3,
 				'value' => implode("\n", $value),
 			);
@@ -132,7 +132,7 @@ foreach ($fields as $index => $field) {
 
 		case 'string':
 			$options = array(
-				'class' => 'input-block-level',
+				'class' => 'form-control',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';

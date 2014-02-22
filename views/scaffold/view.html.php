@@ -1,42 +1,44 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<ul class="actions pull-right nav nav-pills">
-	<li><?= $this->html->link('export', $this->scaffold->action('export'), array('icon' => 'download-alt'));?></li>
-	<li><?= $this->html->link('delete', $this->scaffold->action('delete'), array('icon' => 'remove-sign'));?></li>
-	<li><?= $this->html->link('edit', $this->scaffold->action('edit'), array('icon' => 'edit'));?></li>
-</ul>
-<ul class="breadcrumb">
+<div class="actions pull-right btn-group">
+	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'cloud-download'));?>
+	<?= $this->html->link('delete', $this->scaffold->action('delete'), array('class' => 'btn btn-default', 'icon' => 'trash-o'));?>
+	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-default', 'icon' => 'plus-square-o'));?>
+</div>
+
+<ol class="breadcrumb">
 	<li>
+		<i class="fa fa-home fa-fw"></i>
 		<?= $this->html->link('Home', '/');?>
-		<span class="divider">/</span>
 	</li>
 	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
-			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li>
-		<?= $this->html->link($this->scaffold->human, $this->scaffold->base);?>
-		<span class="divider">/</span>
+		<?= $this->html->link($this->scaffold->human, array('action' => 'index'));?>
 	</li>
 	<li class="active">
 		<?= $this->title($this->scaffold->object->title()); ?>
 		<?php if (isset($this->scaffold->object->status)): ?>
-			<span class="label label_<?= $this->scaffold->object->status ?>"><?= $this->scaffold->object->status ?></span>
+			<span class="label label-<?= $this->scaffold->object->status ?>"><?= $this->scaffold->object->status ?></span>
 		<?php endif; ?>
 	</li>
-</ul>
+</ol>
 
-<div class="page-header">
-	<h1>
-		<?= $this->title(); ?>
+<div class="header">
+	<div class="col-md-12">
+		<h3 class="header-title"><?= $this->title(); ?></h3>
 		<?php if (!empty($this->scaffold->object->notes)): ?>
-			<small><?= $this->scaffold->object->notes ?></small>
-		<?php else: ?>
-			<small>View details.</small>
+			<p class="header-info">
+				<?= $this->scaffold->object->notes ?>
+			</p>
 		<?php endif; ?>
-	</h1>
+	</div>
 </div>
 
-<?= $this->scaffold->render('view'); ?>
+<div class="main-content">
+	<?= $this->scaffold->render('view'); ?>
+</div>
+

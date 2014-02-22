@@ -1,1 +1,1 @@
-<?= $this->scaffold->element('data'); ?>
+<?= $this->scaffold->render('data', array('data' => $this->scaffold->object)); ?>

@@ -410,6 +410,16 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * returns if current record is marked as deleted
+	 *
+	 * @param object $entity current instance
+	 * @return boolean true if record is deleted, false otherwise
+	 */
+	public function deleted($entity) {
+		return (bool) is_null($entity->deleted);
+	}
+
+	/**
 	 * undeletes a record, in case it was marked as deleted
 	 *
 	 * @param object $entity current instance

@@ -24,6 +24,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 	public $uploadPath = null;
 
+	public $layout = 'radium';
+
 	public function _init() {
 		parent::_init();
 		$this->controller = $this->request->controller;
@@ -31,6 +33,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 		$this->_render['paths']['template'][] = '{:library}/views/scaffold/{:template}.{:type}.php';
 		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
+		$this->_render['layout'] = $this->layout;
 		$this->_scaffold();
 	}
 
@@ -259,7 +262,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				? array('controller' => $this->controller, 'library' => $this->library)
 				: array('controller' => $this->controller);
 			$this->scaffold = array(
-				'base' => Router::match($base),
+				'base' => Router::match($base, $this->request),
 				'controller' => $this->controller,
 				'library' => $this->library,
 				'class' => $class,

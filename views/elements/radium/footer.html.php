@@ -1,0 +1,1 @@
+<p class="muted">©<?= date('Y'); ?></p>
