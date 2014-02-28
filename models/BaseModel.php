@@ -112,7 +112,7 @@ class BaseModel extends \lithium\data\Model {
 	 * @see lithium\data\Model
 	 * @return void
 	 */
-	public static function __init() {
+	public static function _init() {
 		if (!static::finder('random')) {
 			static::finder('random', function($self, $params, $chain){
 				$amount = $self::find('count', $params['options']);
