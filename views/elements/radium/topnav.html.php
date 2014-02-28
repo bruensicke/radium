@@ -101,11 +101,11 @@
 				</li>
 			</ul>
 		</li> -->
+<!--
 		<li class="dropdown">
 			<a href="#" class="dropdown-toggle avatar pull-right" data-toggle="dropdown">
 				<i class="fa fa-user fa-3x"></i>
-<!-- 				<img src="img/users/mike.jpg" alt="mike" class="img-avatar" />
- -->				<span class="hidden-small">Mike Smith<b class="caret"></b></span>
+				<span class="hidden-small">Mike Smith<b class="caret"></b></span>
 			</a>
 			<ul class="dropdown-menu pull-right">
 				<li><a href="#"><i class="fa fa-gear"></i>Account Settings</a></li>
@@ -114,6 +114,7 @@
 				<li><a href="login.html"><i class="fa fa-sign-out"></i>Logout</a></li>
 			</ul>
 		</li>
+-->
 	</ul>
 </nav>
 
