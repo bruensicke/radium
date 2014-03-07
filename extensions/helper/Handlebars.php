@@ -92,7 +92,10 @@ class Handlebars extends \lithium\template\Helper {
 		parent::_init();
 		$this->_engine = new Engine;
 		$context = $this->_context;
-		$this->addHelper('scaffold', function($a, $b, $c) use ($context) {
+		$this->addHelper('url', function($a, $b, $c, $d) use ($context) {
+			return $context->url($c);
+		});
+		$this->addHelper('scaffold', function($a, $b, $c, $d) use ($context) {
 			if (isset($context->scaffold->$c)
 			 && is_callable(array($context->scaffold->$c, '\lithium\data\Collection'))) {
 				return $context->scaffold->$c->data();
