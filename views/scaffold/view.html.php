@@ -3,7 +3,7 @@
 <div class="actions pull-right btn-group">
 	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'cloud-download'));?>
 	<?= $this->html->link('delete', $this->scaffold->action('delete'), array('class' => 'btn btn-default', 'icon' => 'trash-o'));?>
-	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-default', 'icon' => 'plus-square-o'));?>
+	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-primary', 'icon' => 'pencil'));?>
 </div>
 
 <ol class="breadcrumb">

@@ -3,7 +3,7 @@
 
 <div class="actions pull-right btn-group">
 	<?= $this->html->link('cancel', $this->scaffold->action('index'), array('class' => 'btn btn-default'));?>
-	<?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-info', 'icon' => 'floppy-o')); ?>
+	<?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-primary', 'icon' => 'floppy-o')); ?>
 </div>
 
 <ol class="breadcrumb">
