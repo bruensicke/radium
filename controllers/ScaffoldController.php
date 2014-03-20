@@ -250,7 +250,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	/**
 	 * Generates different variations of the configured $this->model property name
 	 *
-	 * @param string $type type defines, what variation of the default you want to have
+	 * @param string $field defines, what variation of the default you want to have
 	 *               available are 'class', 'model', 'singular', 'plural' and 'table' and 'human'.
 	 *               if omitted, returns array containing all of them.
 	 * @return array|string
