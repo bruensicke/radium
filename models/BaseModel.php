@@ -86,6 +86,8 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	protected $_query = array(
 		'order' => array(
+			'slug' => 'ASC',
+			'name' => 'ASC',
 			'updated' => 'DESC',
 			'created' => 'DESC',
 		),
@@ -278,7 +280,7 @@ class BaseModel extends \lithium\data\Model {
 			$options['conditions'] = array(
 				'slug' => array('like' => "/$slug/i"),
 				'status' => $status,
-				'deleted' => array('<=' => null), // only not deleted
+				'deleted' => null, // only not deleted
 			);
 			$result = $self::find('all', $options);
 			if (!$result) {
@@ -307,8 +309,12 @@ class BaseModel extends \lithium\data\Model {
 				: 'slug';
 
 			$options['conditions'] = ($key == 'slug')
-				? array($key => $id, 'status' => $status, 'deleted' => array('>=' => 1))
+				? array($key => $id, 'status' => $status, 'deleted' => null)
 				: array($key => $id);
+
+			$options['order'] = ($key == 'slug')
+				? array('updated' => 'DESC')
+				: null;
 
 			$result = $self::find('first', $options);
 			if (!$result) {
