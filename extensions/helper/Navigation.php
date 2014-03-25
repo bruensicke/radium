@@ -120,7 +120,7 @@ class Navigation extends \lithium\template\Helper {
 	private function _item($navitem) {
 		$context = $this->_context;
 		$navitem['url']   = (empty($navitem['url']) && !empty($navitem['name']))
-			? Inflector::tableize($navitem['name'])
+			? '/' . Inflector::tableize($navitem['name'])
 			: $navitem['url'];
 		$navitem['name']   = (empty($navitem['name']) && !empty($navitem['url']))
 			? Inflector::humanize(basename($navitem['url']))
