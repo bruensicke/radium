@@ -6,6 +6,7 @@
 	'/radium/css/font-awesome.min',
 	'/radium/css/select2',
 	'/radium/css/select2-bootstrap',
+	'/radium/css/uniform.default.min',
 	'/radium/css/ark',
 	// '/radium/css/theme',
 	'/radium/css/radium',

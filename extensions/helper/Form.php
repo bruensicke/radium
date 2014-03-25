@@ -14,7 +14,8 @@ class Form extends \lithium\template\helper\Form {
 	 */
 	protected $_strings = array(
 		'button'         => '<button{:options}>{:title}</button>',
-		'checkbox'       => '<input type="checkbox" name="{:name}"{:options} />',
+		'checkbox'     	 => '<input type="checkbox" name="{:name}"{:options} />',
+		'checkbox-label' => '<label class="control-label"><input type="checkbox" name="{:name}"{:options} />{:title}</label>',
 		'checkbox-multi' => '<input type="checkbox" name="{:name}[]"{:options} />',
 		'checkbox-multi-group' => '{:raw}',
 		'error'          => '<span class="help-block">{:content}</span>',
@@ -46,6 +47,41 @@ class Form extends \lithium\template\helper\Form {
 		'date'           => '<input type="text" data-date-format="yyyy-mm-dd" class="date-field" name="{:name}"{:options} />',
 		'submit-button'  => '<button type="submit"{:options}>{:name}</button>'
 	);
+
+	/**
+	 * Generates an HTML `<input type="checkbox" />` object.
+	 *
+	 * @param string $name The name of the field.
+	 * @param array $options Options to be used when generating the checkbox `<input />` element:
+	 *        - `'checked'` _boolean_: Whether or not the field should be checked by default.
+	 *        - `'value'` _mixed_: if specified, it will be used as the 'value' html
+	 *          attribute and no hidden input field will be added.
+	 *        - Any other options specified are rendered as HTML attributes of the element.
+	 * @return string Returns a `<input />` tag with the given name and HTML attributes.
+	 */
+	public function checkbox($name, array $options = array()) {
+		$defaults = array('value' => '1', 'hidden' => true, 'label' => '');
+		$options += $defaults;
+		$default = $options['value'];
+		$key = $name;
+		$out = '';
+
+		list($name, $options, $template) = $this->_defaults(__FUNCTION__, $name, $options);
+		list($scope, $options) = $this->_options($defaults, $options);
+
+		if (!isset($options['checked'])) {
+			$options['checked'] = ($this->binding($key)->data == $default);
+		}
+		if ($scope['hidden']) {
+			$out = $this->hidden($name, array('value' => '', 'id' => false));
+		}
+		$options['value'] = $scope['value'];
+		if (!empty($scope['label'])) {
+			$title = $scope['label'];
+			$template = 'checkbox-label';
+		}
+		return $out . $this->_render(__METHOD__, $template, compact('name', 'options', 'title'));
+	}
 
 	public function button($title = null, array $options = array()) {
 		if (isset($options['icon'])) {
