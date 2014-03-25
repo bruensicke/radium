@@ -2635,3 +2635,20 @@ body.cover {
 .login-wrap .panel .panel-title {
   font-weight: normal;
 }
+
+/* radium added classes */
+ul.nav>li.nav-header {
+	margin-top: 2em;
+	padding: 6px 10px 6px 15px;
+	border-top: solid 1px #ddd;
+}
+ul.nav:first-child>li.nav-header:first-child {
+	margin-top: 0;
+	border-top: 0;
+}
+.sidebar .nav li > a .badge {
+	right: 10px;
+}
+.sidebar .nav li li > a .badge {
+	right: 8px;
+}
