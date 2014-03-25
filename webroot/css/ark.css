@@ -2647,8 +2647,9 @@ ul.nav:first-child>li.nav-header:first-child {
 	border-top: 0;
 }
 .sidebar .nav li > a .badge {
-	right: 10px;
+	right: auto;
+	margin-left: 0.5em;
 }
 .sidebar .nav li li > a .badge {
-	right: 8px;
+	font-size: 80%;
 }
