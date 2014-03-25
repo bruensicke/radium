@@ -28,6 +28,7 @@ class Configurations extends \radium\models\BaseModel {
 		'array' => 'array',
 		'ini' => 'ini',
 		'neon' => 'neon',
+		'navigation' => 'navigation',
 	);
 
 	/**
@@ -105,6 +106,8 @@ class Configurations extends \radium\models\BaseModel {
 					}
 				}
 				return $result;
+			case 'navigation':
+				return Converter::get('neon', $entity->value, $field, $options);
 			case 'json':
 			case 'neon':
 			case 'ini':
