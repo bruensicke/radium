@@ -9,6 +9,7 @@ var Radium = new function ($) {
 		initControls();
 		// initDatePickers();
 		initMenus();
+		initDataswitch();
 		// //init code highlighter
 		// if (typeof prettyPrint === "function"){
 		// 	prettyPrint();
@@ -52,12 +53,24 @@ var Radium = new function ($) {
 		// set up tooltips
 		$('[data-toggle="tooltip"]').tooltip();
 		// set up checkbox/radiobox styles
-		$("input:checkbox, input:radio").uniform();
-
+		$("input:checkbox:visible, input:radio:visible").uniform();
 		// set up select2
 		$('select').select2();
 	}
 
+	function initDataswitch() {
+		$('body').on('change', '[data-switch]', function(e){
+			var name = $(this).attr('data-switch'),
+				val = $(this).val(),
+				target = name + '_' + val;
+
+			$('[class*="' + name + '_"]').hide();
+			if (this.value !== '') {
+				$('div.'+target).show();
+			}
+		});
+		$('[data-switch]').trigger('change');
+	}
 
 }(jQuery);
 

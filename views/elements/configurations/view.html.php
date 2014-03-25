@@ -1,6 +1,9 @@
 <?php
 $configuration = $this->scaffold->object;
 switch($configuration->type) {
+	case 'navigation':
+		echo $this->Navigation->render($configuration->val());
+		break;
 	case 'ini':
 	case 'json':
 	case 'neon':
