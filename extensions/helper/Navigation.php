@@ -17,23 +17,42 @@ class Navigation extends \lithium\template\Helper {
 
 	/**
 	 * Generated a navigation list based on the given parameters.
-	 * If a string is given, it looks for a Configuration with this slug and takes the array in it to render
+	 * If a string is given, it looks for a Configuration with this slug and takes the array in it to render.
 	 * If an array is given, it just renders the navigation with this array.
 	 *
 	 * The array should look like this:
 	 *
 	 *	Array (
 	 *		0 => Array (
-	 *			'name' => 'Users'   // optional, if not provided, humanized url will be used
-	 *			'icon' => 'user'    // optional, font-awesome icon name
-	 *			'url' =>  '/users'  // mandatory
+	 *			'name' => 'Users'   // optional(1), if not provided, humanized url will be used
+	 *			'icon' => 'user'    // optional, font-awesome icon name (without the trailing ´fa-´
+	 *			'url' =>  '/users'  // optional(1), if not provided, lower case ´name´ will be used (in this case /users)
+	 * 			'badge' => 4		// optional, will render a ´4´ in a blue circle behind the navigation name
 	 *		),
 	 *		1 => Array (
 	 *			'name' => 'Contents'
-	 *			'icon' => 'file-text'
-	 *			'url' =>  '/contents'
+	 * 			'badge' => array(			// badge can also be an array with additional data
+	 * 				'value' => '4', 		// mandatory
+	 * 				'color' => 'primary'    // optional, can be default (gray), primary (blue),
+	 * 										// success (green), info (turquoise), warning (yellow), danger (red)
+	 * 			)
+	 *		),
+	 *		2 => Array (					// this will render a expandable submenu ´Contents´
+	 *			'name' => 'Contents'		// with the items Posts and Images inside it.
+	 * 			'children' => Array(
+	 * 				[0] => Array (
+	 *					'name' => 'Posts'
+	 *					'icon' => 'page'
+	 *				),
+	 * 				[1] => Array (
+	 *					'name' => 'Images'
+	 *					'icon' => 'image'
+	 *				),
+	 * 			)
 	 *		)
 	 * 	)
+	 *
+	 * (1) either ´name´ or ´url´ must be provided
 	 *
 	 * @param string|array $nav slug or array containing the navigation items
 	 * @return string HTML navigation list
@@ -62,8 +81,21 @@ class Navigation extends \lithium\template\Helper {
 		return $this->_element('navigation', $navigation);
 	}
 
-	public function group($name) {
-		$configs = Configurations::search(sprintf('nav\.%s\.', $name));
+	/**
+	 * Renders a group of navigations defined as Configurations.
+	 *
+	 * A Configuration with a type ´navigation´ must follow this naming conventions:
+	 * nav.{name of navigation group}.{name of navigation}
+	 * e.g. nav.sidebar.main, nav.sidebar.mailplugin, ...
+	 *
+	 * $this->Navigation->group('sidebar') will render ALL Configurations starting with ´nav.sidebar.´ as navigations.
+	 *
+	 *
+	 * @param string $groupname part of a navigation slug
+	 * @return string all navigations
+	 */
+	public function group($groupname) {
+		$configs = Configurations::search(sprintf('nav\.%s\.', $groupname));
 		$returnvalue = '';
 		foreach($configs as $nav) {
 			$returnvalue .= $this->render($nav);
@@ -117,6 +149,12 @@ class Navigation extends \lithium\template\Helper {
 	}
 
 
+	/**
+	 * creates all nessasary array keys for rendering a menu/list item
+	 *
+	 * @param array $navitem all availible data for a single navigation item
+	 * @return array navitem filled with all needed keys
+	 */
 	private function _item($navitem) {
 		$context = $this->_context;
 		$navitem['url']   = (empty($navitem['url']) && !empty($navitem['name']))
@@ -133,10 +171,15 @@ class Navigation extends \lithium\template\Helper {
 		return $navitem;
 	}
 
+	/**
+	 * creates all nessasary array keys for a badge subkey of a menu item
+	 *
+	 * @param array $badge all availible data for a single badge
+	 * @return array filled with all needed keys for a badge
+	 */
 	private function _badge($badge) {
 		$returnvalue = array(
 			'value' => '',
-			'shape' => '',
 			'color' => 'primary'
 		);
 		if (!is_array($badge)) {
@@ -144,7 +187,7 @@ class Navigation extends \lithium\template\Helper {
 			$badge = array(
 				'value' => $temp
 			);
-		} else {
+		} elseif (isset($badge[0])) {
 			$badge = $badge[0];
 		}
 		$returnvalue = array_merge($returnvalue, $badge);
