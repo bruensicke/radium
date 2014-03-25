@@ -2637,6 +2637,9 @@ body.cover {
 }
 
 /* radium added classes */
+#content {
+	padding-right: 20px;
+}
 ul.nav>li.nav-header {
 	margin-top: 2em;
 	padding: 6px 10px 6px 15px;
