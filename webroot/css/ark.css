@@ -2656,3 +2656,13 @@ ul.nav:first-child>li.nav-header:first-child {
 .sidebar .nav li li > a .badge {
 	font-size: 80%;
 }
+.well {
+	border: 0;
+	background-color: #f7f7f9;
+}
+.sidebar {
+	background-color: #f5f5f9;
+}
+.navbar-default.navbar-main {
+	background-color: #f5f5f9;
+}
