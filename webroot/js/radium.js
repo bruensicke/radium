@@ -19,6 +19,7 @@ var Radium = new function ($) {
 		$('body').resize(function (){
 			updateContentHeight();
 		});
+		initDatetimes();
 	};
 
 	/**
@@ -70,6 +71,25 @@ var Radium = new function ($) {
 			}
 		});
 		$('[data-switch]').trigger('change');
+	}
+
+	function initDatetimes() {
+		$("[data-datetime]").each(function(){
+			var $this = $(this),
+				date = $this.data('datetime'),
+				valid = ((date != undefined && date > 0)
+					|| (date != undefined && typeof(date)=='string' && date.length > 0) );
+			if (!valid) {
+				return;
+			}
+			var mom = 0;
+			if (typeof(date)=='number') {
+				mom = moment(date*1000);
+			} else {
+				mom = moment(date);
+			}
+			$this.html(mom.fromNow());
+		});
 	}
 
 }(jQuery);

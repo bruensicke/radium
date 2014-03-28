@@ -163,7 +163,7 @@ class Navigation extends \lithium\template\Helper {
 		$navitem['name']   = (empty($navitem['name']) && !empty($navitem['url']))
 			? Inflector::humanize(basename($navitem['url']))
 			: $navitem['name'];
-		$navitem['active'] = stristr($navitem['url'], $context->scaffold->controller);
+		$navitem['active'] = (bool) stristr($navitem['url'], $context->scaffold->slug);
 		$navitem['link']   = $context->url($navitem['url']);
 		$navitem['badge']  = empty($navitem['badge'])
 			? null

@@ -2,6 +2,7 @@
 	<colgroup>
 		<col width="70" />
 		<col width="100" />
+		<col width="120" />
 		<col width="*" />
 		<col width="120" />
 		<col width="120" />
@@ -11,6 +12,7 @@
 		<tr>
 			<th>Status</th>
 			<th>Type</th>
+			<th>Slug</th>
 			<th>Name</th>
 			<th>Created</th>
 			<th>Updated</th>
@@ -20,7 +22,7 @@
 	<tbody>
 	{{#unless objects}}
 		<tr>
-			<td colspan="6"><h4>No objects found...</h4></td>
+			<td colspan="7"><h4>No objects found...</h4></td>
 		</tr>
 	{{/unless}}
 	{{#each objects}}
@@ -30,6 +32,9 @@
 			</td>
 			<td>
 				{{#if type}}<span class="label label-primary label-{{ type }}">{{ type }}</span>{{/if}}
+			</td>
+			<td>
+				{{ slug }}
 			</td>
 			<td>
 				<a href="{{ scaffold base }}/view/{{ _id }}">
@@ -43,8 +48,8 @@
 					<br /><small class="muted">{{ notes }}</small>
 				{{/if}}
 			</td>
-			<td data-datetime="{{ created }}"></td>
-			<td data-datetime="{{ updated }}"></td>
+			<td data-datetime="{{ created.sec }}">{{ created.sec }}</td>
+			<td data-datetime="{{ updated.sec }}">{{ updated.sec }}</td>
 			<td>
 				<div class="btn-group">
 					<a class="btn btn-primary btn-sm" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil"></i> Edit</a>

@@ -23,6 +23,7 @@
 	'/radium/js/jquery.autosize.min',
 	'/radium/js/jquery.uniform.min.js',
 	'/radium/js/select2.min',
+	'/radium/js/moment.min',
 	'/radium/js/radium'
 )); ?>
 <?php echo $this->head(); ?>
