@@ -4,7 +4,7 @@
 	{{/if}}
 	{{#each items}}
 		{{#if children}}
-			<li class="menu">
+			<li class="menu{{#if active}} active{{/if}}">
 				<a href="#" class="menu-toggle">
 					{{#if icon}}
 						<i class="fa fa-{{ icon }} fa-fw"></i>
@@ -17,7 +17,7 @@
 				</a>
 				<ul class="submenu">
 					{{#each children}}
-					<li>
+					<li{{#if active}} class="active"{{/if}}>
 						<a href="{{ link }}">
 							{{#if icon}}
 								<i class="fa fa-{{ icon }} fa-fw"></i>
@@ -32,7 +32,7 @@
 				</ul>
 			</li>
 		{{else}}
-			<li>
+			<li{{#if active}} class="active"{{/if}}>
 				<a href="{{ link }}">
 					{{#if icon}}
 						<i class="fa fa-{{ icon }} fa-fw"></i>
