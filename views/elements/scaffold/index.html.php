@@ -48,8 +48,8 @@
 					<br /><small class="muted">{{ notes }}</small>
 				{{/if}}
 			</td>
-			<td data-datetime="{{ created }}"></td>
-			<td data-datetime="{{ updated }}"></td>
+			<td data-datetime="{{ created.sec }}">{{ created.sec }}</td>
+			<td data-datetime="{{ updated.sec }}">{{ updated.sec }}</td>
 			<td>
 				<div class="btn-group">
 					<a class="btn btn-primary btn-sm" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil"></i> Edit</a>
