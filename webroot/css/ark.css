@@ -2670,6 +2670,10 @@ ul.nav:first-child>li.nav-header:first-child {
 .sidebar .nav li li > a .badge {
 	font-size: 80%;
 }
+.sidebar .nav li i.fa {
+	min-width: 16px;
+	display: inline-block;
+}
 .well {
 	border: 0;
 	background-color: #f7f7f9;
