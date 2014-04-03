@@ -67,6 +67,22 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
+	 * Criteria for data validation.
+	 *
+	 * @see lithium\data\Model::$validates
+	 * @see lithium\util\Validator::check()
+	 * @var array
+	 */
+	public $validates = array(
+		'name' => array(
+			array('notEmpty', 'message' => 'Please give me a name.'),
+		),
+		'slug' => array(
+			array('notEmpty', 'message' => 'Insert an alphanumeric value'),
+			array('slug', 'message' => 'This must be alphanumeric'),
+		),
+	);
+
 	 * Custom find query properties, indexed by name.
 	 *
 	 * @var array
