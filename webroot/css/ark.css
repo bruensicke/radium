@@ -2708,3 +2708,6 @@ ul.nav:first-child>li.nav-header:first-child {
 	margin: 0;
 	line-height: 1em;
 }
+dl.dl-intended dd {
+	padding-left: 1em;
+}
