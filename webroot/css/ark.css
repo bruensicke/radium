@@ -2637,6 +2637,9 @@ body.cover {
 }
 
 /* radium added classes */
+a, a:active, a:hover, a:visited {
+	outline: none !important;
+}
 .table {
 	border-top: 0;
 }
@@ -2691,7 +2694,7 @@ ul.nav:first-child>li.nav-header:first-child {
 }
 .well {
 	border: 0;
-	background-color: #f7f7f9;
+	background-color: #f2f2f4;
 }
 .sidebar {
 	box-shadow:  inset -7px 0 5px -5px hsla(0,0%,0%,.25);
@@ -2710,4 +2713,31 @@ ul.nav:first-child>li.nav-header:first-child {
 }
 dl.dl-intended dd {
 	padding-left: 1em;
+}
+
+.tab-content {
+	padding: 19px;
+	border: 0;
+	background: #f2f2f4;
+}
+.nav-tabs {
+	border-bottom: 0;
+}
+.nav-tabs li {
+	margin-bottom: 0;
+	border: 0;
+}
+.nav-tabs > li > a,
+.nav-tabs > li > a:hover {
+	float: left;
+	border: 0;
+	margin: 0;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover {
+	background: #f2f2f4;
+	border: 0;
+}
+.nav-tabs > li.active > a:hover {
+	background: #f1f1f2;
 }
