@@ -2637,8 +2637,22 @@ body.cover {
 }
 
 /* radium added classes */
+.table {
+	border-top: 0;
+}
+.table thead tr {
+	border-bottom: 1px solid #ccc;
+}
+.btn-sm {
+	line-height: 1.2em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
 #content {
 	padding-right: 20px;
+}
+.dropdown-menu {
+	min-width: 0;
 }
 ul.nav>li.nav-header {
 	margin-top: 2em;

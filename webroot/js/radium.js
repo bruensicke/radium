@@ -16,7 +16,7 @@ var Radium = new function ($) {
 		// }
 		// initCharts(charts);
 		updateContentHeight();
-		$('body').resize(function (){
+		$( window ).resize(function (){
 			updateContentHeight();
 		});
 		initDatetimes();
