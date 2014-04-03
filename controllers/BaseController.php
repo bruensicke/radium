@@ -144,7 +144,7 @@ class BaseController extends \lithium\action\Controller {
 		$size = stream_copy_to_stream($input, $temp);
 		@chmod($tmp, $options['chmod']);
 		fclose($input);
-		$msg = sprintf('upload of file %s.%s', $filename, $ext);
+		$msg = sprintf('upload of file %s.%s to %s', $filename, $ext, $tmp);
 		$success = (bool) ($size == (int) $_SERVER['CONTENT_LENGTH']);
 		if (!$success) {
 			$msg = $error = $msg . ' failed.';

@@ -97,6 +97,10 @@ var Radium = new function ($) {
 		});
 	}
 
+	function upload() {
+
+	}
+
 }(jQuery);
 
 /**

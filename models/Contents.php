@@ -31,16 +31,7 @@ class Contents extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	protected $_schema = array(
-		'_id' => array('type' => 'id'),
-		'name' => array('type' => 'string', 'default' => '', 'null' => false),
-		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
-		'type' => array('type' => 'string', 'default' => 'plain'),
 		'body' => array('type' => 'string'),
-		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
-		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
-		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
-		'updated' => array('type' => 'datetime'),
-		'deleted' => array('type' => 'datetime'),
 	);
 
 	/**
@@ -72,7 +63,7 @@ class Contents extends \radium\models\BaseModel {
 	 * @param string $name name of configuration to retrieve
 	 * @param array $data additional data to be passed into render context
 	 * @param array $options an array of options, currently all of
-	 *              Contentes::body() are supported, see there.
+	 *              Contents::body() are supported, see there.
 	 * @return mixed
 	 */
 	public static function get($name, $data = null, array $options = array()) {

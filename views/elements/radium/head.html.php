@@ -4,6 +4,7 @@
 	'http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700',
 	'/radium/css/bootstrap.min',
 	'/radium/css/font-awesome.min',
+	'/radium/css/import',
 	'/radium/css/select2',
 	'/radium/css/select2-bootstrap',
 	'/radium/css/uniform.default.min',
@@ -21,9 +22,11 @@
 	'/radium/js/jquery.min',
 	'/radium/js/bootstrap.min',
 	'/radium/js/jquery.autoresize.min',
+	'/radium/js/fineuploader.min',
 	'/radium/js/jquery.uniform.min.js',
 	'/radium/js/select2.min',
 	'/radium/js/moment.min',
+	'/radium/js/import',
 	'/radium/js/radium'
 )); ?>
 <?php echo $this->head(); ?>

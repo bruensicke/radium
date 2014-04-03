@@ -39,18 +39,11 @@ class Versions extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	protected $_schema = array(
-		'_id' => array('type' => 'id'),
 		'model' => array('type' => 'string', 'default' => '', 'null' => false),
 		'foreign_id' => array('type' => 'string', 'default' => '', 'null' => false),
-		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
-		'type' => array('type' => 'string', 'null' => true),
 		'data' => array('type' => 'string'),
 		'fields' => array('type' => 'object'),
-		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
-		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
-		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
 		'approved' => array('type' => 'datetime'),
-		'deleted' => array('type' => 'datetime'),
 	);
 
 	/**

@@ -94,7 +94,7 @@ class Navigation extends \lithium\template\Helper {
 	 * @param string $groupname part of a navigation slug
 	 * @return string all navigations
 	 */
-	public function group($groupname) {
+	public function group($groupname, array $options = array()) {
 		$configs = Configurations::search(sprintf('nav\.%s\.', $groupname));
 		$returnvalue = '';
 		foreach($configs as $nav) {
@@ -118,7 +118,7 @@ class Navigation extends \lithium\template\Helper {
 	 */
 	private function _element($name, array $data = array(), array $options = array()) {
 		$element = sprintf('%s/%s', 'templates', $name);
-		$data = $this->_data($data, $options);
+		// $data = $this->_data($data, $options);
 		$hb = $this->_context->helper('handlebars');
 		try {
 			return $hb->render($element, $data, $options);
