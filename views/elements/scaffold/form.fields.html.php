@@ -54,6 +54,9 @@ foreach ($fields as $index => $field) {
 				'data-switch' => $field,
 				'list' => $model::$method()
 			);
+			if (isset($schema[$field]['null']) && $schema[$field]['null'] === true) {
+				$options['empty'] = true;
+			}
 			if (in_array($field, $readonly)) {
 				$options['type'] = 'text';
 				$options['value'] = $model::$method($this->scaffold->object->$field);

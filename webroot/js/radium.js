@@ -56,7 +56,10 @@ var Radium = new function ($) {
 		// set up checkbox/radiobox styles
 		$("input:checkbox:visible, input:radio:visible").uniform();
 		// set up select2
-		$('select').select2();
+		$('select').select2({
+			placeholder: " ",
+			allowClear: true
+		});
 	}
 
 	function initDataswitch() {
