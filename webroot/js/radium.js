@@ -28,7 +28,7 @@ var Radium = new function ($) {
 	function updateContentHeight(){
 		var windowHeight = $(window).height();
 		var navHeight = $('.navbar-main').height();
-		$('.content').css('min-height', (windowHeight - navHeight-1) + "px");
+		$('.content').css('min-height', (windowHeight) + "px");
 	}
 
 
