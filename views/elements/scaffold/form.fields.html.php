@@ -47,7 +47,7 @@ foreach ($fields as $index => $field) {
 		break;
 
 		case 'select':
-			$method = Inflector::pluralize($field);
+			$method = Inflector::underscore(Inflector::pluralize($field));
 			$options = array(
 				'type' => 'select',
 				'class' => "form-control $field",
