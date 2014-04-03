@@ -52,7 +52,7 @@ class Scaffold extends \lithium\template\Helper {
 	 */
 	public function render($name, array $data = array(), array $options = array()) {
 		$data += $this->_scaffold;
-		$data = $this->_data($data, $options);
+		//$data = $this->_data($data, $options);
 		return $this->element($name, $data, $options);
 	}
 

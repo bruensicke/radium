@@ -67,6 +67,39 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
+	 * Criteria for data validation.
+	 *
+	 * @see lithium\data\Model::$validates
+	 * @see lithium\util\Validator::check()
+	 * @var array
+	 */
+	public $validates = array(
+		'name' => array(
+			array('notEmpty', 'message' => 'This field should not be empty.'),
+		),
+		'slug' => array(
+			array('notEmpty', 'message' => 'Insert an alphanumeric value'),
+			array('slug', 'message' => 'This must be alphanumeric'),
+		),
+	);
+
+	/**
+	 * If this contains an array, the containing fields ar rendered as tabs in add/edit forms.
+	 *
+	 * 	$_tabs = array(
+	 * 		'Tab1' => array(
+	 * 			'field1', 'field2', 'field3'
+	 * 		),
+	 *		'Tab2' => array(
+	 *			'field4', 'field5'
+	 *		),
+	 * 	);
+	 *
+	 * @var array
+	 */
+	public static $_tabs = array();
+
+	/**
 	 * Custom find query properties, indexed by name.
 	 *
 	 * @var array
@@ -251,6 +284,16 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function types($type = null) {
 		return static::_group(__FUNCTION__, $type);
+	}
+
+	/**
+	 * all tabs for current model
+	 *
+	 * @param string $name ...
+	 * @return mixed all tabs with keys and their name, or value of `$type` if given
+	 */
+	public static function tabs($name = null) {
+		return static::_group(__FUNCTION__, $name);
 	}
 
 	/**

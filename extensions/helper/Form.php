@@ -137,7 +137,7 @@ class Form extends \lithium\template\helper\Form {
 		if ($this->_binding) {
 			$errors = $this->_binding->errors();
 			if (isset($errors[$name])) {
-				$options['wrap']['class'] .= ' has-error';
+				$options['wrap']['class'] .= ' has-warning';
 			}
 		}
 

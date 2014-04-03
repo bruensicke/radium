@@ -16,7 +16,7 @@ var Radium = new function ($) {
 		// }
 		// initCharts(charts);
 		updateContentHeight();
-		$('body').resize(function (){
+		$( window ).resize(function (){
 			updateContentHeight();
 		});
 		initDatetimes();
@@ -28,7 +28,7 @@ var Radium = new function ($) {
 	function updateContentHeight(){
 		var windowHeight = $(window).height();
 		var navHeight = $('.navbar-main').height();
-		$('.content').css('min-height', (windowHeight - navHeight-1) + "px");
+		$('.content').css('min-height', (windowHeight) + "px");
 	}
 
 
@@ -50,13 +50,18 @@ var Radium = new function ($) {
 	 */
 	function initControls() {
 		// set up textarea autosize
-		$('textarea').autosize();
+		$('textarea').autoResize({
+			maxHeight: 500
+		});
 		// set up tooltips
 		$('[data-toggle="tooltip"]').tooltip();
 		// set up checkbox/radiobox styles
 		$("input:checkbox:visible, input:radio:visible").uniform();
 		// set up select2
-		$('select').select2();
+		$('select').select2({
+			placeholder: "- choose one -",
+			allowClear: true
+		});
 	}
 
 	function initDataswitch() {

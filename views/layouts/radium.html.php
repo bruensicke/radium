@@ -4,27 +4,20 @@
 	<?= $this->_render('element', 'radium/head'); ?>
 </head>
 <body class="cover">
-
-<div class="wrapper ">
-	<?= $this->_render('element', 'radium/topnav'); ?>
-	<div class="body">
-		<?= $this->_render('element', 'radium/sidebar'); ?>
-		<section class="content">
-
-			<header id="header">
-				<?= $this->_render('element', 'radium/header'); ?>
-			</header>
-			<div id="content">
-				<?= $this->content(); ?>
-			</div>
-			<footer id="footer">
-				<?= $this->_render('element', 'radium/footer'); ?>
-			</footer>
-
-		</section>
+	<div class="wrapper">
+		<div class="body">
+			<?= $this->_render('element', 'radium/sidebar'); ?>
+			<section class="content">
+				<?= $this->_render('element', 'radium/topnav'); ?>
+				<header id="header">
+					<?= $this->_render('element', 'radium/header'); ?>
+				</header>
+				<div id="content">
+					<?= $this->content(); ?>
+				</div>
+			</section>
+		</div>
+		<?= $this->_render('element', 'radium/footer'); ?>
 	</div>
-
-</div>
-
 </body>
 </html>

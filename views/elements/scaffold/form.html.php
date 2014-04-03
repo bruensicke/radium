@@ -1,5 +1,7 @@
 <?php
 $binding = $this->form->binding();
+$model = $binding->model();
+$tabs = $model::tabs();
 $schema = $binding->schema();
 $fields = $schema->names();
 $meta = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
@@ -9,6 +11,10 @@ $skip = isset($skip)
 $readonly = isset($readonly)
 	? $readonly
 	: array();
+if (!empty($tabs)) {
+	echo $this->_render('element', '/scaffold/form.tabs', compact('tabs', 'fields', 'skip', 'readonly'));
+	return;
+}
 ?>
 <div class="row">
 

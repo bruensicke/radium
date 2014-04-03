@@ -1,3 +1,5 @@
-<div class="modal-footer">
-	<p class="muted">©<?= date('Y'); ?></p>
-</div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+	<div class="breadcrumb pull-right">
+		<p>© <?= date('Y'); ?></p>
+	</div>
+</nav>
