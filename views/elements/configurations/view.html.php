@@ -1,15 +1,18 @@
 <?php
 $configuration = $this->scaffold->object;
 switch($configuration->type) {
+	case 'navigation':
+		echo $this->Navigation->render($configuration->val());
+		break;
 	case 'ini':
 	case 'json':
 	case 'neon':
 	case 'array':
-		echo $this->scaffold->mustache('data', array('data' => $this->mustache->data((array) $configuration->val())));
+		echo $this->scaffold->render('data', array('data' => $configuration->val(null, array('flat' => true))));
 		break;
 	case 'list':
 		echo '<div class="well">';
-		echo $this->scaffold->mustache('list', array('data' => $configuration->val()));
+		echo $this->scaffold->render('list', array('data' => $configuration->val(null, array('flat' => true))));
 		echo '</div>';
 		break;
 	case 'string':

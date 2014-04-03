@@ -1,42 +1,43 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 <?= $this->form->create($this->scaffold->object, array('class' => 'form')); ?>
 
-<ul class="actions pull-right nav nav-pills">
-	<li><?= $this->html->link('cancel', $this->scaffold->action('view'));?></li>
-	<li><?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-info btn-small', 'icon' => 'save')); ?></li>
-</ul>
-<ul class="breadcrumb">
+<div class="actions pull-right btn-group">
+	<?= $this->html->link('cancel', $this->scaffold->action('view'), array('class' => 'btn btn-default'));?>
+	<?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-primary', 'icon' => 'save')); ?>
+</div>
+
+<ol class="breadcrumb">
 	<li>
+		<i class="fa fa-home fa-fw"></i>
 		<?= $this->html->link('Home', '/');?>
-		<span class="divider">/</span>
 	</li>
 	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
-			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li>
 		<?= $this->html->link($this->scaffold->human, array('action' => 'index'));?>
-		<span class="divider">/</span>
 	</li>
 	<li class="active">
 		<?= $this->title(sprintf('Edit: %s', $this->scaffold->object->title())); ?>
 	</li>
-</ul>
+</ol>
 
-<div class="page-header">
-	<h1>
-		<?= $this->title(); ?>
+<div class="header">
+	<div class="col-md-12">
+		<h3 class="header-title"><?= $this->title(); ?></h3>
 		<?php if (!empty($this->scaffold->object->notes)): ?>
-			<small><?= $this->scaffold->object->notes ?></small>
-		<?php else: ?>
-			<small>Enter details.</small>
+			<p class="header-info">
+				<?= $this->scaffold->object->notes ?>
+			</p>
 		<?php endif; ?>
-	</h1>
+	</div>
 </div>
 
-<?= $this->scaffold->render('errors'); ?>
-<?= $this->scaffold->render('form'); ?>
+<div class="main-content">
+	<?= $this->scaffold->render('errors'); ?>
+	<?= $this->scaffold->render('form'); ?>
+</div>
 
 <?= $this->form->end(); ?>

@@ -1,30 +1,31 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<ul class="actions pull-right nav nav-pills">
-	<li><?= $this->html->link('cancel', $this->scaffold->action('index'));?></li>
-</ul>
-<ul class="breadcrumb">
+<div class="actions pull-right btn-group">
+	<?= $this->html->link('cancel', $this->scaffold->action('index'), array('class' => 'btn btn-default'));?>
+</div>
+
+<ol class="breadcrumb">
 	<li>
+		<i class="fa fa-home fa-fw"></i>
 		<?= $this->html->link('Home', '/');?>
-		<span class="divider">/</span>
 	</li>
 	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
-			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li class="active">
 		<?= $this->title($this->scaffold->human); ?>
 	</li>
-</ul>
+</ol>
 
-<div class="page-header">
-	<h1>
-		<?= $this->title(); ?>
-		<small>Import <?= $this->scaffold->human ?> files</small>
-	</h1>
+<div class="header">
+	<div class="col-md-12">
+		<h3 class="header-title"><?= $this->title(); ?></h3>
+		<p class="header-info">Import <?= $this->scaffold->human ?> files</p>
+	</div>
 </div>
 
-<?= $this->scaffold->render('import'); ?>
-
+<div class="main-content">
+	<?= $this->scaffold->render('import'); ?>
+</div>

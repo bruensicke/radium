@@ -1,31 +1,33 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<ul class="actions pull-right nav nav-pills">
-	<li><?= $this->html->link('import', $this->scaffold->action('import'), array('icon' => 'upload-alt'));?></li>
-	<li><?= $this->html->link('export', $this->scaffold->action('export'), array('icon' => 'download-alt'));?></li>
-	<li><?= $this->html->link('create', $this->scaffold->action('add'), array('icon' => 'plus-sign-alt'));?></li>
-</ul>
-<ul class="breadcrumb">
+<div class="actions pull-right btn-group">
+	<?= $this->html->link('import', $this->scaffold->action('import'), array('class' => 'btn', 'icon' => 'cloud-upload'));?>
+	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn', 'icon' => 'cloud-download'));?>
+	<?= $this->html->link('create', $this->scaffold->action('add'), array('class' => 'btn btn-primary', 'icon' => 'plus-square-o'));?>
+</div>
+
+<ol class="breadcrumb">
 	<li>
+		<i class="fa fa-home fa-fw"></i>
 		<?= $this->html->link('Home', '/');?>
-		<span class="divider">/</span>
 	</li>
 	<?php if ($this->scaffold->library === 'radium'): ?>
 		<li>
 			<?= $this->html->link('radium', '/radium');?>
-			<span class="divider">/</span>
 		</li>
 	<?php endif; ?>
 	<li class="active">
 		<?= $this->title($this->scaffold->human); ?>
 	</li>
-</ul>
+</ol>
 
-<div class="page-header">
-	<h1>
-		<?= $this->title(); ?>
-		<small>See a list of all <?= $this->scaffold->plural ?></small>
-	</h1>
+<div class="header">
+	<div class="col-md-12">
+		<h3 class="header-title"><?= $this->title(); ?></h3>
+		<!-- <p class="header-info">See a list of all <?= $this->scaffold->plural ?></p> -->
+	</div>
 </div>
 
-<?= $this->scaffold->render('index'); ?>
+<div class="main-content">
+	<?= $this->scaffold->render('index'); ?>
+</div>

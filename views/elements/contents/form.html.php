@@ -1,20 +1,24 @@
 <div class="row">
 
-	<div class="span4">
-		<legend><?= $this->scaffold->human ?> meta</legend>
+	<div class="col-md-4">
+		<h3><?= $this->scaffold->human ?> meta</h3>
 		<div class="well">
-			<?= $this->scaffold->render('form.meta'); ?>
+			<div class="form-group">
+				<?= $this->scaffold->render('form.meta'); ?>
+			</div>
 		</div>
 	</div>
 
-	<div class="span8">
-		<legend><?= $this->scaffold->human ?> details</legend>
+	<div class="col-md-8">
+		<h3><?= $this->scaffold->human ?> details</h3>
 		<div class="well">
-			<?= $this->form->field('body', array(
-				'type' => 'textarea',
-				'class' => 'input-block-level',
-				'style' => 'height: 370px;',
-			));?>
+			<div class="form-group">
+				<?= $this->form->field('body', array(
+					'type' => 'textarea',
+					'class' => 'form-control',
+					'style' => 'height: 370px;',
+				));?>
+			</div>
 		</div>
 	</div>
 

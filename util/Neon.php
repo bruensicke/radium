@@ -23,6 +23,13 @@ class Neon {
 		return static::renderer()->decode($content);
 	}
 
+	public static function file($file) {
+		if (!file_exists($file)) {
+			return array();
+		}
+		return static::renderer()->decode(file_get_contents($file));
+	}
+
 	public static function renderer() {
 		if (is_null(static::$_renderer)) {
 			Libraries::add('Neon', array('path' => RADIUM_PATH . '/libraries/neon'));

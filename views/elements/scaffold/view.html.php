@@ -1,1 +1,1 @@
-<?= $this->scaffold->element('data'); ?>
+<?= $this->scaffold->render('data', array('data' => \lithium\util\Set::flatten($this->scaffold->object->data()))); ?>
