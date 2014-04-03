@@ -59,7 +59,7 @@ var Radium = new function ($) {
 		$("input:checkbox:visible, input:radio:visible").uniform();
 		// set up select2
 		$('select').select2({
-			placeholder: "- please choose one -",
+			placeholder: "- choose one -",
 			allowClear: true
 		});
 	}
