@@ -93,7 +93,7 @@ foreach ($fields as $index => $field) {
 		case 'integer':
 			$options = array(
 				'type' => 'number',
-				'class' => 'input-mini numeric',
+				'class' => 'form-control numeric',
 			);
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
