@@ -50,14 +50,16 @@ var Radium = new function ($) {
 	 */
 	function initControls() {
 		// set up textarea autosize
-		$('textarea').autosize();
+		$('textarea').autoResize({
+			maxHeight: 500
+		});
 		// set up tooltips
 		$('[data-toggle="tooltip"]').tooltip();
 		// set up checkbox/radiobox styles
 		$("input:checkbox:visible, input:radio:visible").uniform();
 		// set up select2
 		$('select').select2({
-			placeholder: " ",
+			placeholder: "- please choose one -",
 			allowClear: true
 		});
 	}

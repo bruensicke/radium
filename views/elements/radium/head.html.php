@@ -20,7 +20,7 @@
 <?php echo $this->html->script(array(
 	'/radium/js/jquery.min',
 	'/radium/js/bootstrap.min',
-	'/radium/js/jquery.autosize.min',
+	'/radium/js/jquery.autoresize.min',
 	'/radium/js/jquery.uniform.min.js',
 	'/radium/js/select2.min',
 	'/radium/js/moment.min',
