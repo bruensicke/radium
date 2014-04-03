@@ -75,7 +75,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public $validates = array(
 		'name' => array(
-			array('notEmpty', 'message' => 'Please give me a name.'),
+			array('notEmpty', 'message' => 'This field should not be empty.'),
 		),
 		'slug' => array(
 			array('notEmpty', 'message' => 'Insert an alphanumeric value'),
