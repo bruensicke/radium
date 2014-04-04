@@ -64,6 +64,7 @@ class BaseModel extends \lithium\data\Model {
 		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
 		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
 		'updated' => array('type' => 'datetime'),
+		'deleted' => array('type' => 'datetime'),
 	);
 
 	/**
@@ -74,12 +75,23 @@ class BaseModel extends \lithium\data\Model {
 	 * @var array
 	 */
 	public $validates = array(
+		'_id' => array(
+			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
+		),
 		'name' => array(
 			array('notEmpty', 'message' => 'This field should not be empty.'),
 		),
 		'slug' => array(
 			array('notEmpty', 'message' => 'Insert an alphanumeric value'),
 			array('slug', 'message' => 'This must be alphanumeric'),
+		),
+		'type' => array(
+			array('notEmpty', 'message' => 'Please specify a type'),
+			array('type', 'message' => 'Type is unknown. Please adjust.'),
+		),
+		'status' => array(
+			array('notEmpty', 'message' => 'Please specify a status'),
+			array('status', 'message' => 'Status is unknown. Please adjust.'),
 		),
 	);
 
