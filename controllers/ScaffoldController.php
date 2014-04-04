@@ -115,7 +115,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$name = sprintf('%s-%s.json', $plural, $suffix);
 		} else {
 			$result = $model::first($id);
-			$data = array($singular => $result);
+			$data = array($plural => array($result->data()));
 			$name = sprintf('%s-%s.json', $singular, $id);
 		}
 		$this->response->headers('download', $name);
@@ -174,17 +174,23 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if (!$this->request->is('ajax')) {
 			return array();
 		}
+		$model = '\radium\models\Assets';
 		$this->_render['type'] = 'json';
-		$upload = $this->_upload(array('allowed' => 'json'));
-		if (isset($upload['error'])) {
-			return $upload;
+		$allowed = array('json');
+		$file = $this->_upload(compact('allowed'));
+		if ($file['error'] !== UPLOAD_ERR_OK) {
+			return $file;
 		}
-		try {
-			$content = file_get_contents($upload['tmp']);
-			$content = Media::decode($upload['ext'], $content);
-		} catch(Exception $e) {
-			return array('error' => 'data could not be decoded.');
+		$data = $model::init($file, array('type' => 'import'));
+		if (isset($data['error']) || empty($data['id'])) {
+			return $data;
 		}
+		$asset = $model::get($upload['id']);
+		if (empty($asset)) {
+			return $data;
+		}
+		$content = $asset->decode();
+		var_dump($content);exit;
 		$data = $this->_import($content);
 		return $data;
 	}
