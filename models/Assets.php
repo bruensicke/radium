@@ -144,10 +144,12 @@ class Assets extends \radium\models\BaseModel {
 	 * @return array parsed content of Assets bytes
 	 */
 	public function decode($asset, $data = array(), array $options = array()) {
-		return Converter::get($asset->type, $asset->body(), $data, $options);
+		return Converter::get($asset->type, $asset->file->getBytes(), $data, $options);
 	}
 
-	public static function init($file) {
+	public static function init($file, array $options = array()) {
+		$defaults = array('type' => 'default');
+		$options += $defaults;
 		$md5 = md5_file($file['tmp_name']);
 		// find by md5, first
 		$data = array(
@@ -156,7 +158,7 @@ class Assets extends \radium\models\BaseModel {
 			'slug' => strtolower(sprintf('%s.%s', $file['name'], $file['type'])),
 			'md5' => $md5,
 			'extension' => $file['type'],
-			// 'type' => 'default', // TODO: define type, aka image, video, audio
+			'type' => $options['type'], // TODO: define type, aka image, video, audio
 			'mimetype' => Mime::type($file['type']),
 			'size' => $file['size'],
 			'file' => file_get_contents($file['tmp_name']), //TODO: convert to stream
@@ -171,9 +173,10 @@ class Assets extends \radium\models\BaseModel {
 			}
 
 		} catch(Exception $e) {
-			return array('error' => $e->getMessage());
 			// return array('error' => 'asset could not be saved.');
+			$file = array('error' => $e->getMessage());
 		}
+		// TODO: remove uploaded file!
 		return $file;
 	}
 
