@@ -22,6 +22,9 @@ class Converter extends \lithium\core\Adaptable {
 		'ini' => array(
 			'adapter' => 'Ini',
 		),
+		'import' => array(
+			'adapter' => 'Json',
+		),
 		'json' => array(
 			'adapter' => 'Json',
 		),
