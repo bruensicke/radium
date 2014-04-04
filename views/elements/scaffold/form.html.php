@@ -1,7 +1,7 @@
 <?php
 $binding = $this->form->binding();
 $model = $binding->model();
-$tabs = $model::tabs();
+$tabs = $model::renderLayout();
 $schema = $binding->schema();
 $fields = $schema->names();
 $meta = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');

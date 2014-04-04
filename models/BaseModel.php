@@ -98,18 +98,21 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * If this contains an array, the containing fields ar rendered as tabs in add/edit forms.
 	 *
-	 * 	$_tabs = array(
+	 * 	$_renderLayout = array(
 	 * 		'Tab1' => array(
-	 * 			'field1', 'field2', 'field3'
+	 * 			'field1',
+	 * 			'field2',
+	 * 			'field3'
 	 * 		),
 	 *		'Tab2' => array(
-	 *			'field4', 'field5'
+	 *			'field4',
+	 * 			'field5'
 	 *		),
 	 * 	);
 	 *
 	 * @var array
 	 */
-	public static $_tabs = array();
+	public static $_renderLayout = array();
 
 	/**
 	 * Custom find query properties, indexed by name.
@@ -299,12 +302,12 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * all tabs for current model
+	 * render layout for current model
 	 *
 	 * @param string $name ...
-	 * @return mixed all tabs with keys and their name, or value of `$type` if given
+	 * @return mixed renderLayouts with keys and their name, or value of `$name` if given
 	 */
-	public static function tabs($name = null) {
+	public static function renderLayout($name = null) {
 		return static::_group(__FUNCTION__, $name);
 	}
 
