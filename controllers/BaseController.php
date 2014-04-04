@@ -125,6 +125,7 @@ class BaseController extends \lithium\action\Controller {
 		$defaults = array(
 			'allowed' => '*',
 			'path' => Libraries::get(true, 'resources') . '/tmp/cache',
+			'prefix' => __FUNCTION__,
 			'chmod' => 0644,
 		);
 		$options += $defaults;
@@ -132,27 +133,28 @@ class BaseController extends \lithium\action\Controller {
 			return array('error' => 'only ajax upload allowed.');
 		}
 		$pathinfo = pathinfo($_GET['qqfile']);
-		$filename = $pathinfo['filename'];
-		$ext = isset($pathinfo['extension']) ? $pathinfo['extension'] : '';
-		if (!in_array($ext, (array) $options['allowed']) || $options['allowed'] == '*') {
+		$name = $pathinfo['filename'];
+		$type = isset($pathinfo['extension']) ? $pathinfo['extension'] : '';
+		if (!in_array($type, (array) $options['allowed']) && $options['allowed'] != '*') {
 			$error = 'file-extension not allowed.';
-			return compact('error', 'filename', 'ext');
+			return compact('error', 'name', 'type');
 		}
-		$tmp = tempnam($options['path'], __FUNCTION__); // TODO: make configurable
+		$tmp_name = tempnam($options['path'], $options['prefix']);
 		$input = fopen('php://input', 'r');
-		$temp = fopen($tmp, 'w');
+		$temp = fopen($tmp_name, 'w');
 		$size = stream_copy_to_stream($input, $temp);
-		@chmod($tmp, $options['chmod']);
+		@chmod($tmp_name, $options['chmod']);
 		fclose($input);
-		$msg = sprintf('upload of file %s.%s to %s', $filename, $ext, $tmp);
-		$success = (bool) ($size == (int) $_SERVER['CONTENT_LENGTH']);
-		if (!$success) {
+		$msg = sprintf('upload of file %s.%s to %s', $name, $type, $tmp_name);
+		$complete = (bool) ($size == (int) $_SERVER['CONTENT_LENGTH']);
+		if (!$complete) {
 			$msg = $error = $msg . ' failed.';
 		} else {
 			$msg = 'succesful ' . $msg;
+			$error = UPLOAD_ERR_OK;
 		}
-		$data = compact('success', 'error', 'filename', 'ext', 'size', 'tmp');
-		$priority = (isset($error)) ? 'warning' : 'debug';
+		$data = compact('error', 'name', 'type', 'size', 'tmp_name');
+		$priority = ($complete) ? 'debug' : 'warning';
 		Logger::write($priority, $msg);
 		return $data;
 	}
