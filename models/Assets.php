@@ -41,7 +41,7 @@ class Assets extends \radium\models\BaseModel {
 	protected $_schema = array(
 		'md5' => array('type' => 'string'),
 		'filename' => array('type' => 'string'),
-		'mimetype' => array('type' => 'string'),
+		'mime' => array('type' => 'string'),
 		'extension' => array('type' => 'string'),
 		'size' => array('type' => 'int'),
 	);
@@ -74,6 +74,78 @@ class Assets extends \radium\models\BaseModel {
 			array('numeric', 'message' => 'size must be numeric.'),
 		),
 	);
+
+	/**
+	 * must be called with an array with the following fields to create an asset:
+	 *
+	 *	Array (
+	 *		'name' => 'foobar'   // Name of file to be humanized for records name
+	 *		'type' => 'jpg'      // file-extension, will be adapted to correct asset type
+	 *		'tmp_name' => '/dir/some-file.jpg'  // FQDN of file, to be retrieved
+	 * 		'size' => 44		 // optional, size in bytes of file
+	 *	),
+	 *
+	 * @param array $file array as described above
+	 * @param array $options additional options
+	 *        - `type`: overwrite type of file, if you want to disable automatic detection
+	 *        - `delete`: triggers deletion of retrieved temporary file, defaults to true
+	 *        - `keep`: triggers keeping temporary files in case of errors, defaults to true
+	 * @return array parsed content of Assets bytes
+	 */
+	public static function init($file, array $options = array()) {
+		$defaults = array('type' => 'default', 'delete' => true, 'keep' => true);
+		$options += $defaults;
+
+		// fetch file, if remote
+		// determine size of file on its own
+		// determine md5 of file
+		// find by md5, first
+
+		$md5 = md5_file($file['tmp_name']);
+		$asset = static::findByMd5($md5, array('fields' => '_id'));
+		if ($asset) {
+			if ($options['delete']) {
+				unlink($file['tmp_name']);
+			}
+			$error = 'Asset already present';
+			return compact('error', 'asset');
+		}
+
+		$mime = Mime::type($file['type']);
+		if (is_array($mime)) {
+			$mime = reset($mime);
+		}
+		$data = array(
+			'name' => Inflector::humanize($file['name']),
+			'filename' => sprintf('%s.%s', $file['name'], $file['type']),
+			'slug' => strtolower(sprintf('%s.%s', $file['name'], $file['type'])),
+			'md5' => $md5,
+			'extension' => $file['type'],
+			'type' => static::type($mime),
+			'mime' => $mime,
+			'size' => $file['size'],
+			'file' => file_get_contents($file['tmp_name']), //TODO: convert to stream
+			'foo' => 'bar',
+		);
+
+		try {
+			$asset = static::create($data);
+			if ($asset->validates()) {
+				$file['success'] = (bool) $asset->save();
+				$file['asset'] = $asset;
+			} else {
+				$file['errors'] = $asset->errors();
+			}
+
+		} catch(Exception $e) {
+			// return array('error' => 'asset could not be saved.');
+			$file = array('error' => $e->getMessage());
+		}
+		if ($file['success'] && empty($file['error']) && !$options['keep']) {
+			unlink($file['tmp_name']);
+		}
+		return $file;
+	}
 
 	/**
 	 * load a specific asset
@@ -147,38 +219,18 @@ class Assets extends \radium\models\BaseModel {
 		return Converter::get($asset->type, $asset->file->getBytes(), $data, $options);
 	}
 
-	public static function init($file, array $options = array()) {
-		$defaults = array('type' => 'default');
-		$options += $defaults;
-		$md5 = md5_file($file['tmp_name']);
-		// find by md5, first
-		$data = array(
-			'name' => Inflector::humanize($file['name']),
-			'filename' => sprintf('%s.%s', $file['name'], $file['type']),
-			'slug' => strtolower(sprintf('%s.%s', $file['name'], $file['type'])),
-			'md5' => $md5,
-			'extension' => $file['type'],
-			'type' => $options['type'], // TODO: define type, aka image, video, audio
-			'mimetype' => Mime::type($file['type']),
-			'size' => $file['size'],
-			'file' => file_get_contents($file['tmp_name']), //TODO: convert to stream
-		);
-		try {
-			$asset = static::create($data);
-			if ($asset->validates()) {
-				$file['success'] = (bool) $asset->save();
-				$file['id'] = $asset->id();
-			} else {
-				$file['errors'] = $asset->errors();
-			}
-
-		} catch(Exception $e) {
-			// return array('error' => 'asset could not be saved.');
-			$file = array('error' => $e->getMessage());
+	/**
+	 * returns correct type for given mime-type to allow for grouping assets into types
+	 *
+	 * @param string $mime string of mime-type, e.g. application/json, image/png, ...
+	 */
+	public static function mimetype($mime) {
+		if ($mime == 'application/json') {
+			return 'import';
 		}
-		// TODO: remove uploaded file!
-		return $file;
+		return substr($mime, 0, strpos($mime, '/'));
 	}
+
 
 }
 

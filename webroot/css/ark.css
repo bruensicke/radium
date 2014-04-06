@@ -2637,6 +2637,9 @@ body.cover {
 }
 
 /* radium added classes */
+.img-thumbnail {
+  background-color: transparent;
+}
 a, a:active, a:hover, a:visited {
 	outline: none !important;
 }

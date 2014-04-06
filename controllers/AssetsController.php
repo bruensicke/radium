@@ -8,6 +8,8 @@
 
 namespace radium\controllers;
 
+use lithium\net\http\Router;
+
 class AssetsController extends \radium\controllers\ScaffoldController {
 
 	public $model = 'radium\models\Assets';
@@ -35,7 +37,26 @@ class AssetsController extends \radium\controllers\ScaffoldController {
 		if ($file['error'] !== UPLOAD_ERR_OK) {
 			return $file;
 		}
-		return $model::init($file);
+		$result = $model::init($file);
+		if (!empty($result['asset'])) {
+			$result['message'] = (!empty($result['success']))
+				? 'upload successful'
+				: 'file already present';
+			$result['url'] = Router::match(
+				array(
+					'library' => 'radium',
+					'controller' => 'assets',
+					'action' => 'view',
+					'id' => $result['asset']->id()),
+				$this->request,
+				array('absolute' => true)
+			);
+			// unset($result['asset']);
+		}
+		// if ($result['success']) {
+		// 	unset($result['asset']);
+		// }
+		return $result;
 	}
 
 }

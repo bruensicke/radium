@@ -21,9 +21,14 @@ uploader.completed = function(id, file, res) {
 	// console.log(file);
 	// console.log(res);
 	if (res.url !== undefined) {
+		$('ul.qq-upload-list li:eq('+id+') .qq-upload-file').wrap('<a href="'+res.url+'"></a>');
 		$('ul.qq-upload-list li:eq('+id+') .qq-upload-status-text').html('<a href="'+res.url+'">'+res.message+'</a>');
 	}
-	if (typeof res.error == 'string' || res.error instanceof String) {
+	if (res.asset !== undefined) {
+		$('ul.qq-upload-list li:eq('+id+')').removeClass('alert-error').addClass('alert-success');
+		$('ul.qq-upload-list li:eq('+id+') .qq-upload-status-text').html('<a href="'+res.url+'">'+res.message+'</a> <i class="fa fa-check"></i>');
+		// uploader.msg('success', '<a href="'+res.url+'">'+res.message+'</a>');
+	} else if (typeof res.error == 'string' || res.error instanceof String) {
 		$('ul.qq-upload-list li:eq('+id+') .qq-upload-status-text').html('<i class="fa fa-warning"></i>');
 		uploader.msg('warning', 'import failed: ' + res.error);
 	} else if (res.errors !== undefined) {
