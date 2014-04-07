@@ -2637,6 +2637,9 @@ body.cover {
 }
 
 /* radium added classes */
+.btn {
+	text-transform: uppercase;
+}
 .img-thumbnail {
   background-color: transparent;
 }
@@ -2663,6 +2666,7 @@ a, a:active, a:hover, a:visited {
 .dropdown-menu i.fa {
 	min-width: 1.2em;
 	display: inline-block;
+	text-align: center;
 }
 ul.nav>li.nav-header {
 	margin-top: 2em;
@@ -2686,6 +2690,7 @@ ul.nav:first-child>li.nav-header:first-child {
 .sidebar .nav li i.fa {
 	min-width: 1.1em;
 	display: inline-block;
+	text-align: center;
 }
 .sidebar .nav .active > a {
 	background-color: #fff;
