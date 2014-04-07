@@ -141,6 +141,15 @@ class Configurations extends \radium\models\BaseModel {
 		return $entity->val($options['field'], $options);
 	}
 
+	public static function settings($name = null, array $options = array()) {
+		$defaults = array('visible' => true, 'status' => 'active');
+		$options += $defaults;
+        $conditions = $defaults;
+		return static::find('all', compact('conditions'));
+	}
+
+
+
 }
 
 ?>
