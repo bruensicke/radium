@@ -2640,6 +2640,12 @@ body.cover {
 .btn {
 	text-transform: uppercase;
 }
+.label-inactive {
+	background-color: #e8b976;
+}
+.label-active {
+	background-color: #84ce84;
+}
 .img-thumbnail {
   background-color: transparent;
 }

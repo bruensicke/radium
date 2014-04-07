@@ -31,7 +31,7 @@
 				{{#if status}}<span class="label label-primary label-{{ status }}">{{ status }}</span>{{/if}}
 			</td>
 			<td>
-				{{#if type}}<span class="label label-primary label-{{ type }}">{{ type }}</span>{{/if}}
+				{{#if type}}<span class="label label-primary label-{{ type }}" style="background-color:{{strtocolor type}}">{{ type }}</span>{{/if}}
 			</td>
 			<td>
 				{{ slug }}
