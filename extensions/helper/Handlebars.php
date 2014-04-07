@@ -98,6 +98,10 @@ class Handlebars extends \lithium\template\Helper {
 		$this->addHelper('url', function($a, $b, $c, $d) use ($context) {
 			return $context->url($c);
 		});
+		$this->addHelper('strtocolor', function($a, $b, $c, $d) use ($context) {
+			$color = substr(dechex(crc32($b->get($c))), 0, 6);
+			return '#'.$color;
+		});
 		$this->addHelper('scaffold', function($a, $b, $c, $d) use ($context) {
 			if (isset($context->scaffold->$c)
 			 && is_callable(array($context->scaffold->$c, '\lithium\data\Collection'))) {

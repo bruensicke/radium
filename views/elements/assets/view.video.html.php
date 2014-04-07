@@ -12,7 +12,7 @@ $url = Router::match(
 );
 ?>
 <div class="plaintext"><pre><?= $url ?></pre></div>
-<div class="image img_<?= $this->scaffold->type ?>"><img src="<?= $url ?>" class="img-thumbnail" /></div>
+<video width="320" height="240" controls><source src="<?= $url ?>" type="<?= $this->scaffold->object['mime']?>"></video>
 <hr />
 <?unset($this->scaffold->object['file']);?>
 <?= $this->scaffold->render('data', array('data' => \lithium\util\Set::flatten($this->scaffold->object->data()))); ?>
