@@ -10,6 +10,8 @@ namespace radium\models;
 
 use radium\media\Mime;
 use radium\data\Converter;
+
+use lithium\util\Set;
 use lithium\util\Inflector;
 use lithium\action\Response;
 
@@ -121,7 +123,7 @@ class Assets extends \radium\models\BaseModel {
 			'slug' => strtolower(sprintf('%s.%s', $file['name'], $file['type'])),
 			'md5' => $md5,
 			'extension' => $file['type'],
-			'type' => static::type($mime),
+			'type' => static::mimetype($mime),
 			'mime' => $mime,
 			'size' => $file['size'],
 			'file' => file_get_contents($file['tmp_name']), //TODO: convert to stream
@@ -177,12 +179,14 @@ class Assets extends \radium\models\BaseModel {
 	 * @param array $options additional options
 	 *        - `response`: returns prepared response, defaults to false
 	 *                      WARNING: will load whole file into RAM at once.
+	 *        - `download`: specify a filename and file will be offered as download
 	 *        - `stream`: directly stream contents out, defaults to true
 	 *        - `exit`: will exit process after streaming, defaults to true
 	 * @return object|void returns response or directly renders the asset
 	 */
 	public function render($asset, $data = array(), array $options = array()) {
 		$defaults = array(
+			'download' => false,
 			'response' => false,
 			'stream' => true,
 			'exit' => true,
@@ -196,7 +200,7 @@ class Assets extends \radium\models\BaseModel {
 			));
 		}
 
-		Mime::header($asset->extension);
+		Mime::header($asset->extension, $options);
 		$stream = $asset->file->getResource();
 		while (!feof($stream)) {
 			echo fread($stream, $options['size']);
@@ -217,6 +221,61 @@ class Assets extends \radium\models\BaseModel {
 	 */
 	public function decode($asset, $data = array(), array $options = array()) {
 		return Converter::get($asset->type, $asset->file->getBytes(), $data, $options);
+	}
+
+	/**
+	 * runs whatever is suited for given type
+	 *
+	 * @param object $asset instance of current record
+	 * @return mixed
+	 */
+	public function run($asset) {
+		switch ($asset->type) {
+			case 'import':
+				return $asset->import();
+		}
+		return true;
+	}
+
+	/**
+	 * imports data attribute into database. Allows importing of all model data within one file.
+	 * Will call a method on each model, named `bulkImport` (can be customized) to do the heavy
+	 * lifting of import. Thus, it allows overwriting the import on a per-model basis.
+	 *
+	 * The data of the asset, to be decoded must have the following structure:
+	 *
+	 *	Array (
+	 *		'radium\\models\\Contents' => Array (
+	 *			'5328587a4eaa3af84e000000' => Array (
+	 *				'key' => 'value'   // all data per model
+	 *			),
+	 *			'5428587a4eaa3af84e000001' => Array (
+	 *				'key' => 'value'   // all data per model
+	 *			),
+	 *		),
+	 *
+	 * @see radium\data\BaseModel::bulkImport()
+	 * @param object $asset instance of current record
+	 * @param array $options additional options, will be passed into bulkImport method.
+	 *        - `function`: pass in a callback to handle the import of each record on the
+	 *                      corresponding model class, defaults to `bulkImport`.
+	 * @return array parsed content of Assets bytes
+	 */
+	public function import($asset, array $options = array()) {
+		$defaults = array('function' => 'bulkImport');
+		$options += $defaults;
+
+		$data = $asset->decode();
+		$result = array();
+
+		list($temp, $params) = Set::slice($options, array('dry', 'prune', 'overwrite', 'strict'));
+
+		$models = array_keys($data);
+		foreach($models as $model) {
+			$items = &$data[$model];
+			$result[$model] = call_user_func(array($model, $options['function']), $items, $params);
+		}
+		return $result;
 	}
 
 	/**
