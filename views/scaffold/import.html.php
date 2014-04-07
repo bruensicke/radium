@@ -1,7 +1,7 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
 <div class="actions pull-right btn-group">
-	<?= $this->html->link('CANCEL', $this->scaffold->action('index'), array('class' => 'btn btn-default', 'icon' => 'close'));?>
+	<?= $this->html->link('cancel', $this->scaffold->action('index'), array('class' => 'btn btn-default', 'icon' => 'close'));?>
 </div>
 
 <ol class="breadcrumb">
