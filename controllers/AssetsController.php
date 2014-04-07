@@ -8,6 +8,7 @@
 
 namespace radium\controllers;
 
+use lithium\util\Set;
 use lithium\net\http\Router;
 
 class AssetsController extends \radium\controllers\ScaffoldController {
@@ -47,7 +48,15 @@ class AssetsController extends \radium\controllers\ScaffoldController {
 			$url = array('action' => 'index');
 			return $this->redirect($url);
 		}
-		$result = $object->run();
+		list($temp, $options) = Set::slice($this->request->data, array('validate', 'strict'));
+		switch ($this->request->data['mode']) {
+			case 'keep':
+				$options['overwrite'] = false;
+			case 'remove':
+				$options['prune'] = true;
+				break;
+		}
+		$result = $object->run($options);
 		$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 		return $this->redirect($url);
 	}

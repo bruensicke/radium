@@ -227,12 +227,13 @@ class Assets extends \radium\models\BaseModel {
 	 * runs whatever is suited for given type
 	 *
 	 * @param object $asset instance of current record
+	 * @param array $options additional options to be passed into corresponding method.
 	 * @return mixed
 	 */
-	public function run($asset) {
+	public function run($asset, array $options = array()) {
 		switch ($asset->type) {
 			case 'import':
-				return $asset->import();
+				return $asset->import($options);
 		}
 		return true;
 	}
