@@ -127,7 +127,6 @@ class Assets extends \radium\models\BaseModel {
 			'mime' => $mime,
 			'size' => $file['size'],
 			'file' => file_get_contents($file['tmp_name']), //TODO: convert to stream
-			'foo' => 'bar',
 		);
 
 		try {
@@ -143,7 +142,7 @@ class Assets extends \radium\models\BaseModel {
 			// return array('error' => 'asset could not be saved.');
 			$file = array('error' => $e->getMessage());
 		}
-		if ($file['success'] && empty($file['error']) && !$options['keep']) {
+		if (!empty($file['success']) && empty($file['error']) && !$options['keep']) {
 			unlink($file['tmp_name']);
 		}
 		return $file;
@@ -196,7 +195,7 @@ class Assets extends \radium\models\BaseModel {
 		if ($options['response'] || !$options['stream']) {
 			return new Response(array(
 				'headers' => array('Content-type' => $asset->mimetype),
-				'body' => $object->file->getBytes()
+				'body' => $asset->file->getBytes()
 			));
 		}
 
