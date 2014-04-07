@@ -26,6 +26,32 @@ class AssetsController extends \radium\controllers\ScaffoldController {
 		return $object->render();
 	}
 
+	public function download($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+
+		$object = $model::first($id);
+		if (!$object) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
+		return $object->render(array(), array('download' => $object->filename));
+	}
+
+	public function run($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+
+		$object = $model::first($id);
+		if (!$object) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
+		$result = $object->run();
+		$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+		return $this->redirect($url);
+	}
+
 	public function upload() {
 		if (!$this->request->is('ajax')) {
 			return array();
