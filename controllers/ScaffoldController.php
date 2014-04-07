@@ -189,8 +189,10 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if (empty($asset)) {
 			return $data;
 		}
-		$content = $asset->decode();
-		$data = $this->_import($content);
+		//TODO:
+		$asset->import();
+		// $content = $asset->decode();
+		// $data = $this->_import($content);
 		return $data;
 	}
 
