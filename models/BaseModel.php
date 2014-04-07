@@ -408,6 +408,7 @@ class BaseModel extends \lithium\data\Model {
 	 *        - `overwrite`: overwrite existing records, defaults to true
 	 *        - `validate`: validate data, before save, defaults to true
 	 *        - `strict`: defines if only fields in schema will be imported, defaults to true
+	 *        - `callbacks`: enable callbacks in save-method, defaults to false
 	 * @return array
 	 */
 	public static function bulkImport($data, array $options = array()) {
@@ -417,6 +418,7 @@ class BaseModel extends \lithium\data\Model {
 			'overwrite' => true,
 			'validate' => true,
 			'strict' => true,
+			'callbacks' => false,
 		);
 		$options += $defaults;
 		$result = array();
@@ -435,6 +437,8 @@ class BaseModel extends \lithium\data\Model {
 			$result += array_fill_keys($skipped, 'skipped');
 		}
 
+		$callbacks = $options['callbacks'];
+		$whitelist = ($options['strict']) ? static::schema()->names() : null;
 		foreach ($data as $key => $item) {
 			$entity = static::create();
 			$entity->set($item);
@@ -442,16 +446,12 @@ class BaseModel extends \lithium\data\Model {
 				$result[$key] = (!$entity->validates())
 					? $entity->errors()
 					: 'valid';
-				if ($options['dry'] || $result[$key] !== 'valid') {
+				if ($result[$key] !== 'valid' || $options['dry']) {
 					continue;
 				}
 			}
-			if ($options['strict']) {
-				$schema = $entity->schema();
-				$whitelist = $schema->names();
-			}
 			if (!$options['dry']) {
-				$result[$key] = ($entity->save(null, compact('whitelist')))
+				$result[$key] = ($entity->save(null, compact('whitelist', 'callbacks')))
 					? 'saved'
 					: 'failed';
 			}
