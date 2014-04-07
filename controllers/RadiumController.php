@@ -9,6 +9,7 @@
 namespace radium\controllers;
 
 use radium\models\Configurations;
+use lithium\core\Libraries;
 
 class RadiumController extends \radium\controllers\BaseController {
 
@@ -26,6 +27,11 @@ class RadiumController extends \radium\controllers\BaseController {
 
 	public function index() {
 
+	}
+
+	public function export() {
+		$models = Libraries::locate('models');
+		return compact('models');
 	}
 
 	public function settings() {

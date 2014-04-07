@@ -7,7 +7,7 @@
         <?= $this->html->link('radium', '/radium');?>
     </li>
     <li class="active">
-        <?= $this->title('Settings'); ?>
+        <?= $this->title('Export'); ?>
     </li>
 </ol>
 
@@ -19,9 +19,6 @@
 </div>
 
 <div class="main-content">
-	<?php
-	var_dump($settings);
-	?>
+	<?= $this->_render('element', 'radium/form.export'); ?>
 </div>
-
 
