@@ -102,6 +102,12 @@ class Handlebars extends \lithium\template\Helper {
 			$color = substr(dechex(crc32($b->get($c))), 0, 6);
 			return '#'.$color;
 		});
+		$this->addHelper('muted_if_comment', function($a, $b, $c, $d) {
+			if (substr($b->get($c), 0, 2) == '//' || substr($b->get($c), 0, 2) == '/*') {
+				return ' class=text-muted';
+			}
+			return '';
+		});
 		$this->addHelper('scaffold', function($a, $b, $c, $d) use ($context) {
 			if (isset($context->scaffold->$c)
 			 && is_callable(array($context->scaffold->$c, '\lithium\data\Collection'))) {
