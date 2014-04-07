@@ -1,8 +1,8 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
 <div class="actions pull-right btn-group">
-	<?= $this->html->link('import', $this->scaffold->action('import'), array('class' => 'btn btn-default', 'icon' => 'cloud-upload'));?>
-	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'cloud-download'));?>
+	<?= $this->html->link('import', $this->scaffold->action('import'), array('class' => 'btn btn-default', 'icon' => 'download'));?>
+	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'upload'));?>
 </div>
 
 <ol class="breadcrumb">

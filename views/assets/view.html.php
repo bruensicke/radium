@@ -1,9 +1,9 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
 <div class="actions pull-right btn-group">
-	<?= $this->html->link('download', $this->scaffold->action('download'), array('class' => 'btn btn-default', 'icon' => 'cloud-download'));?>
-	<?= $this->html->link('delete', $this->scaffold->action('delete'), array('class' => 'btn btn-default', 'icon' => 'trash-o'));?>
-	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-primary', 'icon' => 'pencil'));?>
+	<?= $this->html->link('download', $this->scaffold->action('download'), array('class' => 'btn btn-default', 'icon' => 'upload'));?>
+	<?= $this->html->link('delete', $this->scaffold->action('delete'), array('class' => 'btn btn-default', 'icon' => 'remove'));?>
+	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-primary', 'icon' => 'pencil2'));?>
 </div>
 
 <ol class="breadcrumb">
