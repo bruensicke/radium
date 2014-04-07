@@ -279,7 +279,7 @@ class Mime {
 			header(sprintf('Cache-Control: %s', $options['cache']));
 		}
 		if ($options['download']) {
-			header(sprintf('Content-Disposition: attachment; filename="%s"', $download));
+			header(sprintf('Content-Disposition: attachment; filename="%s"', $options['download']));
 		}
 	}
 
