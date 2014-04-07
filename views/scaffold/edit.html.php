@@ -2,8 +2,8 @@
 <?= $this->form->create($this->scaffold->object, array('class' => 'form')); ?>
 
 <div class="actions pull-right btn-group">
-	<?= $this->html->link('cancel', $this->scaffold->action('view'), array('class' => 'btn btn-default'));?>
-	<?= $this->form->button('Save', array('type' => 'submit', 'class' => 'btn btn-primary', 'icon' => 'save')); ?>
+	<?= $this->html->link('cancel', $this->scaffold->action('index'), array('class' => 'btn btn-default', 'icon' => 'close'));?>
+	<?= $this->form->button('save', array('type' => 'submit', 'class' => 'btn btn-primary', 'icon' => 'save')); ?>
 </div>
 
 <ol class="breadcrumb">

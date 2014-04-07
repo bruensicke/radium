@@ -57,15 +57,15 @@
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuContext">
 						<li role="presentation" class="dropdown-header">Actions</li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/view/{{ _id }}"><i class="fa fa-fw fa-eye"></i> View</a></li>
-						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil"></i> Edit</a></li>
+						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil2"></i> Edit</a></li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/duplicate/{{ _id }}"><i class="fa fa-fw fa-copy"></i> Clone</a></li>
-						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-cloud-download"></i> Export</a></li>
+						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-upload"></i> Export</a></li>
 						<li role="presentation" class="divider"></li>
 						{{#if deleted}}
-							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/undelete/{{ _id }}"><i class="fa fa-fw fa-reply"></i> Restore</a></li>
-							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/remove/{{ _id }}"><i class="fa fa-fw fa-trash-o"></i> Remove physically</a></li>
+							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/undelete/{{ _id }}"><i class="fa fa-fw fa-spinner7 fa-flip-horizontal"></i> Restore</a></li>
+							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/remove/{{ _id }}"><i class="fa fa-fw fa-remove"></i> Remove physically</a></li>
 						{{else}}
-							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/delete/{{ _id }}"><i class="fa fa-fw fa-trash-o"></i> Delete</a></li>
+							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/delete/{{ _id }}"><i class="fa fa-fw fa-remove"></i> Delete</a></li>
 						{{/if}}
 					</ul>
 				</div>
