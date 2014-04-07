@@ -7,7 +7,7 @@ $data = $object->import(array('dry' => true));
 $models = array_keys($data);
 foreach ($models as $model) {
 	echo sprintf('<h3>%s</h3>', $model);
-	echo $this->scaffold->render('data', array('data' => $data[$model]));
+	echo $this->scaffold->render('data', array('data' => lithium\util\Set::flatten($data[$model])));
 }
 		?>
 	</div>
