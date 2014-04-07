@@ -399,6 +399,67 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * mass-import datasets
+	 *
+	 * @param array $data data as array, keyed off by ids and value beeing an array with all values
+	 * @param array $options additional options
+	 *        - `dry`: make a dry-run of import
+	 *        - `prune`: empty collection before import, defaults to false
+	 *        - `overwrite`: overwrite existing records, defaults to true
+	 *        - `validate`: validate data, before save, defaults to true
+	 *        - `strict`: defines if only fields in schema will be imported, defaults to true
+	 * @return array
+	 */
+	public static function bulkImport($data, array $options = array()) {
+		$defaults = array(
+			'dry' => false,
+			'prune' => false,
+			'overwrite' => true,
+			'validate' => true,
+			'strict' => true,
+		);
+		$options += $defaults;
+		$result = array();
+
+		if ($options['prune'] && !$options['dry']) {
+			static::remove();
+		}
+
+		if (!$options['overwrite']) {
+			$conditions = array('_id' => array_keys($data));
+			$fields = '_id';
+			$present = static::find('all', compact('conditions', 'fields'));
+
+			$data = array_diff_key($data, $present->data());
+			$skipped = array_keys(array_intersect_key($data, $present->data()));
+			$result += array_fill_keys($skipped, 'skipped');
+		}
+
+		foreach ($data as $key => $item) {
+			$entity = static::create();
+			$entity->set($item);
+			if ($options['validate'] || $options['dry']) {
+				$result[$key] = (!$entity->validates())
+					? $entity->errors()
+					: 'valid';
+				if ($options['dry'] || $result[$key] !== 'valid') {
+					continue;
+				}
+			}
+			if ($options['strict']) {
+				$schema = $entity->schema();
+				$whitelist = $schema->names();
+			}
+			if (!$options['dry']) {
+				$result[$key] = ($entity->save(null, compact('whitelist')))
+					? 'saved'
+					: 'failed';
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * updates fields for multiple records, specified by key => value
 	 *
 	 * You can update the same field for more than on record with one call, like this:

@@ -1,29 +1,11 @@
 <?php
-use lithium\net\http\Router;
-
 $asset = $this->scaffold->object;
-switch($asset->type) {
-	case 'plain':
-		echo sprintf('<div class="plaintext"><pre>%s</pre></div>', $asset->file->getBytes());
-	break;
-	case 'import':
-		echo $this->scaffold->render('data', array('data' => \lithium\util\Set::flatten($asset->decode())));
-	break;
-	case 'image':
-		$url = Router::match(
-			array(
-				'library' => 'radium',
-				'controller' => 'assets',
-				'action' => 'show',
-				'id' => $asset->id()),
-			$this->request(),
-			array('absolute' => true)
-		);
-		echo sprintf('<div class="plaintext"><pre>%s</pre></div>', $url);
-		echo sprintf('<div class="image img_%s"><img src="%s" class="img-thumbnail" /></div>', $asset->extension, $url);
-	default:
-		#echo $asset->body();
+if (in_array($asset->type, array('import', 'plain', 'image'))) {
+	echo $this->_render('element', sprintf('assets/view.%s', $asset->type));
+} else {
+	echo $this->_render('element', 'assets/view.default');
 }
+unset($this->scaffold->object['file']); // no need to show data from grid.fs
 ?>
 <hr />
 <?= $this->scaffold->render('data', array('data' => \lithium\util\Set::flatten($this->scaffold->object->data()))); ?>

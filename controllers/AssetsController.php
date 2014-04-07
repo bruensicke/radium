@@ -8,6 +8,7 @@
 
 namespace radium\controllers;
 
+use lithium\util\Set;
 use lithium\net\http\Router;
 
 class AssetsController extends \radium\controllers\ScaffoldController {
@@ -24,6 +25,40 @@ class AssetsController extends \radium\controllers\ScaffoldController {
 			return $this->redirect($url);
 		}
 		return $object->render();
+	}
+
+	public function download($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+
+		$object = $model::first($id);
+		if (!$object) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
+		return $object->render(array(), array('download' => $object->filename));
+	}
+
+	public function run($id = null) {
+		$id = (!is_null($id)) ? $id : $this->request->id;
+		$model = $this->scaffold['model'];
+
+		$object = $model::first($id);
+		if (!$object) {
+			$url = array('action' => 'index');
+			return $this->redirect($url);
+		}
+		list($temp, $options) = Set::slice($this->request->data, array('validate', 'strict'));
+		switch ($this->request->data['mode']) {
+			case 'keep':
+				$options['overwrite'] = false;
+			case 'remove':
+				$options['prune'] = true;
+				break;
+		}
+		$result = $object->run($options);
+		$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
+		return $this->redirect($url);
 	}
 
 	public function upload() {
