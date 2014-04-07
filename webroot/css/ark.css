@@ -2772,3 +2772,8 @@ tr.deleted  {
 .table-striped>tbody>tr.deleted>td, .table-striped>tbody>tr.deleted>th {
 	background-color: transparent;
 }
+
+div.checker span {
+	line-height: 16px;
+	font-weight: normal;
+}

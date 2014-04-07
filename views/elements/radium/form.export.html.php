@@ -1,9 +1,9 @@
 <?php
 foreach ($models as $model) {
-	echo $this->Form->field($model, array(
-		'type' => 'checkbox',
+	echo $this->Form->checkbox($model, array(
+		'div' => 'form-control',
 		'label' => $model,
-		'value' => $model,
 	));
+	echo '<br>';
 }
-?>
+

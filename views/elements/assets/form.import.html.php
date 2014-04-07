@@ -9,11 +9,11 @@ echo $this->Form->field('mode', array(
 		'remove' => 'remove all existing records before import',
 	),
 ));
-echo $this->Form->field('validate', array(
-	'type' => 'checkbox',
+echo $this->Form->checkbox('validate', array(
 	'label' => 'Only import, if validation passes',
 ));
-echo $this->Form->field('strict', array(
-	'type' => 'checkbox',
+echo '<br>';
+echo $this->Form->checkbox('strict', array(
 	'label' => 'Only import fields defined in schema',
 ));
+echo '<br>';
