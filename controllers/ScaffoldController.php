@@ -102,20 +102,20 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$id = (!is_null($id)) ? $id : $this->request->id;
 		$model = $this->scaffold['model'];
 		$singular = strtolower($this->scaffold['singular']);
-		$plural = $this->scaffold['table'];
+		$plural = strtolower($this->scaffold['table']);
 
 		if (is_null($id)) {
 			$limit = 0;
 			$conditions = $this->_options();
 			$result = $model::find('all', compact('limit', 'conditions'));
-			$data = array($plural => $result);
+			$data = array($model => $result);
 			$suffix = (!empty($conditions))
 				? http_build_query($conditions, '', '-')
-				: 'all';
+				: date('Y-m-d_H:i:s');
 			$name = sprintf('%s-%s.json', $plural, $suffix);
 		} else {
 			$result = $model::first($id);
-			$data = array($plural => array($result->data()));
+			$data = array($model => array($id => $result->data()));
 			$name = sprintf('%s-%s.json', $singular, $id);
 		}
 		$this->response->headers('download', $name);
@@ -190,7 +190,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return $data;
 		}
 		$content = $asset->decode();
-		var_dump($content);exit;
 		$data = $this->_import($content);
 		return $data;
 	}
