@@ -52,6 +52,7 @@ class AssetsController extends \radium\controllers\ScaffoldController {
 		switch ($this->request->data['mode']) {
 			case 'keep':
 				$options['overwrite'] = false;
+				break;
 			case 'remove':
 				$options['prune'] = true;
 				break;
