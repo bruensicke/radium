@@ -19,6 +19,7 @@ Inflector::rules('uninflected', 'status');
  * apply new validation rules to the Validator class, because we need them
  */
 Validator::add(array(
+	'sha1' => '/^[A-Fa-f0-9]{40}$/',
 	'slug' => '/^[a-z0-9\_\-\.]*$/',			// only lowercase, digits and dot
 	'loose_slug' => '/^[a-zA-Z0-9\_\-\.]*$/',	// both cases, digits and dot
 	'strict_slug' => '/^[a-z][a-z0-9\_\-]*$/',  // only lowercase, starting with letter, no dot
