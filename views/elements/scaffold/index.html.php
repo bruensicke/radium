@@ -26,7 +26,7 @@
 		</tr>
 	{{/unless}}
 	{{#each objects}}
-		<tr{{#if deleted}} class="deleted"{{/if}}>
+		<tr class="{{ status }}{{#if deleted}} deleted{{/if}}">
 			<td>
 				{{#if status}}<span class="label label-primary label-{{ status }}">{{ status }}</span>{{/if}}
 			</td>
