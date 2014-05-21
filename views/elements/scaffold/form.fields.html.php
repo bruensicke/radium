@@ -15,9 +15,39 @@ $readonly = isset($readonly)
 	? $readonly
 	: array();
 
-foreach ($fields as $index => $field) {
+$newfields = array();
+foreach ($fields as $field) {
+	if (is_array($field)) {
+		$newfields[] = 'GROUPSTART_'.intval(12 / count($field));
+		foreach ($field as $i => $f) {
+			$newfields[] = $f;
+		}
+		$newfields[] = 'GROUPEND';
+		continue;
+	}
+	$newfields[] = $field;
+}
+$fields = $newfields;
+
+$inCols = false;
+foreach ($fields as $field) {
+
 	if (in_array($field, $skip)) {
 		continue;
+	}
+
+	if (stristr($field, 'GROUPSTART')) {
+		list($groupstart, $inCols) = explode('_', $field);
+		echo '<div class="row">';
+		continue;
+	}
+	if (stristr($field, 'GROUPEND')) {
+		$inCols = false;
+		echo '</div>';
+		continue;
+	}
+	if ($inCols) {
+		echo sprintf('<div class="col-md-%d">', $inCols);
 	}
 
 	switch ($field) {
@@ -105,6 +135,19 @@ foreach ($fields as $index => $field) {
 			echo $this->form->field($field, $options);
 		break;
 
+		case 'double':
+			$options = array(
+				'type' => 'number',
+				'step' => '0.01',
+				'class' => 'form-control numeric',
+			);
+			if (in_array($field, $readonly)) {
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
+			}
+			echo $this->form->field($field, $options);
+			break;
+
 		case 'date':
 			// TODO: datepicker
 			$options = array(
@@ -144,5 +187,9 @@ foreach ($fields as $index => $field) {
 			echo $this->form->field($field, $options);
 		break;
 	}
+
+	if ($inCols) {
+		echo '</div>';
+	}
+
 }
-?>
