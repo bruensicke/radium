@@ -98,9 +98,21 @@ class Handlebars extends \lithium\template\Helper {
 		$this->addHelper('url', function($a, $b, $c, $d) use ($context) {
 			return $context->url($c);
 		});
-		$this->addHelper('strtocolor', function($a, $b, $c, $d) use ($context) {
-			$color = substr(dechex(crc32($b->get($c))), 0, 6);
-			return '#'.$color;
+		$this->addHelper('colorlabel', function($a, $b, $c, $d) use ($context) {
+			$useClass = array('active', 'inactive');
+			$text = $b->get($c);
+			if (in_array($text, $useClass)) {
+				$html = '<span class="label label-primary label-%s">%s</span>';
+				return sprintf($html, $text, $text);
+			}
+			$bgcolor = substr(dechex(crc32($text)), 0, 6);
+			$c_r = hexdec(substr($bgcolor, 0, 2));
+			$c_g = hexdec(substr($bgcolor, 2, 2));
+			$c_b = hexdec(substr($bgcolor, 4, 2));
+			$lightness = (($c_r * 299) + ($c_g * 587) + ($c_b * 114)) / 1000;
+			$txcolor = ($lightness > 200) ? '666666' : 'ffffff';
+			$html = '<span class="label label-primary" style="background-color: #%s; color: #%s">%s</span>';
+			return sprintf($html, $bgcolor, $txcolor, $text);
 		});
 		$this->addHelper('muted_if_comment', function($a, $b, $c, $d) {
 			if (substr($b->get($c), 0, 2) == '//' || substr($b->get($c), 0, 2) == '/*') {
