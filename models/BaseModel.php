@@ -566,11 +566,14 @@ class BaseModel extends \lithium\data\Model {
 	 * @param object $entity current instance
 	 * @param string $field what field (in case of array) to return
 	 * @param array $options an array of options currently supported are
+	 *              - `raw`     : returns Configuration object directly
 	 *              - `default` : what to return, if nothing is found
 	 *              - `flat`    : to flatten the result, if object/array-ish, defaults to false
 	 * @return mixed configuration value
 	 */
 	public function configuration($entity, $field = null, array $options = array()) {
+		$defaults = array('raw' => false);
+		$options += $defaults;
 		$load = (empty($entity->config_id))
 			? sprintf('%s.%s', strtolower(static::meta('name')), $entity->slug)
 			: $entity->config_id;
@@ -578,7 +581,7 @@ class BaseModel extends \lithium\data\Model {
 		if (!$config) {
 			return null;
 		}
-		return $config->val($field, $options);
+		return ($options['raw']) ? $config : $config->val($field, $options);
 	}
 
 	/**
