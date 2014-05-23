@@ -2806,3 +2806,6 @@ dl.dl-intended dd {
 	padding-left: 1em;
 }
 
+.trumbowyg-box, .editor {
+	margin: 0 !important;
+}

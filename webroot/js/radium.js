@@ -11,6 +11,7 @@ var Radium = new function ($) {
 		// initDatePickers();
 		initMenus();
 		initDataswitch();
+		initRTE();
 		// //init code highlighter
 		// if (typeof prettyPrint === "function"){
 		// 	prettyPrint();
@@ -77,6 +78,9 @@ var Radium = new function ($) {
 			}
 		});
 		$('[data-switch]').trigger('change');
+	}
+	function initRTE() {
+		$('.rte').trumbowyg();
 	}
 
 	function initDatetimes() {
