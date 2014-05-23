@@ -24,6 +24,7 @@
 	'/radium/js/jquery.autoresize.min',
 	'/radium/js/fineuploader.min',
 	'/radium/js/jquery.uniform.min.js',
+	'/radium/js/jquery.slug.js',
 	'/radium/js/select2.min',
 	'/radium/js/moment.min',
 	'/radium/js/import',
