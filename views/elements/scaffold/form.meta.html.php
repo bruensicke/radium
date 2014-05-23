@@ -5,5 +5,5 @@ $skip = isset($skip)
 $readonly = isset($readonly)
 	? $readonly
 	: array();
-$fields = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
+$fields = array('status', 'type', 'name', 'slug', 'notes', 'config_id', '_id');
 echo $this->scaffold->render('form.fields', compact('fields', 'skip', 'readonly'));

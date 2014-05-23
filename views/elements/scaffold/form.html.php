@@ -4,7 +4,7 @@ $model = $binding->model();
 $tabs = $model::renderLayout();
 $schema = $binding->schema();
 $fields = $schema->names();
-$meta = array('status', 'type', 'name', 'slug', 'notes', 'configuration', '_id');
+$meta = array('status', 'type', 'name', 'slug', 'notes', 'config_id', '_id');
 $skip = isset($skip)
 	? $skip
 	: array();

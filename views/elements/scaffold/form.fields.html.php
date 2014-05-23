@@ -103,6 +103,9 @@ foreach ($fields as $field) {
 				'data-switch' => 'configuration',
 				'list' => Configurations::find('list')
 			);
+			if (isset($schema[$field]['null']) && $schema[$field]['null'] === true) {
+				$options['empty'] = true;
+			}
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';

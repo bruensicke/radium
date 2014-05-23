@@ -57,6 +57,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	protected $_schema = array(
 		'_id' => array('type' => 'id'),
+		'config_id' => array('type' => 'configuration', 'null' => true),
 		'name' => array('type' => 'string', 'default' => '', 'null' => false),
 		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
 		'type' => array('type' => 'string', 'default' => 'default'),
@@ -558,6 +559,10 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * fetches the associated configuration record
 	 *
+	 * If current record has a configuration id set, it will load the corresponding record,
+	 * but if it is not set, it will try to load a configuration by slug, with the following
+	 * format: `<modelname>.<slug>`.
+	 *
 	 * @param object $entity current instance
 	 * @param string $field what field (in case of array) to return
 	 * @param array $options an array of options currently supported are
@@ -566,10 +571,10 @@ class BaseModel extends \lithium\data\Model {
 	 * @return mixed configuration value
 	 */
 	public function configuration($entity, $field = null, array $options = array()) {
-		if (empty($entity->config_id)) {
-			return null;
-		}
-		$config = Configurations::load($entity->config_id);
+		$load = (empty($entity->config_id))
+			? sprintf('%s.%s', strtolower(static::meta('name')), $entity->slug)
+			: $entity->config_id;
+		$config = Configurations::load($load);
 		if (!$config) {
 			return null;
 		}
