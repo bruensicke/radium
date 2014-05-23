@@ -10,6 +10,7 @@
 	'/radium/css/uniform.default.min',
 	'/radium/css/ark',
 	// '/radium/css/theme',
+	'/radium/trumbowyg/design/css/trumbowyg',
 	'/radium/css/radium',
 	// '/li3_bootstrap/css/bootstrap-select.min',
 	// '/li3_bootstrap/css/bootstrap-modal',
@@ -28,6 +29,7 @@
 	'/radium/js/select2.min',
 	'/radium/js/moment.min',
 	'/radium/js/import',
+	'/radium/trumbowyg/trumbowyg.min',
 	'/radium/js/radium'
 )); ?>
 <?php echo $this->head(); ?>

@@ -63,6 +63,7 @@ foreach ($fields as $field) {
 	}
 
 	switch($type) {
+		case 'rte':
 		case 'textarea':
 			$options = array(
 				'type' => 'textarea',
@@ -72,6 +73,9 @@ foreach ($fields as $field) {
 			if (in_array($field, $readonly)) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-textarea';
+			}
+			if ($type == 'rte') {
+				$options['class'] .= ' rte';
 			}
 			echo $this->form->field($field, $options);
 		break;
