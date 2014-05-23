@@ -103,16 +103,10 @@ class Handlebars extends \lithium\template\Helper {
 			return $context->url($c);
 		});
 		$this->addHelper('number_format', function($a, $b, $c, $d) {
-			extract(array(
-				'number' => null,
-				'decimals' => 2,
-				'dec_point' => ',',
-				'thousands_sep' => '.'
-			));
-			list($number, $decimals, $dec_point, $thousands_sep) = explode(' ', str_pad($c, 4));
-			$number = $b->get($number);
-			$price = number_format($number, $decimals, $dec_point, $thousands_sep);
-			return $price;
+			$params = explode(' ', $c, 4);
+			$params += array(null, 2, '.', ',');
+			$params[0] = $b->get($params[0]);
+			return call_user_func_array('number_format', $params);
 		});
 		$this->addHelper('colorlabel', function($a, $b, $c, $d) use ($context) {
 			$useClass = array('active', 'inactive');
