@@ -173,6 +173,30 @@ class BaseModel extends \lithium\data\Model {
 		}
 	}
 
+	public function __call2($method, $params) {
+		// 	var_dump($method);exit;
+		// return true;
+		// if ($method != 'deleted') {
+		// 	return;
+		// }
+		// debug(static::schema()->fields());
+		// $schema_field = static::schema($method);
+		// debug($params[0]->$method);
+		// $method = 'title';
+		// debug($method);
+		// // var_dump($params[0]->updated);
+		// var_dump(($params[0]->$method || $params[0]->$method === null));
+		// exit;
+		// if (count($params) === 1 && ($params[0]->$method || $params[0]->$method === null)) {
+		// 	// var_dump($params[0]->$method);exit;
+		// 	return 'foo';
+		// 	return $params[0]->$method;
+		// debug($params);exit;
+		// }
+		// var_dump($schema);exit;
+
+	}
+
 	/**
 	 * overwritten to allow for soft-deleting a record
 	 *

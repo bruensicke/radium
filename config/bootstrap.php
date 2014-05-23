@@ -8,8 +8,9 @@
 
 define('RADIUM_PATH', dirname(__DIR__));
 
-require __DIR__ . '/bootstrap/media.php';
+require __DIR__ . '/bootstrap/libraries.php';
 require __DIR__ . '/bootstrap/validators.php';
+require __DIR__ . '/bootstrap/media.php';
 
 
 // use radium\models\BaseModel;

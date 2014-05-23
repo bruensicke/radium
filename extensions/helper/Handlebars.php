@@ -8,6 +8,8 @@
 
 namespace radium\extensions\helper;
 
+use radium\template\HandlebarsContext;
+
 use Handlebars\Handlebars as Engine;
 use Handlebars\Helpers;
 use Handlebars\Loader\FilesystemLoader;
@@ -48,7 +50,8 @@ class Handlebars extends \lithium\template\Helper {
 	 */
 	public function render($name, $data = array(), $options = array()) {
 		$data += $this->_context->data();
-		return $this->_engine->render($this->element($name, $data), $data);
+		$context = new HandlebarsContext($data);
+		return $this->_engine->render($this->element($name, $data), $context);
 	}
 
 	/**
