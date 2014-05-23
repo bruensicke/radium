@@ -114,6 +114,9 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}
+			if ($field == 'config_id') {
+				$options['label'] = 'Configuration';
+			}
 			echo $this->form->field($field, $options);
 		break;
 
