@@ -438,6 +438,10 @@ class BaseModel extends \lithium\data\Model {
 			$result += array_fill_keys($skipped, 'skipped');
 		}
 
+		if ($options['overwrite'] && !$options['dry']) {
+			static::remove(array('_id' => array_keys($data)));
+		}
+
 		$callbacks = $options['callbacks'];
 		$whitelist = ($options['strict']) ? static::schema()->names() : null;
 		foreach ($data as $key => $item) {
@@ -452,6 +456,9 @@ class BaseModel extends \lithium\data\Model {
 				}
 			}
 			if (!$options['dry']) {
+				if ($options['overwrite']) {
+					static::remove(array('_id' => $key));
+				}
 				$result[$key] = ($entity->save(null, compact('whitelist', 'callbacks')))
 					? 'saved'
 					: 'failed';

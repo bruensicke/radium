@@ -182,17 +182,48 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return $file;
 		}
 		$data = $model::init($file, array('type' => 'import'));
-		if (isset($data['error']) || empty($data['id'])) {
+		if (empty($data['asset'])) {
+			$data['message'] = 'File could not be saved.';
 			return $data;
 		}
-		$asset = $model::get($upload['id']);
-		if (empty($asset)) {
+		if (!empty($data['asset']) && empty($data['success'])) {
+			if (!empty($data['asset'])) {
+				$data['message'] = $data['error'];
+				$data['url'] = Router::match(
+					array(
+						'library' => 'radium',
+						'controller' => 'assets',
+						'action' => 'view',
+						'id' => $data['asset']->id()),
+					$this->request,
+					array('absolute' => true)
+				);
+			}
 			return $data;
 		}
-		//TODO:
-		$asset->import();
-		// $content = $asset->decode();
-		// $data = $this->_import($content);
+		$asset = $model::load($data['asset']->id());
+		if (!$asset) {
+			$data['message'] = 'File could not be loaded';
+			return $data;
+		}
+		$result = $asset->import();
+		$result = $result[$this->model];
+		$valid = array_filter($result, function($ret){ return ($ret == 'saved') ? true : false; });
+		$success = (bool) (count($valid) == count($result));
+		$single = (bool) (count($result) == 1);
+		$library = $this->library;
+		$data['message'] = sprintf('Imported %s records from %s', count($valid), count($result));
+		$url = array( // on one, go directly, else index
+			'controller' => $this->controller,
+			'action' => ($single) ? 'view' : 'index',
+		);
+		if (!empty($this->library)) {
+			$url['library'] = $this->library;
+		}
+		if ($single) {
+			$url['id'] = key($result);
+		}
+		$data['url'] = Router::match($url, $this->request, array('absolute' => true));
 		return $data;
 	}
 
