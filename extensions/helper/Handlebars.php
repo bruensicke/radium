@@ -36,7 +36,7 @@ class Handlebars extends \lithium\template\Helper {
 	 *
 	 * @var object
 	 */
-	protected $_engine = array();
+	protected $_engine = null;
 
 	/**
 	 * Renders one mustache element with given $data
@@ -81,6 +81,7 @@ class Handlebars extends \lithium\template\Helper {
 	 * @return void
 	 */
 	public function addHelper($name, $helper) {
+		$this->_init();
 		$this->_engine->addHelper($name, $helper);
 	}
 
@@ -89,6 +90,9 @@ class Handlebars extends \lithium\template\Helper {
 	 *
 	 */
 	protected function _init() {
+		if ($this->_engine) {
+			return;
+		}
 		parent::_init();
 		$this->_engine = new Engine;
 		$context = $this->_context;
@@ -97,6 +101,18 @@ class Handlebars extends \lithium\template\Helper {
 		});
 		$this->addHelper('url', function($a, $b, $c, $d) use ($context) {
 			return $context->url($c);
+		});
+		$this->addHelper('number_format', function($a, $b, $c, $d) {
+			extract(array(
+				'number' => null,
+				'decimals' => 2,
+				'dec_point' => ',',
+				'thousands_sep' => '.'
+			));
+			list($number, $decimals, $dec_point, $thousands_sep) = explode(' ', str_pad($c, 4));
+			$number = $b->get($number);
+			$price = number_format($number, $decimals, $dec_point, $thousands_sep);
+			return $price;
 		});
 		$this->addHelper('colorlabel', function($a, $b, $c, $d) use ($context) {
 			$useClass = array('active', 'inactive');
