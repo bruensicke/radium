@@ -632,6 +632,30 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * return entity data, filtered by top-level keys
+	 *
+	 * return only subset of data, that is requested, as in $keys or as fallback taken from
+	 * a static property of the corresponding model, named `$_publicFields`.
+	 *
+	 * @todo allow filtering with sub-keys, i.e. parent.sub
+	 * @param object $entity instance of current Record
+	 * @param string $key an array with all keys to be preserved, everything else is removed
+	 * @return array only data, that is left after filtering everything, that is not in $keys
+	 */
+	public function publicData($entity, $keys = array()) {
+		$keys = (empty($keys) && isset(static::$_publicFields))
+			? static::$_publicFields
+			: (array) $keys;
+		$data = $entity->data();
+		foreach ($data as $key => $item) {
+			if (!in_array($key, $keys)) {
+				unset($data[$key]);
+			}
+		}
+		return $data;
+	}
+
+	/**
 	 * allows easy output of IniFormat into a property
 	 *
 	 * @param object $entity instance of current Record
