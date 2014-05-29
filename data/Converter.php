@@ -40,6 +40,9 @@ class Converter extends \lithium\core\Adaptable {
 		'mustache' => array(
 			'adapter' => 'Mustache',
 		),
+		'handlebars' => array(
+			'adapter' => 'Handlebars',
+		),
 		'markdown' => array(
 			'adapter' => 'Markdown',
 		),

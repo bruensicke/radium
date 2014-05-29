@@ -18,8 +18,9 @@ class Contents extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	public static $_types = array(
-		'plain' => 'Plain text',
+		'plain' => 'Plain Text',
 		'html' => 'Html Markup',
+		'handlebars' => 'Handlebars Template',
 		'mustache' => 'Mustache',
 		'markdown' => 'Markdown',
 	);
@@ -31,6 +32,8 @@ class Contents extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	protected $_schema = array(
+		'accessible' => array('type' => 'bool'),
+		'layout' => array('type' => 'string'),
 		'body' => array('type' => 'string'),
 	);
 

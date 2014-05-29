@@ -10,11 +10,16 @@ namespace radium\controllers;
 
 class PagesController extends \radium\controllers\BaseController {
 
-	public $model = 'radium\models\Pages';
+	public $model = 'radium\models\Contents';
 
-	public function file() {
+	public function view() {
 		$path = func_get_args() ?: array('radium');
-		return $this->render(array('template' => join('/', $path)));
+    $model = $this->model;
+    $content = $model::load(join('/', $path));
+    if (!$content) {
+      return $this->render(array('template' => join('/', $path)));
+    }
+    return compact('content');
 	}
 }
 
