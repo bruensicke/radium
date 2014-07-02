@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use Exception;
 
+use lithium\core\libraries;
 use lithium\core\Environment;
 use lithium\util\Inflector;
 use lithium\net\http\Media;
@@ -288,12 +289,21 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	/**
 	 * Generates different variations of the configured $this->model property name
 	 *
+	 * If no model is configured (i.e. `null`) - it automatically detects the corresponding
+	 * model for this Controller via Inflection and `Libraries::locate()`.
+	 *
+	 * @see lithium\core\Libraries::locate()
 	 * @param string $field defines, what variation of the default you want to have
 	 *               available are 'class', 'model', 'singular', 'plural' and 'table' and 'human'.
 	 *               if omitted, returns array containing all of them.
 	 * @return array|string
 	 **/
 	protected function _scaffold($field = null) {
+
+		if (is_null($this->model)) {
+			$this->model = (string) Libraries::locate('models', $this->request->controller);
+		}
+
 		if (is_null($this->scaffold)) {
 			$class = basename(str_replace('\\', '/', $this->model));
 			$base = (!empty($this->library))
