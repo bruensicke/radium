@@ -65,7 +65,7 @@ var Radium = new function ($) {
 			allowClear: true
 		});
 
-		$('input[name*="slug"]').slugify('input[name*="name"]');
+		$('input[name~="slug"]').slugify('input[name~="name"]');
 	}
 
 	function initDataswitch() {
