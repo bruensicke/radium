@@ -9,8 +9,10 @@
 namespace radium\extensions\helper;
 
 use radium\models\Configurations;
+use radium\util\Neon;
 use lithium\util\Inflector;
 use lithium\template\TemplateException;
+use lithium\util\String;
 use lithium\util\Set;
 
 class Navigation extends \lithium\template\Helper {
@@ -55,28 +57,42 @@ class Navigation extends \lithium\template\Helper {
 	 * (1) either ´name´ or ´url´ must be provided
 	 *
 	 * @param string|array $nav slug or array containing the navigation items
+	 * @param array $options additional options:
+	 *        - `caption`: allows overwriting/setting caption of navigation
 	 * @return string HTML navigation list
 	 */
-	public function render($nav) {
+	public function render($nav, array $options = array()) {
+		$defaults = array('caption' => false);
+		$options += $defaults;
+
+		if (is_string($nav)) {
+			return $this->render(Configurations::get($nav));
+		}
+
 		$navigation = array();
 		if ($nav instanceof \lithium\data\Entity) {
 			$navigation['caption'] = $nav->name;
 			$nav = $nav->val();
 		}
-		if (is_array($nav)) {
-			foreach ($nav as $navitem) {
-				$navitem = $this->_item($navitem);
-				if (!empty($navitem['children'])) {
-					foreach ($navitem['children'] as $id => $child) {
-						$child = $this->_item($child);
-						$navitem['children'][$id] = $child;
-					}
-				}
-				$navigation['items'][] = $navitem;
-			}
+
+		if (!is_array($nav)) {
+			return false;
 		}
-		elseif (!empty($nav) && is_string($nav)) {
-			$this->render(Configurations::get($nav));
+
+		if ($options['caption']) {
+			$navigation['caption'] = $options['caption'];
+		}
+
+
+		foreach ($nav as $navitem) {
+			$navitem = $this->_item($navitem);
+			if (!empty($navitem['children'])) {
+				foreach ($navitem['children'] as $id => $child) {
+					$child = $this->_item($child);
+					$navitem['children'][$id] = $child;
+				}
+			}
+			$navigation['items'][] = $navitem;
 		}
 		return $this->_element('navigation', $navigation);
 	}
@@ -88,19 +104,47 @@ class Navigation extends \lithium\template\Helper {
 	 * nav.{name of navigation group}.{name of navigation}
 	 * e.g. nav.sidebar.main, nav.sidebar.mailplugin, ...
 	 *
-	 * $this->Navigation->group('sidebar') will render ALL Configurations starting with ´nav.sidebar.´ as navigations.
+	 * $this->Navigation->group('sidebar') will render all Configurations with a slug starting with
+	 * ´nav.sidebar.´ that are of type `navigation`. In addition it renders all navigations based
+	 * on files from all loaded libraries, that have files at {:library}/data/nav/{:name}.foo.neon
 	 *
-	 *
-	 * @param string $groupname part of a navigation slug
+	 * @param string $name part of a navigation slug
+	 * @param array $options additional options:
+	 *        - `pattern`: pattern of slug to search configurations of, defaults to `nav.{:name}.`
+	 *        - `seperator`: glue-character to implode all navigations together with
+	 *        - `db`: set to false to avoid database-based rendering of navigations (configurations)
+	 *        - `files`: set to false to avoid file-based rendering of navigations
 	 * @return string all navigations
 	 */
-	public function group($groupname, array $options = array()) {
-		$configs = Configurations::search(sprintf('nav\.%s\.', $groupname));
-		$returnvalue = '';
-		foreach($configs as $nav) {
-			$returnvalue .= $this->render($nav);
+	public function group($name, array $options = array()) {
+		$defaults = array(
+			'pattern' => 'nav.{:name}.', 'seperator' => "\n", 'files' => true, 'db' => 'true');
+		$options += $defaults;
+
+		$result = array();
+
+		if ($options['db']) {
+			$configs = Configurations::search(String::insert($options['pattern'], compact('name')));
+			if ($configs) {
+				foreach($configs as $nav) {
+					$result[] = $this->render($nav);
+				}
+			}
 		}
-		return $returnvalue;
+
+		if (!$options['files']) {
+			return implode($options['seperator'], $result);
+		}
+
+		$conditions = array('slug' => $name);
+		$files = Neon::find(array('source' => 'nav', 'key' => 'slug'), 'all', compact('conditions'));
+		if ($files) {
+			foreach($files as $file => $nav) {
+				$caption = Inflector::humanize(str_replace(sprintf('%s.', $name), '', $file));
+				$result[] = $this->render($nav, compact('caption'));
+			}
+		}
+		return implode($options['seperator'], $result);
 	}
 
 	/**
@@ -150,9 +194,9 @@ class Navigation extends \lithium\template\Helper {
 
 
 	/**
-	 * creates all nessasary array keys for rendering a menu/list item
+	 * creates all necessary array keys for rendering a menu/list item
 	 *
-	 * @param array $navitem all availible data for a single navigation item
+	 * @param array $navitem all available data for a single navigation item
 	 * @return array navitem filled with all needed keys
 	 */
 	private function _item($navitem) {
@@ -172,9 +216,9 @@ class Navigation extends \lithium\template\Helper {
 	}
 
 	/**
-	 * creates all nessasary array keys for a badge subkey of a menu item
+	 * creates all necessary array keys for a badge subkey of a menu item
 	 *
-	 * @param array $badge all availible data for a single badge
+	 * @param array $badge all available data for a single badge
 	 * @return array filled with all needed keys for a badge
 	 */
 	private function _badge($badge) {
