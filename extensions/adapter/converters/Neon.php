@@ -43,10 +43,10 @@ class Neon extends \lithium\core\Object {
 					return $config[$data];
 				}
 			}
-			$data = '/'.str_replace('.', '/', $data).'/.';
-			$result = current(Set::extract((array) $config, $data));
-			if (!empty($result)) {
-				return $result;
+			if ($data) {
+				$data = '/'.str_replace('.', '/', $data).'/.';
+				$result = current(Set::extract((array) $config, $data));
+				return (!empty($result)) ? $result : null;
 			}
 			return ($options['flat'])
 				? Set::flatten($config)
