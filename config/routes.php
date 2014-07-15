@@ -19,7 +19,7 @@ use lithium\core\Libraries;
 $prefix = Libraries::get('radium', 'url_prefix') ? : 'radium';
 
 Router::connect("/$prefix/api/{:args}", array('type' => 'json', 'library' => 'radium'), array('continue' => true));
-Router::connect("/$prefix/{:action:(settings|export)}/{:args}", array('library' => 'radium', 'controller' => 'radium'));
+Router::connect("/$prefix/{:action:(settings|export|schema)}/{:args}", array('library' => 'radium', 'controller' => 'radium'));
 Router::connect("/$prefix/{:controller}/{:action}/{:id:[0-9a-f]{24}}/{:args}", array('library' => 'radium'));
 Router::connect("/$prefix/{:controller}/{:action}/{:id:[0-9a-f]{24}}", array('library' => 'radium'));
 Router::connect("/$prefix/{:controller}/{:action}/{:args}", array('library' => 'radium'));

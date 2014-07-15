@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use radium\models\Configurations;
 use lithium\core\Libraries;
+use lithium\util\Collection;
 
 class RadiumController extends \radium\controllers\BaseController {
 
@@ -37,6 +38,17 @@ class RadiumController extends \radium\controllers\BaseController {
 	public function settings() {
 		$settings = Configurations::settings();
 		return compact('settings');
+	}
+
+	public function schema() {
+		$data = Libraries::locate('models');
+		$models = new Collection(compact('data'));
+		$schema = $models->map(function($model) {
+			return $model::schema();
+		});
+		// var_dump($schema);
+		// var_dump($models);exit;
+		return compact('models', 'schema');
 	}
 }
 
