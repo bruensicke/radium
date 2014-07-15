@@ -1,0 +1,12 @@
+-
+	name: Assets
+	icon: file
+-
+	name: Configurations
+	icon: cogs
+-
+	name: Contents
+	icon: file2
+-
+	name: Versions
+	icon: clock
