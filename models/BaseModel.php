@@ -9,6 +9,7 @@
 namespace radium\models;
 
 use radium\models\Configurations;
+use radium\util\Neon;
 use radium\util\IniFormat;
 
 use lithium\core\Libraries;
@@ -155,6 +156,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	protected $_meta = array(
 		'versions' => true,
+		'neon' => true,
 	);
 
 	/**
@@ -341,12 +343,42 @@ class BaseModel extends \lithium\data\Model {
 				'status' => $status,
 				'deleted' => null, // only not deleted
 			);
-			$result = $self::find('all', $options);
-			if (!$result) {
-				return false;
-			}
-			return $result;
+			return $self::find('all', $options);
 		});
+	}
+
+	/**
+	 * allows for data-retrieval of entities via file-based access
+	 *
+	 * In case you want to provide default file-data without inserting them into the database, you
+	 * would need to create files based on model-name in a path like that
+	 * `{:library}/data/{:class}/{:id}.neon` or `{:library}/data/{:class}/{:slug}.neon`
+	 *
+	 * In that case, an entity requested by id or slug would be loaded from file instead. Please pay
+	 * attention, though that not all options are implemented, such as extended conditions, order,
+	 * limit or page. This is meant to enable basic loading of id- or slug-based entity lookups.
+	 *
+	 * @see radium\util\Neon::file()
+	 * @see radium\util\File::contents()
+	 * @param string $type The find type, which is looked up in `Model::$_finders`. By default it
+	 *        accepts `all`, `first`, `list` and `count`,
+	 * @param array $options Options for the query. By default, accepts:
+	 *        - `conditions`: The conditional query elements, e.g.
+	 *                 `'conditions' => array('published' => true)`
+	 *        - `fields`: The fields that should be retrieved. When set to `null`, defaults to
+	 *             all fields.
+	 *        - `order`: The order in which the data will be returned, e.g. `'order' => 'ASC'`.
+	 *        - `limit`: The maximum number of records to return.
+	 *        - `page`: For pagination of data.
+	 * @return mixed
+	 */
+	public static function find($type, array $options = array()) {
+		$result = parent::find($type, $options);
+		$neon = static::meta('neon');
+		if ($neon && (!$result || (!count($result)))) {
+			return Neon::find(get_called_class(), $type, $options);
+		}
+		return $result;
 	}
 
 	/**
