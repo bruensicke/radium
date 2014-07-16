@@ -7,7 +7,7 @@ $fields = $schema->names();
 $meta = array('status', 'type', 'name', 'slug', 'notes', 'config_id', '_id');
 $skip = isset($skip)
 	? $skip
-	: array();
+	: array('created', 'updated', 'deleted');
 $readonly = isset($readonly)
 	? $readonly
 	: array();
@@ -31,7 +31,7 @@ if (!empty($tabs)) {
 		<h3><?= $this->scaffold->human ?> details</h3>
 		<div class="well">
 			<div class="form-group">
-				<?php $fields = $schema->names(); $skip += $meta; ?>
+				<?php $fields = $schema->names(); $skip = array_merge($skip, $meta); ?>
 				<?= $this->scaffold->render('form.fields', compact('fields', 'skip', 'readonly')); ?>
 			</div>
 		</div>
