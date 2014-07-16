@@ -191,7 +191,7 @@ class Neon {
 				if (is_array($model)) {
 					$filename = File::name($file);
 					$data[$filename] = $current;
-					break;
+					continue;
 				}
 				if ($model === 'radium\models\Configurations') {
 					$current['value'] = Neon::encode($current['value']);
