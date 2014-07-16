@@ -32,8 +32,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->controller = $this->request->controller;
 		$this->library = $this->request->library;
 
-		$this->_render['paths']['template'][] = '{:library}/views/scaffold/{:template}.{:type}.php';
-		$this->_render['paths']['template'][] = RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php';
 		$this->_render['layout'] = $this->layout;
 		$this->_scaffold();
 	}

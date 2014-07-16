@@ -27,24 +27,6 @@ class BaseController extends \lithium\action\Controller {
 		parent::_init();
 		$this->controller = $this->request->controller;
 		$this->library = $this->request->library;
-
-		$this->_render['paths'] = array(
-			'template' => array(
-				LITHIUM_APP_PATH . '/views/{:controller}/{:template}.{:type}.php',
-				RADIUM_PATH . '/views/{:controller}/{:template}.{:type}.php',
-				'{:library}/views/{:controller}/{:template}.{:type}.php',
-			),
-			'layout' => array(
-				LITHIUM_APP_PATH . '/views/layouts/{:layout}.{:type}.php',
-				RADIUM_PATH . '/views/layouts/{:layout}.{:type}.php',
-				'{:library}/views/layouts/{:layout}.{:type}.php',
-			),
-			'element' => array(
-				LITHIUM_APP_PATH . '/views/elements/{:template}.{:type}.php',
-				RADIUM_PATH . '/views/elements/{:template}.{:type}.php',
-				'{:library}/views/elements/{:template}.{:type}.php',
-			),
-		);
 	}
 
 	/**
