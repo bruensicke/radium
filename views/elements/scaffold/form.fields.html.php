@@ -133,6 +133,19 @@ foreach ($fields as $field) {
 			echo $this->form->field($field, $options);
 		break;
 
+		case 'neon':
+			$options = array(
+				'type' => 'textarea',
+				'class' => 'form-control autogrow',
+				'rows' => 10,
+			);
+			if (in_array($field, $readonly)) {
+				$options['disabled'] = 'disabled';
+				$options['class'] .= ' uneditable-input';
+			}
+			echo $this->form->field($field, $options);
+		break;
+
 		case 'integer':
 			$options = array(
 				'type' => 'number',
