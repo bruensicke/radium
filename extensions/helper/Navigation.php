@@ -118,13 +118,13 @@ class Navigation extends \lithium\template\Helper {
 	 */
 	public function group($name, array $options = array()) {
 		$defaults = array(
-			'pattern' => 'nav.{:name}.', 'seperator' => "\n", 'files' => true, 'db' => 'true');
+			'pattern' => 'nav.{:name}.', 'seperator' => "\n", 'files' => true, 'db' => true);
 		$options += $defaults;
 
+		$search = String::insert($options['pattern'], compact('name'));
 		$result = array();
-
 		if ($options['db']) {
-			$configs = Configurations::search(String::insert($options['pattern'], compact('name')));
+			$configs = Configurations::search($search);
 			if ($configs) {
 				foreach($configs as $nav) {
 					$result[] = $this->render($nav);
