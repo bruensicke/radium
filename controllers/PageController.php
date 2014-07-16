@@ -10,16 +10,16 @@ namespace radium\controllers;
 
 class PageController extends BaseController {
 
-   	public function _init() {
-        parent::_init();
+	public function _init() {
+		parent::_init();
 
-        if (empty($this->request->page)) {
-        	return;
-        }
-        $this->_page = $this->request->page;
-        $this->_render['layout'] = $this->_page->layout;
-        $this->_render['template'] = $this->_page->template;
-    }
+		if (empty($this->request->page)) {
+			return;
+		}
+		$this->_page = $this->request->page;
+		$this->_render['layout'] = $this->_page->layout;
+		$this->_render['template'] = $this->_page->template;
+	}
 
 	public function view() {
 	}
