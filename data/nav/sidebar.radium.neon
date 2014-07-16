@@ -1,12 +1,15 @@
 -
 	name: Assets
-	icon: file
+	icon: image
 -
 	name: Configurations
 	icon: cogs
 -
 	name: Contents
 	icon: file2
+-
+	name: Pages
+	icon: file
 -
 	name: Versions
 	icon: clock

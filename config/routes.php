@@ -10,6 +10,8 @@ use lithium\net\http\Router;
 use lithium\action\Response;
 use lithium\core\Libraries;
 
+use radium\models\Pages;
+
 /**
  * In case you want to change the url-prefix to something different than `radium`
  * just specify the url_prefix like that:
@@ -27,6 +29,19 @@ Router::connect("/$prefix/{:controller}/{:action}", array('library' => 'radium')
 Router::connect("/$prefix/{:controller}", array('library' => 'radium'));
 Router::connect("/$prefix", array('library' => 'radium', 'controller' => 'radium', 'action' => 'index'));
 
+Router::connect('/page/{:args}', array('Page::view'), function($request){
+    $conditions = array(
+        'fullslug' => implode('/', $request->args),
+        'status' => 'active',
+        'deleted' => null,
+    );
+    $page = Pages::find('first', compact('conditions'));
+    if (!$page) {
+        return false;
+    }
+    $request->page = $page;
+    return $request;
+});
 
 /*
  we encourage you to add routes to your app-routes file, that look like this:

@@ -23,12 +23,14 @@
         <li><?= $this->html->link('Assets', array('library' => 'radium', 'controller' => 'assets', 'action' => 'index')); ?></li>
         <li><?= $this->html->link('Configurations', array('library' => 'radium', 'controller' => 'configurations', 'action' => 'index')); ?></li>
         <li><?= $this->html->link('Contents', array('library' => 'radium', 'controller' => 'contents', 'action' => 'index')); ?></li>
+        <li><?= $this->html->link('Pages', array('library' => 'radium', 'controller' => 'pages', 'action' => 'index')); ?></li>
         <li><?= $this->html->link('Versions', array('library' => 'radium', 'controller' => 'versions', 'action' => 'index')); ?></li>
     </ul>
     <hr />
     <h4>Extras</h4>
     <ul class="nav nav-pills">
         <li><?= $this->html->link('Settings', array('library' => 'radium', 'controller' => 'radium', 'action' => 'settings')); ?></li>
+        <li><?= $this->html->link('Schema', array('library' => 'radium', 'controller' => 'radium', 'action' => 'schema')); ?></li>
         <li><?= $this->html->link('Export', array('library' => 'radium', 'controller' => 'radium', 'action' => 'export')); ?></li>
     </ul>
 </div>

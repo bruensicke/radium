@@ -13,62 +13,87 @@ use radium\data\Converter;
 class Pages extends \radium\models\BaseModel {
 
 	/**
+	 * Custom status options
+	 *
+	 * @var array
+	 */
+	public static $_layouts = array(
+		'default' => 'default',
+	);
+
+	/**
+	 * Custom status options
+	 *
+	 * @var array
+	 */
+	public static $_templates = array(
+		'full' => 'full',
+		'half' => 'half',
+	);
+
+	/**
 	 * Stores the data schema.
 	 *
 	 * @see lithium\data\source\MongoDb::$_schema
 	 * @var array
 	 */
 	protected $_schema = array(
-		'_id' => array('type' => 'id'),
 		'parent_id' => array('type' => 'string'),
-		'name' => array('type' => 'string', 'default' => '', 'null' => false),
-		'slug' => array('type' => 'string', 'default' => '', 'null' => false),
 		'fullslug' => array('type' => 'string', 'default' => '', 'null' => false),
-		'type' => array('type' => 'string', 'default' => 'string'),
-		'body' => array('type' => 'string'),
-		'notes' => array('type' => 'string', 'default' => '', 'null' => false),
-		'status' => array('type' => 'string', 'default' => 'active', 'null' => false),
-		'created' => array('type' => 'datetime', 'default' => '', 'null' => false),
-		'updated' => array('type' => 'datetime'),
-		'deleted' => array('type' => 'datetime'),
+		'layout' => array('type' => 'select', 'default' => 'default', 'null' => false),
+		'template' => array('type' => 'select', 'default' => 'full', 'null' => false),
+		'body' => array('type' => 'rte'),
+		'widgets' => array('type' => 'neon'),
 	);
 
 	/**
-	 * Validation rules
-	 *
-	 * @var array
-	 */
+	* Validation rules
+	*
+	* @var array
+	*/
 	public $validates = array(
-		'_id' => array(
-			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
+		'layout' => array(
+			array('notEmpty', 'message' => 'a layout is required.'),
 		),
-		'name' => array(
-			array('notEmpty', 'message' => 'a name is required.'),
+		'template' => array(
+			array('notEmpty', 'message' => 'a template is required.'),
+			// array('length', 'message' => 'must be at least 10 chars.', 'limit' => 10),
 		),
-		'slug' => array(
-			array('notEmpty', 'message' => 'a valid slug is required.', 'last' => true),
-			array('slug', 'message' => 'only numbers, small letters and . - _ are allowed.', 'last' => true),
-		),
-		'type' => array(
-			array('notEmpty', 'message' => 'type is empty.'),
-			array('inList', 'list' => array('page', 'post', 'wiki'), 'message' => 'type must be valid.')
-		),
-		'status' => array(
-			array('notEmpty', 'message' => 'Status is empty.'),
-			array('inList', 'list' => array('active', 'inactive'), 'message' => 'Status must be a valid option.')
-		)
 	);
 
 	/**
-	 * Custom type options
+	 * all layouts available to pages
 	 *
-	 * @var array
+	 * @param string $type type to look for
+	 * @return mixed all types with keys and their name, or value of `$type` if given
 	 */
-	public static $_types = array(
-		'page' => 'page',
-		'post' => 'post',
-		'wiki' => 'wiki',
-	);
-}
+	public static function layouts($type = null) {
+		return static::_group(__FUNCTION__, $type);
+	}
 
-?>
+	/**
+	 * all templates available to pages
+	 *
+	 * @param string $type type to look for
+	 * @return mixed all types with keys and their name, or value of `$type` if given
+	 */
+	public static function templates($type = null) {
+		return static::_group(__FUNCTION__, $type);
+	}
+
+	/**
+	 * returns all widgets from current Page
+	 *
+	 * @see radium\data\Converter::get()
+	 * @param object $entity instance of current record
+	 * @param string $field returns a certain field from widgets
+	 * @param array $options additional options to be passed into Converter::get()
+	 * @return array an array of widgets
+	 */
+	public function widgets($entity, $field = null, array $options = array()) {
+		return Converter::get('neon', $entity->widgets, $field, $options);
+	}
+
+
+
+}
