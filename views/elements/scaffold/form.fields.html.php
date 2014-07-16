@@ -156,7 +156,7 @@ foreach ($fields as $field) {
 				$options['class'] .= ' uneditable-input';
 			}
 			echo $this->form->field($field, $options);
-			break;
+		break;
 
 		case 'date':
 			// TODO: datepicker
@@ -167,6 +167,7 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}
+			echo $this->form->field($field, $options);
 		break;
 
 		case 'list':
