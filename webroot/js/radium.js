@@ -22,6 +22,7 @@ var Radium = new function ($) {
 			updateContentHeight();
 		});
 		initDatetimes();
+		initScrollEventHandler();
 	};
 
 	/**
@@ -112,6 +113,23 @@ var Radium = new function ($) {
 			}
 			return retStr;
 		};
+	}
+
+	function initScrollEventHandler() {
+		$(window).on('scroll', function(e) {
+			if ($(this).scrollTop() > $('.navbar-static-top').height()) {
+				$('.actions.btn-group').css({
+					position: 'fixed',
+					top: 0,
+					right: 20,
+					zIndex: 1
+				});
+			} else {
+				$('.actions.btn-group').css({
+					position: 'static'
+				});
+			}
+		});
 	}
 
 }(jQuery);
