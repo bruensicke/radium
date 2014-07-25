@@ -31,7 +31,7 @@ Validator::add(array(
 			}
 		}
 		$fields = $options['field'];
-		return is_null($options['model']::find('first', compact('fields', 'conditions')));
+		return empty($options['model']::find('first', compact('fields', 'conditions')));
 	},
 	'status' => function ($value, $format, $options) {
 		return (bool) $options['model']::status($value);
