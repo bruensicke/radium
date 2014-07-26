@@ -40,9 +40,13 @@ class Page extends \lithium\template\Helper {
 	/**
 	 * returns current page entity
 	 *
+	 * @param string $name Name of attribute to return from page
 	 * @return object instance of current page entity
 	 */
-	public function get() {
+	public function get($name = null) {
+		if (!is_null($name)) {
+			return $this->_page->$name ? : null;
+		}
 		return $this->_page;
 	}
 
