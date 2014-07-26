@@ -96,6 +96,12 @@ class Handlebars extends \lithium\template\Helper {
 		parent::_init();
 		$this->_engine = new Engine;
 		$context = $this->_context;
+		$this->addHelper('page', function($a, $b, $c, $d) use ($context) {
+			return $context->page->get($c);
+		});
+		$this->addHelper('content', function($a, $b, $c, $d) use ($context) {
+			return $context->content->get($c);
+		});
 		$this->addHelper('gravatar', function($a, $b, $c, $d) use ($context) {
 			return 'http://www.gravatar.com/avatar/' . md5($b->get($c)) . '.jpg';
 		});
