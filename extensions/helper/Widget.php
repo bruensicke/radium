@@ -87,17 +87,28 @@ class Widget extends \lithium\template\Helper {
 	 * @param string $widget name of widget to render
 	 * @param array $data additional data to be passed into element
 	 * @param array $options additional options:
-	 *              - `target`: a string that defines which widgets to render
+	 *              - `hb`: set to false to disable handlebars rendering
+	 *              - `target`: a string that defines which widgets to render, depending on widgets
+	 *                          target parameter
 	 * @return string the rendered markup from all widgets
 	 */
 	protected function _render($widget, array $data = array(), array $options = array()) {
-		$defaults = array('target' => null);
+		$defaults = array('target' => null, 'hb' => true);
 		$options += $defaults;
 
 		if (($options['target']) && (!(!empty($data['target'])) || $data['target'] != $options['target'])) {
 			return;
 		}
-		return $this->_context->view()->render(compact('widget'), $data, $options);
+		if (!$options['hb']) {
+			return $this->_context->view()->render(compact('widget'), $data, $options);
+		}
+
+		$hb = $this->_context->helper('handlebars');
+		try {
+			return $hb->render(sprintf('../widgets/%s', $widget), $data, $options);
+		} catch (TemplateException $e) {
+			// return $hb->render(sprintf('../widgets/%s', $widget), $data, $options);
+		}
 	}
 
 	/**
