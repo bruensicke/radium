@@ -44,33 +44,33 @@ Validator::add(array(
 		return (bool) (strlen($value) === 32 && ctype_xdigit($value));
 	},
 	'attachmentType' => function($value, $type, $data) {
-		if (isset($data['attachment'])) {
-			$mime = $data['attachment']['type'];
-			$mimeTypes = Mime::types();
-			foreach ($data['types'] as $each) {
-				if (isset($mimeTypes[$each]) && in_array($mime, $mimeTypes[$each])) {
-					return true;
-				}
-			}
-			return false;
+		if (!isset($data['attachment'])) {
+			return true;
 		}
-		return true;
+		$mime = $data['attachment']['type'];
+		$mimeTypes = Mime::types();
+		foreach ($data['types'] as $each) {
+			if (isset($mimeTypes[$each]) && in_array($mime, $mimeTypes[$each])) {
+				return true;
+			}
+		}
+		return false;
 	},
 	'attachmentSize' => function($value, $type, $data) {
-		if (isset($data['attachment'])) {
-			$size = $data['attachment']['size'];
-			if (is_string($data['size'])) {
-				if (preg_match('/([0-9\.]+) ?([a-z]*)/i', $data['size'], $matches)) {
-					$number = $matches[1];
-					$suffix = $matches[2];
-					$suffixes = array(""=> 0, "Bytes"=>0, "KB"=>1, "MB"=>2, "GB"=>3, "TB"=>4, "PB"=>5);
-					if (isset($suffixes[$suffix])) {
-						$data['size'] = round($number * pow(1024, $suffixes[$suffix]));
-					}
+		if (!isset($data['attachment'])) {
+			return true;
+		}
+		$size = $data['attachment']['size'];
+		if (is_string($data['size'])) {
+			if (preg_match('/([0-9\.]+) ?([a-z]*)/i', $data['size'], $matches)) {
+				$number = $matches[1];
+				$suffix = $matches[2];
+				$suffixes = array(""=> 0, "Bytes"=>0, "KB"=>1, "MB"=>2, "GB"=>3, "TB"=>4, "PB"=>5);
+				if (isset($suffixes[$suffix])) {
+					$data['size'] = round($number * pow(1024, $suffixes[$suffix]));
 				}
 			}
-			return $data['size'] >= $size;
 		}
-		return true;
+		return $data['size'] >= $size;
 	},
 ));
