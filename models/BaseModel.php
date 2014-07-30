@@ -160,23 +160,6 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
-	 * initialize method
-	 *
-	 * @see lithium\data\Model
-	 * @return void
-	 */
-	public static function _init() {
-		if (!static::finder('random')) {
-			static::finder('random', function($self, $params, $chain){
-				$amount = $self::find('count', $params['options']);
-				$offset = rand(0, $amount-1);
-				$params['options']['offset'] = $offset;
-				return $self::find('first', $params['options']);
-			});
-		}
-	}
-
-	/**
 	 * overwritten to allow for soft-deleting a record
 	 *
 	 * The schema of the relevant model needs a field defined in schema called `deleted`.
@@ -723,6 +706,57 @@ class BaseModel extends \lithium\data\Model {
 			}
 			return $data;
 		});
+	}
+
+	/**
+	 * Exports an array of custom finders which use the filter system to wrap around `find()`.
+	 *
+	 * @return void
+	 */
+	protected static function _findFilters() {
+		$self = static::_object();
+		$_query = $self->_query;
+
+		$default = parent::_findFilters();
+		$custom = array(
+			'list' => function($self, $params, $chain) {
+				$result = array();
+				$meta = $self::meta();
+				$name = $meta['key'];
+
+				$options = &$params['options'];
+				if (isset($options['field'])) {
+					$options['fields'] = (array) $options['field'];
+				}
+				if ($options['fields'] === null || empty($options['fields'])) {
+					list($name, $value) = array($self::meta('key'), null);
+				} elseif (count($options['fields']) > 2) {
+					list($name, $value) = array_slice($options['fields'], 0, 2);
+				} elseif (count($options['fields']) > 1) {
+					list($name, $value) = array_slice($options['fields'], 0, 2);
+				} elseif (count($options['fields']) == 1) {
+					$name = $meta['key'];
+					$value = is_array($options['fields'])
+						? $options['fields'][0]
+						: $options['fields'];
+				}
+				foreach ($chain->next($self, $params, $chain) as $entity) {
+					$key = $entity->{$name};
+					$key = is_scalar($key) ? $key : (string) $key;
+					$result[$key] = (is_null($value))
+						? $entity->title()
+						: $entity->{$value};
+				}
+				return $result;
+			},
+			'random' => function($self, $params, $chain){
+				$amount = $self::find('count', $params['options']);
+				$offset = rand(0, $amount-1);
+				$params['options']['offset'] = $offset;
+				return $self::find('first', $params['options']);
+			}
+		);
+		return array_merge($default, $custom);
 	}
 
 }
