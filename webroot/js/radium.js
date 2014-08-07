@@ -83,7 +83,7 @@ var Radium = new function ($) {
 		$('[data-switch]').trigger('change');
 	}
 	function initRTE() {
-		$('.rte').trumbowyg();
+		$('.controls .rte').trumbowyg();
 	}
 
 	function initDatetimes() {
