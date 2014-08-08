@@ -614,13 +614,13 @@ class BaseModel extends \lithium\data\Model {
 	 * }}}
 	 *
 	 * @param object $entity current instance
-	 * @param string|array $name name of model to load
+	 * @param string|array $fields name of model to load
 	 * @param array $options an array of options currently supported are
 	 *              - `resolver` : closure that takes $name as parameter and returns full qualified
 	 *                 model name.
-	 * 				- `slug` : true or false. If set to true, model is resolving by slug, not by ID.
-	 * 				   The slug has to be saved in a document schema key, named by the singular
-	 * 				   version of the model to reslove.
+	 *              - `slug` : true or false. If set to true, model is resolving by slug, not by ID.
+	 *                 The slug has to be saved in a document schema key, named by the singular
+	 *                 version of the model to reslove.
 	 * @return array foreign object data
 	 */
 	public function resolve($entity, $fields = null, array $options = array()) {
