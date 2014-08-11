@@ -75,7 +75,7 @@ class Widget extends \lithium\template\Helper {
 			$config = Configurations::get(String::insert($options['pattern'], compact('name')));
 			$result[] = ($config)
 				? $this->render($config, $options)
-				: $this->_render($name, $data, $options);
+				: $this->parse($name, $data, $options);
 		}
 
 		return implode($options['seperator'], $result);
@@ -92,7 +92,7 @@ class Widget extends \lithium\template\Helper {
 	 *                          target parameter
 	 * @return string the rendered markup from all widgets
 	 */
-	protected function _render($widget, array $data = array(), array $options = array()) {
+	protected function parse($widget, array $data = array(), array $options = array()) {
 		$defaults = array('target' => null, 'hb' => true);
 		$options += $defaults;
 
