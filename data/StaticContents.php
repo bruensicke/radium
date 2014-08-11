@@ -9,6 +9,7 @@
 namespace radium\data;
 
 use radium\data\Converter;
+use lithium\util\Set;
 
 use SplFileInfo;
 use DirectoryIterator;
@@ -126,13 +127,17 @@ class StaticContents extends \lithium\core\StaticObject {
 	 * @return array an array containing all available content files
 	 */
 	public static function available($options = array()) {
-		$defaults = array('path' => dirname(LITHIUM_APP_PATH) . static::$path, 'raw' => false);
+		$defaults = array('recursive' => false, 'path' => dirname(LITHIUM_APP_PATH) . static::$path,
+			'raw' => false);
 		$options += $defaults;
 
 		if (!is_dir($options['path'])) {
 			return false;
 		}
 
+		if ($options['recursive']) {
+			return static::recursiveDirectoryIterator($options['path']);
+		}
 		$it = new DirectoryIterator($options['path']);
 		$result = array();
 		foreach ($it as $file) {
@@ -143,6 +148,27 @@ class StaticContents extends \lithium\core\StaticObject {
 		natsort($result);
 		return array_values($result);
 	}
+
+	public function recursiveDirectoryIterator($directory = null, $files = array()) {
+		$iterator = new DirectoryIterator($directory);
+
+		foreach ( $iterator as $info ) {
+			if ($info->isFile()) {
+				$files [$info->__toString()] = $info;
+			} elseif (!$info->isDot()) {
+				$list = array($info->__toString() => static::recursiveDirectoryIterator(
+							$directory.DIRECTORY_SEPARATOR.$info->__toString()
+				));
+				if(!empty($files))
+					$files = array_merge_recursive($files, $list);
+				else {
+					$files = $list;
+				}
+			}
+		}
+		return $files;
+	}
+
 }
 
 ?>
