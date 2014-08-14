@@ -43,7 +43,7 @@ class Pages extends \radium\models\BaseModel {
 		'layout' => array('type' => 'select', 'default' => 'default', 'null' => false),
 		'template' => array('type' => 'select', 'default' => 'full', 'null' => false),
 		'body' => array('type' => 'rte'),
-		'widgets' => array('type' => 'neon'),
+		'widgets' => array('type' => 'object', 'array' => true),
 	);
 
 	/**
@@ -84,14 +84,13 @@ class Pages extends \radium\models\BaseModel {
 	/**
 	 * returns all widgets from current Page
 	 *
-	 * @see radium\data\Converter::get()
 	 * @param object $entity instance of current record
 	 * @param string $field returns a certain field from widgets
 	 * @param array $options additional options to be passed into Converter::get()
 	 * @return array an array of widgets
 	 */
 	public function widgets($entity, $field = null, array $options = array()) {
-		return Converter::get('neon', $entity->widgets, $field, $options);
+		return $entity->widgets->data();
 	}
 
 

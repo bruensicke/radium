@@ -1,6 +1,3 @@
-<?php
-$data = (isset($data)) ? $data : array();
-?>
 <table class="table table-striped table-condensed">
 	<colgroup>
 		<col width="170" />
@@ -13,16 +10,15 @@ $data = (isset($data)) ? $data : array();
 		</tr>
 	</thead>
 	<tbody>
-	<?php if(empty($data)): ?>
+	{{#each data}}
+		<tr data-key="{{@key}}" data-value="{{ this }}">
+			<td class="key">{{@key}}</td>
+			<td class="value">{{ this }}</td>
+		</tr>
+	{{else}}
 		<tr>
 			<td colspan="2"><h5>No data found...</h5></td>
 		</tr>
-	<?php endif; ?>
-	<?php foreach($data as $key => $value): ?>
-		<tr data-key="<?= $key ?>" data-value="<?= $value ?>">
-			<td class="key"><?= $key ?></td>
-			<td class="value"><?= $value ?></td>
-		</tr>
-	<?php endforeach; ?>
+	{{/each}}
 	</tbody>
 </table>

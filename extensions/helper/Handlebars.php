@@ -99,6 +99,9 @@ class Handlebars extends \lithium\template\Helper {
 		$this->addHelper('page', function($a, $b, $c, $d) use ($context) {
 			return $context->page->get($c);
 		});
+		$this->addHelper('widget', function($a, $b, $c, $d) use ($context) {
+			return $context->widget->render($c);
+		});
 		$this->addHelper('content', function($a, $b, $c, $d) use ($context) {
 			return $context->content->get($c);
 		});

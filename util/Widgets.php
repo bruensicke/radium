@@ -18,6 +18,7 @@ class Widgets {
 	public static function find(array $options = array()) {
 		$defaults = array(
 			'collect' => true,
+			'prefixed' => true,
 		);
 		$options += $defaults;
 
@@ -33,13 +34,14 @@ class Widgets {
 			}
 			$temp = array_keys(Set::flatten($files, array('separator' => '/')));
 			foreach ($temp as $key => $value) {
-				if (strpos($value, 'admin.') !== false) {
+				if (strpos($value, '.admin') !== false) {
 					continue;
 				}
-				if (strpos($value, 'inc.') !== false) {
+				if (strpos($value, '.inc') !== false) {
 					continue;
 				}
-				$result[$key] = str_replace('.html.php', '', $value);
+				$value = str_replace('.html.php', '', $value);
+				$result[$key] = ($options['prefixed']) ? sprintf('%s:%s', $lib, $value) : $value;
 			}
 			$data[$lib] = $result;
 		}
