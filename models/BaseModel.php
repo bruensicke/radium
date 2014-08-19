@@ -614,10 +614,13 @@ class BaseModel extends \lithium\data\Model {
 	 * }}}
 	 *
 	 * @param object $entity current instance
-	 * @param string|array $name name of model to load
+	 * @param string|array $fields name of model to load
 	 * @param array $options an array of options currently supported are
 	 *              - `resolver` : closure that takes $name as parameter and returns full qualified
 	 *                 model name.
+	 *              - `slug` : true or false. If set to true, model is resolving by slug, not by ID.
+	 *                 The slug has to be saved in a document schema key, named by the singular
+	 *                 version of the model to reslove.
 	 * @return array foreign object data
 	 */
 	public function resolve($entity, $fields = null, array $options = array()) {
@@ -625,29 +628,40 @@ class BaseModel extends \lithium\data\Model {
 			$modelname = Inflector::pluralize(Inflector::classify($name));
 			return Libraries::locate('models', $modelname);
 		};
-		$defaults = compact('resolver');
+		$slug = false;
+		$defaults = compact('resolver', 'slug');
 		$options += $defaults;
 
 		switch (true) {
+			case is_string($fields) && $options['slug']:
+				$fields = array($fields);
+				break;
+			case is_array($fields) && $options['slug']:
+				break;
 			case is_string($fields):
 				$fields = array((stristr($fields, '_id')) ? $fields : "{$fields}_id");
-				break;
-			case empty($fields):
-				$fields = self::fields();
 				break;
 			case is_array($fields):
 				$fields = array_map(function($field){
 					return (stristr($field, '_id')) ? $field : "{$field}_id";
 				}, $fields);
 				break;
+			case empty($fields):
+				$fields = self::fields();
+				break;
 		}
 
 		$result = array();
 		foreach ($fields as $field) {
-			if (!preg_match('/^(.+)_id$/', $field, $matches)) {
-				continue;
+			if (!$options['slug']) {
+				if (!preg_match('/^(.+)_id$/', $field, $matches)) {
+					continue;
+				}
+				list($attribute, $name) = $matches;
+			} else {
+				$attribute = $field;
+				$name = $field;
 			}
-			list($attribute, $name) = $matches;
 			$model = $options['resolver']($name);
 			if (empty($model)) {
 				continue;
