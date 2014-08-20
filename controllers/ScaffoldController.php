@@ -16,6 +16,7 @@ use lithium\util\Inflector;
 use lithium\net\http\Media;
 use lithium\net\http\Router;
 use lithium\analysis\Logger;
+use lithium\util\Collection;
 
 class ScaffoldController extends \radium\controllers\BaseController {
 
@@ -39,9 +40,14 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function index() {
 		$model = $this->scaffold['model'];
 		$conditions = $this->_options();
-		$objects = $model::find('all', compact('conditions'));
+		$objects = $model::find('all', compact('conditions')) ? : new Collection;
+		if ($this->request->is('ajax')) {
+			return array('objects' => array_values($objects->data()));
+		}
+		$schema = $model::schema();
+		$fields = $schema->fields();
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return compact('objects', 'types');
+		return compact('objects', 'types', 'fields');
 	}
 
 	public function view($id = null) {
@@ -87,6 +93,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$singular = $this->scaffold['singular'];
 		$object = $model::first($id);
 		if (!$object) {
+			// SessionMessage::write('Record not found');
 			return $this->redirect(array('action' => 'index'));
 		}
 		if (($this->request->data) && $object->save($this->request->data)) {

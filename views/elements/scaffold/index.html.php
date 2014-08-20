@@ -10,13 +10,9 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th>Status</th>
-			<th>Type</th>
-			<th>Slug</th>
-			<th>Name</th>
-			<th>Created</th>
-			<th>Updated</th>
-			<th>Actions</th>
+		{{#each fields}}
+			<th>{{@key}}</th>
+		{{/each}}
 		</tr>
 	</thead>
 	<tbody>
@@ -73,4 +69,11 @@
 		</tr>
 	{{/each}}
 	</tbody>
+	<tfoot>
+		<tr>
+		{{#each fields}}
+			<th>{{@key}}</th>
+		{{/each}}
+		</tr>
+	</tfoot>
 </table>

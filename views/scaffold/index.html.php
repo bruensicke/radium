@@ -31,3 +31,58 @@
 <div class="main-content">
 	<?= $this->scaffold->render('index'); ?>
 </div>
+
+<?php
+echo $this->html->style(array(
+	'/radium/css/datatable',
+));
+echo $this->html->script(array(
+	// '/radium/js/jquery.dataTables.min',
+	'//cdn.datatables.net/1.10.1/js/jquery.dataTables.js',
+	'//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js',
+	// '/radium/js/DT_bootstrap.min',
+));
+?>
+<script type="text/javascript">
+$().ready(function() {
+    $('.main-content .table').dataTable({
+    	searching: true,
+    	stateSave: true,
+    	scrollX: true,
+    	deferRender: true,
+    	pageLength: 100,
+    	lengthMenu: [ [100, 250, 500, -1], [100, 250, 500, "All"] ],
+        ajax: {
+        	url: 'api/<?= $this->scaffold->controller ?>',
+        	dataSrc: 'objects'
+        },
+		// columnDefs: [
+		//  	{ "visible": false, "targets": 0 },
+		//     {
+		//       "data": null,
+		//       "defaultContent": "content",
+		//       "targets": -1
+		//     },
+		// ],
+        // see http://datatables.net/reference/option/columns
+        columns: [
+        	<?php
+        	$result = array();
+        	foreach($fields as $field => $options) {
+        		$params = array(
+        			'data' => $field,
+        			// 'options' => $options,
+        			'defaultContent' => 'n/a',
+        		);
+        		if ($field == '_id') {
+        			$params['visible'] = false;
+        		}
+        		$result[] = json_encode($params);
+        	}
+        	// $result[] = json_encode(array('data' => null, 'defaultContent' => 'fobar'));
+        	echo implode(',', $result);
+        	?>
+        ]
+    });
+});
+</script>
