@@ -115,7 +115,7 @@ class BaseController extends \lithium\action\Controller {
 			return array('error' => 'only ajax upload allowed.');
 		}
 		if (empty($_GET['qqfile'])) {
-			sscanf(str_replace('?', ' ', $this->request->query['url']), '%s qqfile=%s', $t, $file);
+			sscanf(str_replace('?', ' ', $this->request->env('REQUEST_URI')), '%s qqfile=%s', $t, $file);
 		} else {
 			$file = $_GET['qqfile'];
 		}
