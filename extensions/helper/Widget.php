@@ -9,6 +9,7 @@
 namespace radium\extensions\helper;
 
 use radium\models\Configurations;
+use lithium\template\TemplateException;
 
 use lithium\core\Environment;
 use lithium\util\String;
