@@ -78,8 +78,7 @@ class Widget extends \lithium\template\Helper {
 				? $this->render($config, $options)
 				: $this->parse($name, $data, $options);
 		}
-
-		return implode($options['seperator'], $result);
+		return implode($options['seperator'], array_filter($result));
 	}
 
 	/**
@@ -108,8 +107,10 @@ class Widget extends \lithium\template\Helper {
 		try {
 			return $hb->render(sprintf('../widgets/%s', $widget), $data, $options);
 		} catch (TemplateException $e) {
+			return (Environment::is('development')) ? $e->getMessage() : '';
 			// return $hb->render(sprintf('../widgets/%s', $widget), $data, $options);
 		}
+		return '';
 	}
 
 	/**
