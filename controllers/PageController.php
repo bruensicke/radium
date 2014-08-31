@@ -8,19 +8,16 @@
 
 namespace radium\controllers;
 
+use lithium\action\DispatchException;
+
 class PageController extends BaseController {
 
-	public function _init() {
-		parent::_init();
-
+	public function view() {
 		if (empty($this->request->page)) {
-			return;
+			throw new DispatchException('Could not find page.');
 		}
 		$this->_page = $this->request->page;
 		$this->_render['layout'] = $this->_page->layout;
 		$this->_render['template'] = $this->_page->template;
-	}
-
-	public function view() {
 	}
 }

@@ -30,17 +30,13 @@ Router::connect("/$prefix/{:controller}", array('library' => 'radium'));
 Router::connect("/$prefix", array('library' => 'radium', 'controller' => 'radium', 'action' => 'index'));
 
 Router::connect('/page/{:args}', array('Page::view'), function($request){
-    $conditions = array(
-        'fullslug' => implode('/', $request->args),
-        'status' => 'active',
-        'deleted' => null,
-    );
-    $page = Pages::find('first', compact('conditions'));
-    if (!$page) {
-        return false;
-    }
-    $request->page = $page;
-    return $request;
+	$fullslug = implode('/', $request->args);
+	$page = Pages::load($fullslug, 'active', array('key' => 'fullslug'));
+	if (!$page) {
+		return false;
+	}
+	$request->page = $page;
+	return $request;
 });
 
 /*
