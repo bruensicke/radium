@@ -11,6 +11,13 @@ define('RADIUM_PATH', dirname(__DIR__));
 require __DIR__ . '/bootstrap/media.php';
 require __DIR__ . '/bootstrap/validators.php';
 
+use radium\extensions\storage\FlashMessage;
+use lithium\action\Dispatcher;
+
+Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
+	return FlashMessage::bindTo($chain->next($self, $params, $chain));
+});
+
 
 // use radium\models\BaseModel;
 
