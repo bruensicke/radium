@@ -51,6 +51,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$object = $model::first($id);
 		if (!$object) {
 			$url = array('action' => 'index');
+			$message = 'Object not found';
+			$this->_message($message);
 			return $this->redirect($url);
 		}
 		return compact('object');
