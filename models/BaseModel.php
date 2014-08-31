@@ -253,13 +253,15 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
-	 * generic method to retrieve a list or an entry of an array of a static property
+	 * generic method to retrieve a list or an entry of an array of a static property or a
+	 * configuration with given properties list
 	 *
 	 * This method is used to allow an easy addition of key/value pairs, mainly for usage
 	 * in a dropdown for a specific model.
 	 *
 	 * If you want to provide a list of available options, declare your properties in the same
-	 * manner as `$_types` or `$_status`.
+	 * manner as `$_types` or `$_status` or create a new configuration with a slug that follows
+	 * this structure: `{static::meta('sources')}.$property`. This array is used, then.
 	 *
 	 * @see radium\models\BaseModel::types()
 	 * @see radium\models\BaseModel::status()
@@ -270,11 +272,14 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function _group($property, $type = null) {
 		$field = sprintf('_%s', $property);
+		$slug = sprintf('%s.%s', static::meta('source'), $property);
 		if (!empty($type)) {
 			$var =& static::$$field;
-			return (isset($var[$type])) ? $var[$type] : false;
+			$default = (isset($var[$type])) ? $var[$type] : false;
+		} else {
+			$default = static::$$field;
 		}
-		return static::$$field;
+		return Configurations::get($slug, $default, array('field' => $type));
 	}
 
 	/**
