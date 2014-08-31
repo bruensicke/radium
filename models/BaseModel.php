@@ -369,6 +369,9 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * @param string $id id of entity to load
 	 * @param string|array $status expected status of record, can be string or an array of strings
+	 * @param array $options additional Options to be used for the query
+	 *        - `key`: the field to use for lookup, if given `id` is not a valid mongo-id
+	 *                   defaults to `slug`
 	 * @return object|boolean entity if found and active, false otherwise
 	 * @filter
 	 */
@@ -376,20 +379,22 @@ class BaseModel extends \lithium\data\Model {
 		$params = compact('id', 'status', 'options');
 		return static::_filter(__METHOD__, $params, function($self, $params) {
 			extract($params);
-			$defaults = array();
+			$defaults = array('key' => 'slug');
 			$options += $defaults;
+
 			$key = ((strlen($id) == 24) && (ctype_xdigit($id)))
 				? $self::key()
-				: 'slug';
+				: $options['key'];
 
-			$options['conditions'] = ($key == 'slug')
+			$options['conditions'] = ($key == $options['key'])
 				? array($key => $id, 'status' => $status, 'deleted' => null)
 				: array($key => $id);
 
-			$options['order'] = ($key == 'slug')
+			$options['order'] = ($key == $options['key'])
 				? array('updated' => 'DESC')
 				: null;
 
+			unset($options['key']);
 			$result = $self::find('first', $options);
 			if (!$result) {
 				return false;
