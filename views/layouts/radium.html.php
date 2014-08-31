@@ -13,6 +13,7 @@
 					<?= $this->_render('element', 'radium/header'); ?>
 				</header>
 				<div id="content">
+					<?= $this->flashMessage->render(); ?>
 					<?= $this->content(); ?>
 				</div>
 			</section>
