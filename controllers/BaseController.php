@@ -8,6 +8,8 @@
 
 namespace radium\controllers;
 
+use radium\extensions\storage\FlashMessage;
+
 use lithium\core\Libraries;
 use lithium\analysis\Logger;
 
@@ -66,6 +68,10 @@ class BaseController extends \lithium\action\Controller {
 			$url['library'] = $this->library;
 		}
 		return $url;
+	}
+
+	protected function _message($message, array $options = array(), $key = 'flash_message') {
+		return FlashMessage::write($message, $options, $key);
 	}
 
 	/**
