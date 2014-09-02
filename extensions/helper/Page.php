@@ -8,6 +8,8 @@
 
 namespace radium\extensions\helper;
 
+use lithium\template\TemplateException;
+
 class Page extends \lithium\template\Helper {
 
 	/**
@@ -34,6 +36,9 @@ class Page extends \lithium\template\Helper {
 	 * @return array array structure from widgets as from page->widgets()
 	 */
 	public function widgets() {
+		if (is_null($this->_page)) {
+			throw new TemplateException('No Page available');
+		}
 		return $this->_page->widgets();
 	}
 
