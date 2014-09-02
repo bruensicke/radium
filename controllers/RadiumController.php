@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use radium\models\Configurations;
 use lithium\core\Libraries;
+use lithium\util\Set;
 use lithium\util\Collection;
 
 class RadiumController extends \radium\controllers\BaseController {
@@ -26,6 +27,22 @@ class RadiumController extends \radium\controllers\BaseController {
 
 	public function index() {
 
+	}
+
+	public function import() {
+		Libraries::paths(array(
+			'neons' => array('{:library}\data\{:class}\{:name}.neon'),
+		));
+		$libraries = Libraries::get(null, 'name');
+		$data = array();
+		$namespaces = true;
+		foreach ($libraries as $library) {
+			$files = Libraries::locate('neons', null, compact('namespaces', 'library'));
+			if (!empty($files)) {
+				$data[$library] = $files;
+			}
+		}
+		return compact('data');
 	}
 
 	public function export() {
