@@ -13,6 +13,7 @@ namespace Neon;
 
 use stdClass;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Simple parser & generator for Nette Object Notation.
