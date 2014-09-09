@@ -121,7 +121,7 @@ class Neon {
 	 *               If `$type` is `first` returns null or the correct entity with given data
 	 *               If `$type` is `all` returns null or a DocumentSet object with loaded entities
 	 */
-	public function find($model, $type, array $options = array()) {
+	public static function find($model, $type, array $options = array()) {
 		$paths = self::$_paths;
 		Libraries::paths($paths);
 		$meta = is_array($model) ? $model : $model::meta();
