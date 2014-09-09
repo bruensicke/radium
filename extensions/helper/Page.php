@@ -55,6 +55,10 @@ class Page extends \lithium\template\Helper {
 		return $this->_page;
 	}
 
+    public function is() {
+        return (bool) $this->_page;
+    }
+
 	/**
 	 * magic method to access page properties in view
 	 *
