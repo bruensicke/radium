@@ -215,7 +215,9 @@ class BaseModel extends \lithium\data\Model {
 			if (isset($meta['type']) && $meta['type'] !== 'list') {
 				continue;
 			}
-			$entity->$name = explode("\n", $entity->$name);
+			$listData = explode("\n", $entity->$name);
+			array_walk($listData, function (&$val) { $val = trim($val); });
+			$entity->$name = $listData;
 		}
 		$versions = static::meta('versions');
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
