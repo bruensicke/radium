@@ -146,5 +146,9 @@ class Handlebars extends \lithium\template\Helper {
 			}
 			return $context->scaffold->$c;
 		});
+		$this->addHelper('date_time', function($a, $b, $c, $d) use ($context) {
+			list($format, $field) = str_getcsv($c, ' ');
+			return date((defined($format)) ? constant($format) : $format, $b->get($field));
+		});
 	}
 }
