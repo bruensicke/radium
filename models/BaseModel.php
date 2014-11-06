@@ -215,9 +215,11 @@ class BaseModel extends \lithium\data\Model {
 			if (isset($meta['type']) && $meta['type'] !== 'list') {
 				continue;
 			}
-			$listData = explode("\n", $entity->$name);
-			array_walk($listData, function (&$val) { $val = trim($val); });
-			$entity->$name = $listData;
+			if(is_string($entity->$name)) {
+				$listData = explode("\n", $entity->$name);
+				array_walk($listData, function (&$val) { $val = trim($val); });
+				$entity->$name = $listData;
+			}
 		}
 		$versions = static::meta('versions');
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
@@ -460,11 +462,12 @@ class BaseModel extends \lithium\data\Model {
 			$fields = '_id';
 			$present = static::find('all', compact('conditions', 'fields'));
 
-			$data = array_diff_key($data, $present->data());
-			$skipped = array_keys(array_intersect_key($data, $present->data()));
-			$result += array_fill_keys($skipped, 'skipped');
+			if($present) {
+				$data = array_diff_key($data, $present->data());
+				$skipped = array_keys(array_intersect_key($data, $present->data()));
+				$result += array_fill_keys($skipped, 'skipped');
+			}
 		}
-
 		if ($options['overwrite'] && !$options['dry']) {
 			static::remove(array('_id' => array_keys($data)));
 		}
