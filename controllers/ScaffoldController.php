@@ -32,7 +32,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->controller = $this->request->controller;
 		$this->library = $this->request->library;
 
-		$this->_render['layout'] = $this->layout;
+		$this->_render['layout'] = $this->request->is('ajax') ? false : $this->layout;
 		$this->_scaffold();
 	}
 
