@@ -51,6 +51,25 @@ class BaseModel extends \lithium\data\Model {
 	);
 
 	/**
+	 * Custom actions available on this object
+	 *
+	 * @var array
+	 */
+	protected static $_actions = array(
+		'first' => array(
+			'delete' => array('icon' => 'remove', 'class' => 'hover-danger', 'data-confirm' => 'Do you really want to delete this record?'),
+			'export' => array('icon' => 'download'),
+			'duplicate' => array('name' => 'clone', 'icon' => 'copy', 'class' => 'hover-primary'),
+			'edit' => array('icon' => 'pencil2', 'class' => 'primary'),
+		),
+		'all' => array(
+			'import' => array('icon' => 'upload'),
+			'export' => array('icon' => 'download'),
+			'add' => array('name' => 'create', 'icon' => 'plus', 'class' => 'primary'),
+		)
+	);
+
+	/**
 	 * Stores the minimum data schema.
 	 *
 	 * @see lithium\data\source\MongoDb::$_schema
@@ -314,6 +333,17 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function status($status = null) {
 		return static::_group(__FUNCTION__, $status);
+	}
+
+	/**
+	 * all actions available for current model
+	 *
+	 * @see radium\extensions\helper\Scaffold::actions()
+	 * @param string $type type to look for, i.e. `first` or `all`
+	 * @return mixed all actions with their corresponding configuration, suitable for Scaffold->actions()
+	 */
+	public static function actions($type = null) {
+		return static::_group(__FUNCTION__, $type);
 	}
 
 	/**
