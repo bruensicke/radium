@@ -1,10 +1,8 @@
+<?php if (!$this->_request->is('ajax')): ?>
+
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<div class="actions pull-right btn-group">
-	<?= $this->html->link('delete', $this->scaffold->action('delete'), array('class' => 'btn btn-default', 'icon' => 'remove'));?>
-	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'upload'));?>
-	<?= $this->html->link('edit', $this->scaffold->action('edit'), array('class' => 'btn btn-primary', 'icon' => 'pencil2'));?>
-</div>
+<?= $this->scaffold->render('actions'); ?>
 
 <ol class="breadcrumb">
 	<li>
@@ -26,6 +24,8 @@
 		<?php endif; ?>
 	</li>
 </ol>
+
+<?php endif; ?>
 
 <div class="header">
 	<div class="col-md-12">
