@@ -11,6 +11,8 @@ var Radium = new function ($) {
 		// initDatePickers();
 		initMenus();
 		initDataswitch();
+		initConfirm();
+		initAjaxLinks();
 		initRTE();
 		// //init code highlighter
 		// if (typeof prettyPrint === "function"){
@@ -34,7 +36,6 @@ var Radium = new function ($) {
 		$('.content').css('min-height', (windowHeight) + "px");
 	}
 
-
 	/**
 	 * Init toggle open menu functionality
 	 */
@@ -45,6 +46,29 @@ var Radium = new function ($) {
 		$(document).on('click', '.menu .menu-toggle', function (event){
 			event.preventDefault();
 			toggleMenu($(this).parents('.menu').first());
+		});
+	}
+
+	/**
+	 * Init confirm functionality
+	 */
+	function initConfirm(options) {
+		$('[data-confirm]').jBox('Confirm', options || {});
+	}
+
+	/**
+	 * Init confirm functionality
+	 */
+	function initAjaxLinks() {
+		$('.btn-ajax,[data-ajax]').jBox('Modal', {
+			getTitle: 'data-title',
+			ajax: {
+				getData: 'data-ajax',
+			},
+			preventDefault: true,
+			onOpen: function() {
+				this.options.ajax.url = this.source.attr('href');
+			}
 		});
 	}
 
@@ -82,6 +106,7 @@ var Radium = new function ($) {
 		});
 		$('[data-switch]').trigger('change');
 	}
+
 	function initRTE() {
 		$('.controls .rte').trumbowyg();
 	}
