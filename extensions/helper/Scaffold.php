@@ -125,6 +125,26 @@ class Scaffold extends \lithium\template\Helper {
 	}
 
 	/**
+	 * getting/setting actions for current view context
+	 *
+	 * @param array $actions additional actions to be put into view
+	 * @param array $options additional options
+	 *        - `merge`: set to false to disable merging view data with context
+	 * @return array
+	 */
+	public function actions($actions = null, array $options = array()) {
+		$defaults = array('merge' => true);
+		$options += $defaults;
+		if (!$actions) {
+			return $this->_scaffold['actions'];
+		}
+		if ($options['merge'] === false) {
+			return $this->_scaffold['actions'] = $actions;
+		}
+		return $this->_scaffold['actions'] = array_merge($actions, $this->_scaffold['actions']);
+	}
+
+	/**
 	 * allows merging of data from context with given data
 	 *
 	 * @param array $data additional data to be put into view
@@ -183,11 +203,14 @@ class Scaffold extends \lithium\template\Helper {
 		parent::_init();
 		$this->_scaffold = Environment::get('scaffold');
 		$this->_data = $this->_context->data();
+		$actions = call_user_func(array($this->_scaffold['model'], 'actions'));
 		if (isset($this->_data['object'])) {
 			$this->_scaffold['object'] = $this->_data['object'];
+			$this->_scaffold['actions'] = $actions['first'];
 		}
 		if (isset($this->_data['objects'])) {
 			$this->_scaffold['objects'] = $this->_data['objects'];
+			$this->_scaffold['actions'] = $actions['all'];
 		}
 	}
 }
