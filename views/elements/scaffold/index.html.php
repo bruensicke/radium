@@ -22,7 +22,7 @@
 	<tbody>
 	{{#unless objects}}
 		<tr>
-			<td colspan="7"><h4>No objects found...</h4></td>
+			<td colspan="20"><h4>No objects found...</h4></td>
 		</tr>
 	{{/unless}}
 	{{#each objects}}
