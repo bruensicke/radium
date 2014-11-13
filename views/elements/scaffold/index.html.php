@@ -59,7 +59,7 @@
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/view/{{ _id }}"><i class="fa fa-fw fa-eye"></i> View</a></li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil2"></i> Edit</a></li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/duplicate/{{ _id }}"><i class="fa fa-fw fa-copy"></i> Clone</a></li>
-						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-upload"></i> Export</a></li>
+						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-download"></i> Export</a></li>
 						<li role="presentation" class="divider"></li>
 						{{#if deleted}}
 							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/undelete/{{ _id }}"><i class="fa fa-fw fa-spinner7 fa-flip-horizontal"></i> Restore</a></li>
