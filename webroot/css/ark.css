@@ -2643,7 +2643,114 @@ body.cover {
 .login-wrap .panel .panel-title {
   font-weight: normal;
 }
-
+/**
+ * Search Area
+ */
+.search {
+  position: relative;
+}
+.search .btn-search {
+  position: absolute;
+  border-radius: 4px 4px 0 0;
+  top: -30px;
+  right: 15px;
+  background-color: #428bca;
+  color: #FFF;
+  padding: 6px 8px;
+}
+.search .btn-search:hover {
+  background-color: #4a90cc;
+}
+.search .search-form {
+  display: none;
+  padding: 10px 17px;
+  background-color: #428bca;
+}
+.search .search-form:after {
+  clear: both;
+}
+.search .search-form h1,
+.search .search-form h2,
+.search .search-form h3,
+.search .search-form h4,
+.search .search-form h5,
+.search .search-form h6 {
+  margin-top: 0;
+  color: #FFF;
+}
+.search .search-form form {
+  padding: 5px;
+  background-color: #FFF;
+}
+.search .search-form form .form-group {
+  margin-bottom: 5px;
+}
+.search .search-form form .checkbox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.search.active .btn-search:hover i:before {
+  content: "\f00d";
+}
+.search.active .search-form {
+  display: block;
+}
+/**
+ * Data Tables
+ */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0;
+  border: 0;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  border: 0;
+  background: transparent;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+  border: 0;
+}
+table.dataTable.no-footer {
+  border-bottom: 0;
+}
+.dataTables_paginate .pagination {
+  margin: 0;
+}
+.dataTables_info {
+  font-weight: 600;
+}
+table.dataTable thead .sorting {
+  background-image: none;
+}
+table.dataTable thead .sorting:before {
+  content: "\f0dc";
+  font-family: 'FontAwesome';
+  float: right;
+  display: block;
+  margin-right: -13px;
+}
+table.dataTable thead .sorting_desc {
+  background-image: none;
+}
+table.dataTable thead .sorting_desc:before {
+  content: "\f0dd";
+  font-family: 'FontAwesome';
+  float: right;
+  display: block;
+  margin-right: -13px;
+}
+table.dataTable thead .sorting_asc {
+  background-image: none;
+}
+table.dataTable thead .sorting_asc:before {
+  content: "\f0de";
+  font-family: 'FontAwesome';
+  float: right;
+  display: block;
+  margin-right: -13px;
+}
+table.dataTable thead th {
+  padding: 10px 18px 10px 10px;
+}
 
 
 /*
