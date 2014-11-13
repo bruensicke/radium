@@ -24,6 +24,8 @@
 	</div>
 </div>
 
+<?= $this->scaffold->render('search'); ?>
+
 <div class="main-content">
 	<?= $this->scaffold->render('index'); ?>
 </div>

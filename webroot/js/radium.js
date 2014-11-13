@@ -19,6 +19,7 @@ var Radium = new function ($) {
 		// 	prettyPrint();
 		// }
 		// initCharts(charts);
+		initSearchForm();
 		updateContentHeight();
 		$( window ).resize(function (){
 			updateContentHeight();
@@ -105,6 +106,16 @@ var Radium = new function ($) {
 			}
 		});
 		$('[data-switch]').trigger('change');
+	}
+
+	/**
+	 * Init the collapsable search form in index-pages for scaffold-views
+	 */
+	function initSearchForm(){
+		$('.search').on('click', '.btn-search', function(e) {
+			e.preventDefault();
+			$(this).parents('.search').toggleClass('active');
+		});
 	}
 
 	function initRTE() {
