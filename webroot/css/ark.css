@@ -1464,6 +1464,11 @@ body.fixed_header .wrapper.container .navbar-default.navbar-main {
 .sidebar .nav .menu.open .submenu {
   display: block;
 }
+
+.header {
+  overflow: hidden;
+}
+
 .header:before,
 .header:after {
   content: " ";
