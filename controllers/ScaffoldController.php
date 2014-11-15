@@ -321,7 +321,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				: array('controller' => $this->controller);
 			$this->scaffold = array(
 				'base' => Router::match($base, $this->request),
-				'controller' => $this->controller,
+				'controller' => strtolower($this->controller),
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,
