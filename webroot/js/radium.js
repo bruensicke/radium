@@ -9,6 +9,7 @@ var Radium = new function ($) {
 		initJsExtensions();
 		initControls();
 		// initDatePickers();
+		initTableSelect();
 		initMenus();
 		initDataswitch();
 		initConfirm();
@@ -40,12 +41,28 @@ var Radium = new function ($) {
 	/**
 	 * Init toggle open menu functionality
 	 */
+	function initTableSelect() {
+		function toggleSelectedRow($row){
+			$row.toggleClass('info');
+		}
+		$(document).on('click', '.table-selectable tr[data-id]', function (e){
+			if (e.target.nodeName.toLowerCase() == 'a') {
+				return true;
+			}
+			e.preventDefault();
+			toggleSelectedRow($(this));
+		});
+	}
+
+	/**
+	 * Init toggle open menu functionality
+	 */
 	function initMenus() {
 		function toggleMenu($menu){
 			$menu.toggleClass('open');
 		}
-		$(document).on('click', '.menu .menu-toggle', function (event){
-			event.preventDefault();
+		$(document).on('click', '.menu .menu-toggle', function (e){
+			e.preventDefault();
 			toggleMenu($(this).parents('.menu').first());
 		});
 	}
