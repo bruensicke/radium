@@ -1,4 +1,4 @@
-<table class="table table-striped table-condensed table-hover">
+<table class="table table-striped table-condensed table-hover table-selectable">
 	<colgroup>
 		<col width="70" />
 		<col width="100" />
@@ -26,7 +26,7 @@
 		</tr>
 	{{/unless}}
 	{{#each objects}}
-		<tr class="status-{{ status }}{{#if deleted}} deleted{{/if}}">
+		<tr class="status-{{ status }}{{#if deleted}} deleted{{/if}}" data-id="{{ _id }}">
 			<td>
 				{{#if status}}{{{colorlabel status}}}{{/if}}
 			</td>
