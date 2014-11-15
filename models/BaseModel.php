@@ -13,7 +13,9 @@ use radium\util\Neon;
 use radium\util\IniFormat;
 
 use lithium\core\Libraries;
+use lithium\core\Environment;
 use lithium\util\Set;
+use lithium\util\String;
 use lithium\util\Validator;
 use lithium\util\Inflector;
 
@@ -178,6 +180,13 @@ class BaseModel extends \lithium\data\Model {
 		'neon' => true,
 	);
 
+	protected static $_rss = array(
+		'title' => 'name',
+		'description' => 'notes',
+		'link' => 'http://{:host}/{:controller}/view/{:_id}',
+		'guid' => '{:controller}/view/{:_id}',
+	);
+
 	/**
 	 * overwritten to allow for soft-deleting a record
 	 *
@@ -263,7 +272,6 @@ class BaseModel extends \lithium\data\Model {
 		}
 		return $result;
 	}
-
 
 	/**
 	 * returns primary id as string from current entity
@@ -718,6 +726,46 @@ class BaseModel extends \lithium\data\Model {
 			$result[$name] = $model::load($foreign_id);
 		}
 		return (count($fields) > 1) ? $result : array_shift($result);
+	}
+
+	/**
+	 * returns a properly processed item as rss-item
+	 *
+ 	 * @param object $entity instance of current Record
+	 * @param array $fields an array of additional fields to generate
+	 * @param array $options an array of additional options
+	 *              - `merge`: set to false, to process only given fields
+	 */
+	public function rssItem($entity, $fields = array(), array $options = array()) {
+		$defaults = array('merge' => true);
+		$options += $defaults;
+		static::$_rss['pubDate'] = function($object) {
+			return date('D, d M Y g:i:s O', $object->created->sec);
+		};
+		$fields = ($options['merge']) ? array_merge(static::$_rss, $fields) : $fields;
+
+		$item = array();
+		foreach ($fields as $field => $source) {
+			switch(true) {
+				case is_callable($source):
+					$item[$field] = $source($entity);
+					break;
+				case stristr($source, '{:'):
+					$replace = array_merge(
+						Environment::get('scaffold'),
+						Set::flatten($entity->data()),
+						array(
+							'host' => $_SERVER['HTTP_HOST'],
+						)
+					);
+					$item[$field] = String::insert($source, $replace);
+					break;
+				case isset($entity->$source):
+					$item[$field] = $entity->$source;
+					break;
+			}
+		}
+		return $item;
 	}
 
 	/**
