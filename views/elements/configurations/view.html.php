@@ -11,7 +11,7 @@ switch($configuration->type) {
 		echo $this->scaffold->render('data', array('data' => $configuration->val(null, array('flat' => true))));
 		break;
 	case 'list':
-		echo '<div class="well">';
+		echo '<div class="well pre-scrollable">';
 		echo $this->scaffold->render('list', array('data' => $configuration->val(null, array('flat' => true))));
 		echo '</div>';
 		break;
