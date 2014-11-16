@@ -292,7 +292,8 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * If you want to provide a list of available options, declare your properties in the same
 	 * manner as `$_types` or `$_status` or create a new configuration with a slug that follows
-	 * this structure: `{static::meta('sources')}.$property`. This array is used, then.
+	 * this structure: `{static::meta('sources')}.$property` (e.g. `content.types`).
+	 * This array is used, then.
 	 *
 	 * @see radium\models\BaseModel::types()
 	 * @see radium\models\BaseModel::status()
@@ -731,10 +732,11 @@ class BaseModel extends \lithium\data\Model {
 	/**
 	 * returns a properly processed item as rss-item
 	 *
- 	 * @param object $entity instance of current Record
+	 * @param object $entity instance of current Record
 	 * @param array $fields an array of additional fields to generate
 	 * @param array $options an array of additional options
 	 *              - `merge`: set to false, to process only given fields
+	 * @return array an array containing relevant rss data as keys and their corresponding values
 	 */
 	public function rssItem($entity, $fields = array(), array $options = array()) {
 		$defaults = array('merge' => true);
