@@ -795,6 +795,50 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * counts distinct values regarding a specific field
+	 *
+	 * @param string $field name of the field to count distinct values against
+	 * @param array $options an array of additional options
+	 *              - `group`: set to $field, overwrite here
+	 *              - `fields`: what fields to retrieve, useful if you overwrite the reduce code
+	 *              - `initial`: initial object to aggregate data in, defaults to StdObject
+	 *              - `reduce`: reduce method to be used within mongodb, must be of type `MongoCode`
+	 * @return array an array containing relevant rss data as keys and their corresponding values
+	 */
+	public static function distinctCount($field = 'type', $options = array()) {
+		$defaults = array(
+			'group' => $field,
+			'fields' => array('_id', $field),
+			'initial' => new \stdClass,
+			'reduce' => new \MongoCode("function(doc, prev) { ".
+				"if(typeof(prev[doc.$field]) == 'undefined') {".
+					"prev[doc.$field] = 0;".
+				"}".
+				"prev[doc.$field] += 1;".
+			"}"),
+		);
+		$options += $defaults;
+
+		$method = Inflector::pluralize($field);
+		$result = (method_exists(__CLASS__, $method))
+			? array_fill_keys(array_keys(static::$method()), 0)
+			: array();
+
+		$res = static::find('all', $options);
+		if (!$res) {
+			return $result;
+		}
+
+		$keys = $res->map(function($item) use ($field) {
+			return $item->$field;
+		});
+		$values = $res->map(function($item) use ($field) {
+			return $item->{$item->$field};
+		});
+		return array_merge($result, array_combine($keys->data(), $values->data()));
+	}
+
+	/**
 	 * allows easy output of IniFormat into a property
 	 *
 	 * @param object $entity instance of current Record
@@ -859,7 +903,7 @@ class BaseModel extends \lithium\data\Model {
 				return $result;
 			},
 			'random' => function($self, $params, $chain){
-				$amount = $self::find('count', $params['options']);
+				$amount = (int) $self::find('count', $params['options']);
 				$offset = rand(0, $amount-1);
 				$params['options']['offset'] = $offset;
 				return $self::find('first', $params['options']);
