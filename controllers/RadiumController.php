@@ -55,15 +55,21 @@ class RadiumController extends \radium\controllers\BaseController {
 		return compact('settings');
 	}
 
+	public function request() {
+		$request = $this->request;
+		return compact('request');
+	}
+
 	public function schema() {
 		$data = Libraries::locate('models');
 		$models = new Collection(compact('data'));
-		$schema = $models->map(function($model) {
-			return $model::schema();
-		});
-		// var_dump($schema);
-		// var_dump($models);exit;
-		return compact('models', 'schema');
+		if ($this->request->is('json')) {
+			$models->each(function($model) {
+		        $schema = (is_callable(array($model, 'schema'))) ? $model::schema() : array(); 
+		        return array($model => ($schema) ? $schema->fields() : array());
+			});
+		}
+		return compact('models');
 	}
 }
 
