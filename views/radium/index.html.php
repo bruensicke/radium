@@ -32,6 +32,7 @@
         <li><?= $this->html->link('Settings', array('library' => 'radium', 'controller' => 'radium', 'action' => 'settings')); ?></li>
         <li><?= $this->html->link('Schema', array('library' => 'radium', 'controller' => 'radium', 'action' => 'schema')); ?></li>
         <li><?= $this->html->link('Request', array('library' => 'radium', 'controller' => 'radium', 'action' => 'request')); ?></li>
+        <li><?= $this->html->link('Connections', array('library' => 'radium', 'controller' => 'radium', 'action' => 'connections')); ?></li>
         <li><?= $this->html->link('Export', array('library' => 'radium', 'controller' => 'radium', 'action' => 'export')); ?></li>
     </ul>
 </div>
