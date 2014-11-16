@@ -65,8 +65,8 @@ class RadiumController extends \radium\controllers\BaseController {
 		$models = new Collection(compact('data'));
 		if ($this->request->is('json')) {
 			$models->each(function($model) {
-		        $schema = (is_callable(array($model, 'schema'))) ? $model::schema() : array(); 
-		        return array($model => ($schema) ? $schema->fields() : array());
+				$schema = (is_callable(array($model, 'schema'))) ? $model::schema() : array(); 
+				return array($model => ($schema) ? $schema->fields() : array());
 			});
 		}
 		return compact('models');
