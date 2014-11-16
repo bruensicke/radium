@@ -142,10 +142,14 @@ class Configurations extends \radium\models\BaseModel {
 	}
 
 	public static function settings($name = null, array $options = array()) {
-		$defaults = array('visible' => true, 'status' => 'active');
+		$defaults = array('visible' => '1', 'status' => 'active');
 		$options += $defaults;
         $conditions = $defaults;
-		return static::find('all', compact('conditions'));
+		$result = static::find('all', compact('conditions'));
+		if (!$result) {
+			return array();
+		}
+		return $result->sort('category');
 	}
 
 
