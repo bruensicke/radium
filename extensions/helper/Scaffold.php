@@ -51,7 +51,7 @@ class Scaffold extends \lithium\template\Helper {
 	 * @return string rendered html of template
 	 */
 	public function render($name, array $data = array(), array $options = array()) {
-		$data += $this->_scaffold;
+		$data += $this->_scaffold ? : array();
 		//$data = $this->_data($data, $options);
 		return $this->element($name, $data, $options);
 	}
@@ -203,6 +203,9 @@ class Scaffold extends \lithium\template\Helper {
 		parent::_init();
 		$this->_scaffold = Environment::get('scaffold');
 		$this->_data = $this->_context->data();
+		if (!$this->_scaffold) {
+			return;
+		}
 		$actions = call_user_func(array($this->_scaffold['model'], 'actions'));
 		if (isset($this->_data['object'])) {
 			$this->_scaffold['object'] = $this->_data['object'];
