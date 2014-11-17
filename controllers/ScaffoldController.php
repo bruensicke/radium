@@ -47,8 +47,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$conditions = $this->_options();
 		}
 		$objects = $model::find('all', compact('conditions'));
-		$count = $model::find('count', compact('conditions'));
-		$all = $model::find('count');
+		$count = (int) $model::find('count', compact('conditions'));
+		$all = (int) $model::find('count');
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
 		return compact('objects', 'types', 'count', 'all');
 	}
