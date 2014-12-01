@@ -81,6 +81,8 @@ class BaseController extends \lithium\action\Controller {
 	 * @return array merged array with all $defaults, $options and named params
 	 */
 	protected function _search($conditions) {
+		$model = $this->scaffold['model'];
+
 		$result = array('$or' => array());
 		foreach($conditions as $field => $value) {
 			if (empty($value) || $field == 'query') {
@@ -94,7 +96,14 @@ class BaseController extends \lithium\action\Controller {
 			$result['$or'][] = array('name' => $like);
 			$result['$or'][] = array('slug' => $like);
 			$result['$or'][] = array('notes' => $like);
+
+			if(isset($model::$_searchable)){
+				foreach($model::$_searchable AS $field){
+					$result['$or'][] = array($field => $like);
+				}
+			}
 		}
+
 		return $result;
 	}
 
