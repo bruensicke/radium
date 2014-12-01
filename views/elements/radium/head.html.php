@@ -10,6 +10,7 @@
 	'/radium/css/uniform.default.min',
 	'/radium/css/jbox',
 	'/radium/css/ark',
+	'/css/style.css',
 	// '/radium/css/theme',
 	'/radium/trumbowyg/design/css/trumbowyg',
 	'/radium/css/radium',

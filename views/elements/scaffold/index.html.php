@@ -1,3 +1,6 @@
+<?php
+	use \radium\extensions\helper\Order;
+?>
 <table class="table table-striped table-condensed table-hover table-selectable">
 	<colgroup>
 		<col width="70" />
@@ -10,12 +13,12 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th>Status</th>
-			<th>Type</th>
-			<th>Slug</th>
-			<th>Name</th>
-			<th>Created</th>
-			<th>Updated</th>
+			<th><?Order::order('status', $order);?></th>
+			<th><?Order::order('type', $order);?></th>
+			<th><?Order::order('slug', $order);?></th>
+			<th><?Order::order('name', $order);?> </th>
+			<th><?Order::order('created', $order)?></th>
+			<th><?Order::order('updated', $order)?></th>
 			<th>Actions</th>
 		</tr>
 	</thead>
