@@ -126,6 +126,36 @@ class BaseController extends \lithium\action\Controller {
 	}
 
 	/**
+	 * Generates order out of named params
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return array merged array with all $defaults, $options and named params
+	 */
+	protected function _order($defaults = array()) {
+		$order = array();
+		if (!empty($this->request->query)) {
+			$query = $this->request->query;
+			if(isset($query['order'])){
+				if (!stristr($query['order'], ',')) {
+					$sorts[] = $query['order'];
+				}else{
+					$sorts = explode(',', $query['order']);
+				}
+				foreach($sorts AS $row){
+					if (stristr($row, ':')) {
+						list($key, $val) = explode(':', $row, 2);
+						$order[$key] = $val;
+					}
+				}
+				unset($this->request->query['order']);
+			}
+		}
+
+		$order = array_merge($defaults, $order);
+		return $order;
+	}
+
+	/**
 	 * allows ajaxified upload of files
 	 *
 	 * @see
