@@ -1,9 +1,17 @@
-<?php $model = $this->scaffold->model; ?>
+<?php
+	$model = $this->scaffold->model;
+	$searchable = '';
+	if(isset($model::$_searchable)){
+		if(is_array($model::$_searchable)){
+			$searchable = ', '.implode($model::$_searchable, ', ');
+		}
+	}
+?>
 
 <div class="form-group">
 	<div class="input-group">
 		<?= $this->form->text('query', array(
-			'placeholder' => 'Search on name, slug and notes',
+			'placeholder' => 'Search on name, slug and notes'.$searchable,
 			'class' => 'form-control',
 			'value' => (!empty($conditions['query'])) ? $conditions['query'] : null,
 		)); ?>
