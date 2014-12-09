@@ -1,6 +1,9 @@
 <?php
 $model = $this->scaffold->model;
 
+if(!isset($offsets)) return false;
+if($offsets['pages'] <= 1) return false;
+
 $prev = $page-1;
 $next = $page+1;
 
@@ -8,13 +11,15 @@ $pageUri = preg_replace('/((\&|\?)p=\d+)/', '', $_SERVER['REQUEST_URI']);
 $pageUri .= (strpos($pageUri, '?') !== false) ? '&' : '?';
 $pageUri .= 'p=';
 
-if($offsets['offset'] <= 0) return false;
-
+$start = ($offsets['offset'] <= 0) ? 1 : $offsets['offset'];
 ?>
 
 <div class="pageination">
+	<div class="pull-left">
+		<div>Showing <?=$start;?> to <?=$offsets['limit'];?> of <?=$count;?> entries</div>
+	</div>
 	<div class="pull-right">
-		<div class="dataTables_paginate paging_bs_normal">
+		<div>
 			<ul class="pagination">
 				<li class="prev <? if($prev <=0) echo "disabled"?>">
 					<a href="<?=$pageUri.'1';?>">

@@ -182,12 +182,12 @@ class BaseController extends \lithium\action\Controller {
 			$currentPage = $pages;
 		}
 
-		if($currentPage < 0){
+		if($currentPage <= 0){
 			$currentPage = 1;
 		}
 
-		$offset = $currentPage*$itemsPerPage;
-		if($offset >= $allItems){
+		$offset = ($currentPage-1)*$itemsPerPage;
+		if($offset > $allItems){
 			$offset = $allItems-$itemsPerPage;
 		}
 
@@ -202,6 +202,8 @@ class BaseController extends \lithium\action\Controller {
 			'offset' => $offset,
 			'pages' => $pages,
 			'page' => $currentPage,
+			'itemsPerPage' => $itemsPerPage
+
 		);
 	}
 

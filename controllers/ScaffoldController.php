@@ -52,14 +52,16 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$all = (int) $model::find('count');
 		$count = (int) $model::find('count', compact('conditions'));
 
-		$offsets = $this->_offset(array(
-			'itemsPerPage' => $model::$_resultsPerPage,
-			'allItems' => $count,
-			'currentPage' => $page
-		));
+		if(isset($model::$_resultsPerPage)){
+			$offsets = $this->_offset(array(
+				'itemsPerPage' => $model::$_resultsPerPage,
+				'allItems' => $count,
+				'currentPage' => $page
+			));
 
-		$page = $offsets['page'];
-		$limit = $model::$_resultsPerPage;
+			$page = $offsets['page'];
+			$limit = $model::$_resultsPerPage;
+		}
 
 		$objects = $model::find('all', compact('conditions', 'order', 'limit', 'page'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
