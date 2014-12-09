@@ -164,6 +164,68 @@ class BaseController extends \lithium\action\Controller {
 		return $order;
 	}
 
+
+	/**
+	 * Generates offset out of params
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return array merged array with all $defaults, $options and named params
+	 */
+	protected function _offset($defaults = array()) {
+		$itemsPerPage = $defaults['itemsPerPage'];
+		$currentPage = $defaults['currentPage'];
+		$allItems = $defaults['allItems'];
+
+		$pages = ceil($allItems/$itemsPerPage);
+
+		if($currentPage > $pages){
+			$currentPage = $pages;
+		}
+
+		if($currentPage < 0){
+			$currentPage = 1;
+		}
+
+		$offset = $currentPage*$itemsPerPage;
+		if($offset >= $allItems){
+			$offset = $allItems-$itemsPerPage;
+		}
+
+		$limit = $offset+$itemsPerPage;
+		if($limit > $allItems){
+			$limit = $allItems;
+		}
+
+
+		return array(
+			'limit' => $limit,
+			'offset' => $offset,
+			'pages' => $pages,
+			'page' => $currentPage,
+		);
+	}
+
+	/**
+	 * Get current page
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return integer of current page/default=0
+	 */
+	protected function _currentPage($defaults = array()) {
+		$currentPage = 1;
+
+		if(isset($this->request->query['p'])){
+			$currentPage = (int) $this->request->query['p'];
+		}
+
+		if($currentPage < 1){
+			$currentPage = 1;
+		}
+		unset($this->request->query['p']);
+
+		return $currentPage;
+	}
+
 	/**
 	 * allows ajaxified upload of files
 	 *

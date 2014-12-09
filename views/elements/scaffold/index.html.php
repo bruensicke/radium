@@ -1,6 +1,8 @@
 <?php
 	use \radium\extensions\helper\Order;
+	echo $this->_render('element', '/scaffold/pagination', compact('offsets'));
 ?>
+
 <table class="table table-striped table-condensed table-hover table-selectable">
 	<colgroup>
 		<col width="70" />
@@ -77,3 +79,7 @@
 	{{/each}}
 	</tbody>
 </table>
+
+<?php
+	echo $this->_render('element', '/scaffold/pagination', compact('offsets'));
+?>
