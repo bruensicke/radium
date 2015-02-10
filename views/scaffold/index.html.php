@@ -1,10 +1,6 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<div class="actions pull-right btn-group">
-	<?= $this->html->link('import', $this->scaffold->action('import'), array('class' => 'btn btn-default', 'icon' => 'download'));?>
-	<?= $this->html->link('export', $this->scaffold->action('export'), array('class' => 'btn btn-default', 'icon' => 'upload'));?>
-	<?= $this->html->link('create', $this->scaffold->action('add'), array('class' => 'btn btn-primary', 'icon' => 'plus'));?>
-</div>
+<?= $this->scaffold->render('actions'); ?>
 
 <ol class="breadcrumb">
 	<li>
@@ -27,6 +23,8 @@
 		<!-- <p class="header-info">See a list of all <?= $this->scaffold->plural ?></p> -->
 	</div>
 </div>
+
+<?= $this->scaffold->render('search'); ?>
 
 <div class="main-content">
 	<?= $this->scaffold->render('index'); ?>

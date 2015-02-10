@@ -75,6 +75,39 @@ class BaseController extends \lithium\action\Controller {
 	}
 
 	/**
+	 * Generates conditions suitable for a search on mongodb based on form inputs according to schema
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return array merged array with all $defaults, $options and named params
+	 */
+	protected function _search($conditions) {
+		$model = $this->scaffold['model'];
+
+		$result = array('$or' => array());
+		foreach($conditions as $field => $value) {
+			if (empty($value) || $field == 'query') {
+				continue;
+			}
+			$result[$field] = array_filter((array) $value);
+		}
+		$result = array_filter($result);
+		if (!empty($conditions['query'])) {
+			$like = array('like' => sprintf('/%s/i', $conditions['query']));
+			$result['$or'][] = array('name' => $like);
+			$result['$or'][] = array('slug' => $like);
+			$result['$or'][] = array('notes' => $like);
+
+			if(isset($model::$_searchable)){
+				foreach($model::$_searchable AS $field){
+					$result['$or'][] = array($field => $like);
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Generates options out of named params
 	 *
 	 * @param string $defaults all default options you want to have set
@@ -99,6 +132,100 @@ class BaseController extends \lithium\action\Controller {
 		}
 		$options = array_merge($defaults, $options);
 		return $options;
+	}
+
+	/**
+	 * Generates order out of named params
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return array merged array with all $defaults, $options and named params
+	 */
+	protected function _order($defaults = array()) {
+		$order = array();
+		if (!empty($this->request->query)) {
+			$query = $this->request->query;
+			if(isset($query['order'])){
+				if (!stristr($query['order'], ',')) {
+					$sorts[] = $query['order'];
+				}else{
+					$sorts = explode(',', $query['order']);
+				}
+				foreach($sorts AS $row){
+					if (stristr($row, ':')) {
+						list($key, $val) = explode(':', $row, 2);
+						$order[$key] = $val;
+					}
+				}
+				unset($this->request->query['order']);
+			}
+		}
+
+		$order = array_merge($defaults, $order);
+		return $order;
+	}
+
+
+	/**
+	 * Generates offset out of params
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return array merged array with all $defaults, $options and named params
+	 */
+	protected function _offset($defaults = array()) {
+		$itemsPerPage = $defaults['itemsPerPage'];
+		$currentPage = $defaults['currentPage'];
+		$allItems = $defaults['allItems'];
+
+		$pages = ceil($allItems/$itemsPerPage);
+
+		if($currentPage > $pages){
+			$currentPage = $pages;
+		}
+
+		if($currentPage <= 0){
+			$currentPage = 1;
+		}
+
+		$offset = ($currentPage-1)*$itemsPerPage;
+		if($offset > $allItems){
+			$offset = $allItems-$itemsPerPage;
+		}
+
+		$limit = $offset+$itemsPerPage;
+		if($limit > $allItems){
+			$limit = $allItems;
+		}
+
+
+		return array(
+			'limit' => $limit,
+			'offset' => $offset,
+			'pages' => $pages,
+			'page' => $currentPage,
+			'itemsPerPage' => $itemsPerPage
+
+		);
+	}
+
+	/**
+	 * Get current page
+	 *
+	 * @param string $defaults all default options you want to have set
+	 * @return integer of current page/default=0
+	 */
+	protected function _currentPage($defaults = array()) {
+		$currentPage = 1;
+
+		if(isset($this->request->query['p'])){
+			$currentPage = (int) $this->request->query['p'];
+		}
+
+		if($currentPage < 1){
+			$currentPage = 1;
+		}
+		unset($this->request->query['p']);
+
+		return $currentPage;
 	}
 
 	/**

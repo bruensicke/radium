@@ -18,10 +18,12 @@
 </div>
 
 <div class="main-content">
-<?php 
+<?php
     foreach($models as $model) {
-        echo sprintf('<h4>%s</h4>', $model);
-        echo $this->_render('element', 'radium/schema', compact('model'));
+        $schema = (is_callable(array($model, 'schema'))) ? $model::schema() : array(); 
+        $fields = ($schema) ? $schema->fields() : array();
+        ksort($fields);
+        echo $this->Handlebars->render('radium/schema', compact('model', 'fields'));
     }
 ?>
 </div>

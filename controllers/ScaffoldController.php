@@ -32,16 +32,40 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		$this->controller = $this->request->controller;
 		$this->library = $this->request->library;
 
-		$this->_render['layout'] = $this->layout;
+		$this->_render['layout'] = $this->request->is('ajax') ? false : $this->layout;
 		$this->_scaffold();
 	}
 
 	public function index() {
 		$model = $this->scaffold['model'];
+		$page = $this->_currentPage();
 		$conditions = $this->_options();
-		$objects = $model::find('all', compact('conditions'));
+		$order = $this->_order();
+
+		if ($this->request->data) {
+			$conditions = $this->request->data;
+			$this->set(compact('conditions'));
+			$conditions = $this->_search($conditions);
+		} else {
+			$conditions = $this->_options();
+		}
+		$all = (int) $model::find('count');
+		$count = (int) $model::find('count', compact('conditions'));
+
+		if(isset($model::$_resultsPerPage)){
+			$offsets = $this->_offset(array(
+				'itemsPerPage' => $model::$_resultsPerPage,
+				'allItems' => $count,
+				'currentPage' => $page
+			));
+
+			$page = $offsets['page'];
+			$limit = $model::$_resultsPerPage;
+		}
+
+		$objects = $model::find('all', compact('conditions', 'order', 'limit', 'page'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return compact('objects', 'types');
+		return compact('objects', 'types', 'count', 'all', 'order', 'offsets', 'page');
 	}
 
 	public function view($id = null) {
@@ -312,7 +336,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				: array('controller' => $this->controller);
 			$this->scaffold = array(
 				'base' => Router::match($base, $this->request),
-				'controller' => $this->controller,
+				'controller' => strtolower($this->controller),
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,

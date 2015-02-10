@@ -1,4 +1,9 @@
-<table class="table table-striped table-condensed table-hover">
+<?php
+	use \radium\extensions\helper\Order;
+	echo $this->_render('element', '/scaffold/pagination', compact('offsets'));
+?>
+
+<table class="table table-striped table-condensed table-hover table-selectable">
 	<colgroup>
 		<col width="70" />
 		<col width="100" />
@@ -10,23 +15,23 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th>Status</th>
-			<th>Type</th>
-			<th>Slug</th>
-			<th>Name</th>
-			<th>Created</th>
-			<th>Updated</th>
+			<th><?Order::order('status', $order);?></th>
+			<th><?Order::order('type', $order);?></th>
+			<th><?Order::order('slug', $order);?></th>
+			<th><?Order::order('name', $order);?> </th>
+			<th><?Order::order('created', $order)?></th>
+			<th><?Order::order('updated', $order)?></th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 	{{#unless objects}}
 		<tr>
-			<td colspan="7"><h4>No objects found...</h4></td>
+			<td colspan="20"><h4>No objects found...</h4></td>
 		</tr>
 	{{/unless}}
 	{{#each objects}}
-		<tr class="status-{{ status }}{{#if deleted}} deleted{{/if}}">
+		<tr class="status-{{ status }}{{#if deleted}} deleted{{/if}}" data-id="{{ _id }}">
 			<td>
 				{{#if status}}{{{colorlabel status}}}{{/if}}
 			</td>
@@ -59,7 +64,7 @@
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/view/{{ _id }}"><i class="fa fa-fw fa-eye"></i> View</a></li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/edit/{{ _id }}"><i class="fa fa-fw fa-pencil2"></i> Edit</a></li>
 						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/duplicate/{{ _id }}"><i class="fa fa-fw fa-copy"></i> Clone</a></li>
-						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-upload"></i> Export</a></li>
+						<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/export/{{ _id }}"><i class="fa fa-fw fa-download"></i> Export</a></li>
 						<li role="presentation" class="divider"></li>
 						{{#if deleted}}
 							<li role="presentation"><a role="menuitem" href="{{ scaffold base }}/undelete/{{ _id }}"><i class="fa fa-fw fa-spinner7 fa-flip-horizontal"></i> Restore</a></li>
@@ -74,3 +79,7 @@
 	{{/each}}
 	</tbody>
 </table>
+
+<?php
+	echo $this->_render('element', '/scaffold/pagination', compact('offsets'));
+?>

@@ -9,14 +9,18 @@ var Radium = new function ($) {
 		initJsExtensions();
 		initControls();
 		// initDatePickers();
+		initTableSelect();
 		initMenus();
 		initDataswitch();
+		initConfirm();
+		initAjaxLinks();
 		initRTE();
 		// //init code highlighter
 		// if (typeof prettyPrint === "function"){
 		// 	prettyPrint();
 		// }
 		// initCharts(charts);
+		initSearchForm();
 		updateContentHeight();
 		$( window ).resize(function (){
 			updateContentHeight();
@@ -34,6 +38,21 @@ var Radium = new function ($) {
 		$('.content').css('min-height', (windowHeight) + "px");
 	}
 
+	/**
+	 * Init toggle open menu functionality
+	 */
+	function initTableSelect() {
+		function toggleSelectedRow($row){
+			$row.toggleClass('info');
+		}
+		$(document).on('click', '.table-selectable tr[data-id]', function (e){
+			if (e.target.nodeName.toLowerCase() == 'a') {
+				return true;
+			}
+			e.preventDefault();
+			toggleSelectedRow($(this));
+		});
+	}
 
 	/**
 	 * Init toggle open menu functionality
@@ -42,9 +61,32 @@ var Radium = new function ($) {
 		function toggleMenu($menu){
 			$menu.toggleClass('open');
 		}
-		$(document).on('click', '.menu .menu-toggle', function (event){
-			event.preventDefault();
+		$(document).on('click', '.menu .menu-toggle', function (e){
+			e.preventDefault();
 			toggleMenu($(this).parents('.menu').first());
+		});
+	}
+
+	/**
+	 * Init confirm functionality
+	 */
+	function initConfirm(options) {
+		$('[data-confirm]').jBox('Confirm', options || {});
+	}
+
+	/**
+	 * Init confirm functionality
+	 */
+	function initAjaxLinks() {
+		$('.btn-ajax,[data-ajax]').jBox('Modal', {
+			getTitle: 'data-title',
+			ajax: {
+				getData: 'data-ajax',
+			},
+			preventDefault: true,
+			onOpen: function() {
+				this.options.ajax.url = this.source.attr('href');
+			}
 		});
 	}
 
@@ -82,6 +124,17 @@ var Radium = new function ($) {
 		});
 		$('[data-switch]').trigger('change');
 	}
+
+	/**
+	 * Init the collapsable search form in index-pages for scaffold-views
+	 */
+	function initSearchForm(){
+		$('.search').on('click', '.btn-search', function(e) {
+			e.preventDefault();
+			$(this).parents('.search').toggleClass('active');
+		});
+	}
+
 	function initRTE() {
 		$('.controls .rte').trumbowyg();
 	}

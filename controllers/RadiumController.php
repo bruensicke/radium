@@ -10,6 +10,7 @@ namespace radium\controllers;
 
 use radium\models\Configurations;
 use lithium\core\Libraries;
+use lithium\data\Connections;
 use lithium\util\Set;
 use lithium\util\Collection;
 
@@ -55,15 +56,34 @@ class RadiumController extends \radium\controllers\BaseController {
 		return compact('settings');
 	}
 
+	public function connections() {
+		$data = Connections::get();
+		$connections = new Collection(compact('data'));
+		if (true || $this->request->is('json')) {
+			$connections->each(function($name) {
+				$config = Connections::get($name, array('config' => true));
+				unset($config['object']);
+				return array_merge(compact('name'), Set::flatten($config));
+			});
+		}
+		return compact('connections');
+	}
+
+	public function request() {
+		$request = $this->request;
+		return compact('request');
+	}
+
 	public function schema() {
 		$data = Libraries::locate('models');
 		$models = new Collection(compact('data'));
-		$schema = $models->map(function($model) {
-			return $model::schema();
-		});
-		// var_dump($schema);
-		// var_dump($models);exit;
-		return compact('models', 'schema');
+		if ($this->request->is('json')) {
+			$models->each(function($model) {
+				$schema = (is_callable(array($model, 'schema'))) ? $model::schema() : array(); 
+				return array($model => ($schema) ? $schema->fields() : array());
+			});
+		}
+		return compact('models');
 	}
 }
 

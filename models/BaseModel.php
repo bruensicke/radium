@@ -13,7 +13,9 @@ use radium\util\Neon;
 use radium\util\IniFormat;
 
 use lithium\core\Libraries;
+use lithium\core\Environment;
 use lithium\util\Set;
+use lithium\util\String;
 use lithium\util\Validator;
 use lithium\util\Inflector;
 
@@ -48,6 +50,25 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static $_types = array(
 		'default' => 'default',
+	);
+
+	/**
+	 * Custom actions available on this object
+	 *
+	 * @var array
+	 */
+	protected static $_actions = array(
+		'first' => array(
+			'delete' => array('icon' => 'remove', 'class' => 'hover-danger', 'data-confirm' => 'Do you really want to delete this record?'),
+			'export' => array('icon' => 'download'),
+			'duplicate' => array('name' => 'clone', 'icon' => 'copy', 'class' => 'hover-primary'),
+			'edit' => array('icon' => 'pencil2', 'class' => 'primary'),
+		),
+		'all' => array(
+			'import' => array('icon' => 'upload'),
+			'export' => array('icon' => 'download'),
+			'add' => array('name' => 'create', 'icon' => 'plus', 'class' => 'primary'),
+		)
 	);
 
 	/**
@@ -159,6 +180,13 @@ class BaseModel extends \lithium\data\Model {
 		'neon' => true,
 	);
 
+	protected static $_rss = array(
+		'title' => 'name',
+		'description' => 'notes',
+		'link' => 'http://{:host}/{:controller}/view/{:_id}',
+		'guid' => '{:controller}/view/{:_id}',
+	);
+
 	/**
 	 * overwritten to allow for soft-deleting a record
 	 *
@@ -215,9 +243,11 @@ class BaseModel extends \lithium\data\Model {
 			if (isset($meta['type']) && $meta['type'] !== 'list') {
 				continue;
 			}
-			$listData = explode("\n", $entity->$name);
-			array_walk($listData, function (&$val) { $val = trim($val); });
-			$entity->$name = $listData;
+			if(is_string($entity->$name)) {
+				$listData = explode("\n", $entity->$name);
+				array_walk($listData, function (&$val) { $val = trim($val); });
+				$entity->$name = $listData;
+			}
 		}
 		$versions = static::meta('versions');
 		if (!isset($options['callbacks']) || $options['callbacks'] !== false) {
@@ -243,7 +273,6 @@ class BaseModel extends \lithium\data\Model {
 		return $result;
 	}
 
-
 	/**
 	 * returns primary id as string from current entity
 	 *
@@ -263,7 +292,8 @@ class BaseModel extends \lithium\data\Model {
 	 *
 	 * If you want to provide a list of available options, declare your properties in the same
 	 * manner as `$_types` or `$_status` or create a new configuration with a slug that follows
-	 * this structure: `{static::meta('sources')}.$property`. This array is used, then.
+	 * this structure: `{static::meta('sources')}.$property` (e.g. `content.types`).
+	 * This array is used, then.
 	 *
 	 * @see radium\models\BaseModel::types()
 	 * @see radium\models\BaseModel::status()
@@ -312,6 +342,17 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function status($status = null) {
 		return static::_group(__FUNCTION__, $status);
+	}
+
+	/**
+	 * all actions available for current model
+	 *
+	 * @see radium\extensions\helper\Scaffold::actions()
+	 * @param string $type type to look for, i.e. `first` or `all`
+	 * @return mixed all actions with their corresponding configuration, suitable for Scaffold->actions()
+	 */
+	public static function actions($type = null) {
+		return static::_group(__FUNCTION__, $type);
 	}
 
 	/**
@@ -460,11 +501,12 @@ class BaseModel extends \lithium\data\Model {
 			$fields = '_id';
 			$present = static::find('all', compact('conditions', 'fields'));
 
-			$data = array_diff_key($data, $present->data());
-			$skipped = array_keys(array_intersect_key($data, $present->data()));
-			$result += array_fill_keys($skipped, 'skipped');
+			if($present) {
+				$data = array_diff_key($data, $present->data());
+				$skipped = array_keys(array_intersect_key($data, $present->data()));
+				$result += array_fill_keys($skipped, 'skipped');
+			}
 		}
-
 		if ($options['overwrite'] && !$options['dry']) {
 			static::remove(array('_id' => array_keys($data)));
 		}
@@ -688,6 +730,47 @@ class BaseModel extends \lithium\data\Model {
 	}
 
 	/**
+	 * returns a properly processed item as rss-item
+	 *
+	 * @param object $entity instance of current Record
+	 * @param array $fields an array of additional fields to generate
+	 * @param array $options an array of additional options
+	 *              - `merge`: set to false, to process only given fields
+	 * @return array an array containing relevant rss data as keys and their corresponding values
+	 */
+	public function rssItem($entity, $fields = array(), array $options = array()) {
+		$defaults = array('merge' => true);
+		$options += $defaults;
+		static::$_rss['pubDate'] = function($object) {
+			return date('D, d M Y g:i:s O', $object->created->sec);
+		};
+		$fields = ($options['merge']) ? array_merge(static::$_rss, $fields) : $fields;
+
+		$item = array();
+		foreach ($fields as $field => $source) {
+			switch(true) {
+				case is_callable($source):
+					$item[$field] = $source($entity);
+					break;
+				case stristr($source, '{:'):
+					$replace = array_merge(
+						Environment::get('scaffold'),
+						Set::flatten($entity->data()),
+						array(
+							'host' => $_SERVER['HTTP_HOST'],
+						)
+					);
+					$item[$field] = String::insert($source, $replace);
+					break;
+				case isset($entity->$source):
+					$item[$field] = $entity->$source;
+					break;
+			}
+		}
+		return $item;
+	}
+
+	/**
 	 * return entity data, filtered by top-level keys
 	 *
 	 * return only subset of data, that is requested, as in $keys or as fallback taken from
@@ -709,6 +792,50 @@ class BaseModel extends \lithium\data\Model {
 			}
 		}
 		return $data;
+	}
+
+	/**
+	 * counts distinct values regarding a specific field
+	 *
+	 * @param string $field name of the field to count distinct values against
+	 * @param array $options an array of additional options
+	 *              - `group`: set to $field, overwrite here
+	 *              - `fields`: what fields to retrieve, useful if you overwrite the reduce code
+	 *              - `initial`: initial object to aggregate data in, defaults to StdObject
+	 *              - `reduce`: reduce method to be used within mongodb, must be of type `MongoCode`
+	 * @return array an array containing relevant rss data as keys and their corresponding values
+	 */
+	public static function distinctCount($field = 'type', $options = array()) {
+		$defaults = array(
+			'group' => $field,
+			'fields' => array('_id', $field),
+			'initial' => new \stdClass,
+			'reduce' => new \MongoCode("function(doc, prev) { ".
+				"if(typeof(prev[doc.$field]) == 'undefined') {".
+					"prev[doc.$field] = 0;".
+				"}".
+				"prev[doc.$field] += 1;".
+			"}"),
+		);
+		$options += $defaults;
+
+		$method = Inflector::pluralize($field);
+		$result = (method_exists(__CLASS__, $method))
+			? array_fill_keys(array_keys(static::$method()), 0)
+			: array();
+
+		$res = static::find('all', $options);
+		if (!$res) {
+			return $result;
+		}
+
+		$keys = $res->map(function($item) use ($field) {
+			return $item->$field;
+		});
+		$values = $res->map(function($item) use ($field) {
+			return $item->{$item->$field};
+		});
+		return array_merge($result, array_combine($keys->data(), $values->data()));
 	}
 
 	/**
@@ -776,7 +903,7 @@ class BaseModel extends \lithium\data\Model {
 				return $result;
 			},
 			'random' => function($self, $params, $chain){
-				$amount = $self::find('count', $params['options']);
+				$amount = (int) $self::find('count', $params['options']);
 				$offset = rand(0, $amount-1);
 				$params['options']['offset'] = $offset;
 				return $self::find('first', $params['options']);
