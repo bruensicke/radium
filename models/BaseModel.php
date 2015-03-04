@@ -156,12 +156,6 @@ class BaseModel extends \lithium\data\Model {
 	 * @var array
 	 */
 	protected $_query = array(
-		'order' => array(
-			'slug' => 'ASC',
-			'name' => 'ASC',
-			'updated' => 'DESC',
-			'created' => 'DESC',
-		),
 		'conditions' => array(
 			'deleted' => null,
 		),
@@ -810,12 +804,14 @@ class BaseModel extends \lithium\data\Model {
 			'group' => $field,
 			'fields' => array('_id', $field),
 			'initial' => new \stdClass,
-			'reduce' => new \MongoCode("function(doc, prev) { ".
-				"if(typeof(prev[doc.$field]) == 'undefined') {".
-					"prev[doc.$field] = 0;".
-				"}".
-				"prev[doc.$field] += 1;".
-			"}"),
+			'reduce' => new \MongoCode(
+				"function(doc, prev) { ".
+					"if(typeof(prev[doc." . $field . "]) == 'undefined') {".
+					"prev[doc." . $field . "] = 0;".
+					"}".
+					"prev[doc." . $field . "] += 1;".
+				"}"
+			),
 		);
 		$options += $defaults;
 
