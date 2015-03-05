@@ -1,6 +1,11 @@
 <?= $this->html->style('/radium/css/scaffold', array('inline' => false)); ?>
 
-<?= $this->scaffold->render('actions'); ?>
+
+<?
+if(!isset($disable) || !in_array('actions', $disable)){
+	echo $this->scaffold->render('actions');
+}
+?>
 
 <ol class="breadcrumb">
 	<li>
@@ -24,7 +29,11 @@
 	</div>
 </div>
 
-<?= $this->scaffold->render('search'); ?>
+<?
+if(!isset($disable) || !in_array('search', $disable)){
+	echo $this->scaffold->render('search');
+}
+?>
 
 <div class="main-content">
 	<?= $this->scaffold->render('index'); ?>
