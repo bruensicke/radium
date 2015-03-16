@@ -229,6 +229,42 @@ class BaseController extends \lithium\action\Controller {
 	}
 
 	/**
+	 * Get queried conditions from get-params
+	 *
+	 * @param array $defaults all default options you want to have set
+	 * @return array of current queried conditions via get-param
+	 */
+	protected function _queriedConditions($defaults = array()) {
+		$conditions = array();
+
+		if(isset($this->request->query['q'])){
+			$query = base64_decode($this->request->query['q']);
+
+			if(strlen($query) > 0){
+				$data = json_decode($query, true);
+			}
+
+			if(is_array($data) && !empty($data)){
+				if(isset($data['query'])) unset($data['query']);
+
+				foreach($data AS $k => $v){
+					if(isset($v[0]) && $v[0] === ''){
+						unset($data[$k][0]);
+						if(empty($data[$k])){
+							unset($data[$k]);
+						}
+					}
+				}
+				$conditions = $data;
+			}
+		}
+
+		unset($this->request->query['q']);
+
+		return $conditions;
+	}
+
+	/**
 	 * allows ajaxified upload of files
 	 *
 	 * @see

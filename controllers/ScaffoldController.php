@@ -39,6 +39,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function index() {
 		$model = $this->scaffold['model'];
 		$page = $this->_currentPage();
+		$querried = $this->_queriedConditions();
 		$conditions = $this->_options();
 		$order = $this->_order();
 
@@ -48,7 +49,12 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$conditions = $this->_search($conditions);
 		} else {
 			$conditions = $this->_options();
+			if(empty($conditions)){
+				$conditions = $querried;
+			}
+
 		}
+
 		$all = (int) $model::find('count');
 		$count = (int) $model::find('count', compact('conditions'));
 

@@ -9,6 +9,9 @@ $next = $page+1;
 
 $pageUri = preg_replace('/((\&|\?)p=\d+)/', '', $_SERVER['REQUEST_URI']);
 $pageUri .= (strpos($pageUri, '?') !== false) ? '&' : '?';
+if(isset($conditions)){
+	$pageUri .= 'q='.base64_encode(json_encode($conditions)).'&';
+}
 $pageUri .= 'p=';
 
 $start = ($offsets['offset'] <= 0) ? 1 : $offsets['offset'];
