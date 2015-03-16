@@ -71,7 +71,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 		$objects = $model::find('all', compact('conditions', 'order', 'limit', 'page'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return compact('objects', 'types', 'count', 'all', 'order', 'offsets', 'page');
+		return compact('objects', 'types', 'count', 'all', 'order', 'offsets', 'page', 'conditions');
 	}
 
 	public function view($id = null) {

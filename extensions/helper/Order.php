@@ -4,6 +4,12 @@ namespace radium\extensions\helper;
 
 class Order extends \lithium\template\helper\Html {
 
+	private static $_conditions = array();
+
+	public static function conditions($conditions){
+		self::$_conditions = $conditions;
+	}
+
 	/**
 	 * order method, to support additional options
 	 *
@@ -18,7 +24,7 @@ class Order extends \lithium\template\helper\Html {
 	public function order($name, $data, $options = array()){
 		$order = 'asc';
 		$sorts = array('desc' => 'sort-up', 'asc' => 'sort-down');
-		$string = ucfirst($name).'<a href="?order=%s:%s" class="sort fa fa-%s"></a>';
+		$string = ucfirst($name).'<a href="?order=%s:%s%s" class="sort fa fa-%s"></a>';
 		$sort = 'unsorted';
 		$type = $name;
 		if(isset($options['field'])){
@@ -29,7 +35,16 @@ class Order extends \lithium\template\helper\Html {
 			$sort = $sorts[$data[$type]];
 			if($current == 'asc') $order = 'desc';
 		}
-		echo sprintf($string, $type, $order, $sort);
+		$conditions = self::enhance();
+		$url = sprintf($string, $type, $order, $conditions, $sort);
+		echo $url;
+	}
+
+	private static function enhance(){
+		if(!empty(self::$_conditions)){
+			return '&q='.base64_encode(json_encode(self::$_conditions));
+		}
+		return '';
 	}
 
 }
