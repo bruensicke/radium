@@ -12,6 +12,9 @@ $pageUri .= (strpos($pageUri, '?') !== false) ? '&' : '?';
 if(isset($conditions) && !isset($_GET['q'])){
 	$pageUri .= 'q='.base64_encode(json_encode($conditions)).'&';
 }
+if(isset($collection) && !isset($_GET['c'])){
+	$pageUri .= 'collection='.$collection.'&';
+}
 $pageUri .= 'p=';
 $start = ($offsets['offset'] <= 0) ? 1 : $offsets['offset'];
 ?>
