@@ -7,7 +7,23 @@
 		}
 	}
 ?>
-
+<?php
+if(isset($collections)): ?>
+<div class="form-group">
+	<div class="input-group">
+		<?= $this->form->select('collection', $collections, array(
+			'empty' => false,
+			'multiple' => false,
+			'placeholder' => 'load collection',
+			'class' => 'form-control',
+			'value' => ($collection) ? $collection : null,
+		)); ?>
+		<span class="input-group-addon">
+			<i class="fa fa-search"></i>
+		</span>
+	</div>
+</div>
+<?php endif ?>
 <div class="form-group">
 	<div class="input-group">
 		<?= $this->form->text('query', array(

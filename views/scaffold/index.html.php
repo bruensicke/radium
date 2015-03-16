@@ -31,7 +31,7 @@ if(!isset($disable) || !in_array('actions', $disable)){
 
 <div class="header">
 	<div class="col-md-12">
-		<h3 class="header-title"><?= (isset($title)) ? $title : $this->title(); ?></h3>
+		<h3 class="header-title"><?=$this->title(); echo (isset($collection)) ? ': '.$collection : '' ?></h3>
 		<!-- <p class="header-info">See a list of all <?= $this->scaffold->plural ?></p> -->
 	</div>
 </div>
