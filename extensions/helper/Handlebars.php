@@ -150,5 +150,13 @@ class Handlebars extends \lithium\template\Helper {
 			list($format, $field) = str_getcsv($c, ' ');
 			return date((defined($format)) ? constant($format) : $format, $b->get($field));
 		});
+		$this->addHelper('ifcolor', function($a, $b, $c, $d) use ($context) {
+			list($lOption, $rOption, $color) = str_getcsv($c, ' ');
+			$lOption = $b->get($lOption);
+			if($lOption == $rOption){
+				return $color;
+			}
+			return false;
+		});
 	}
 }
