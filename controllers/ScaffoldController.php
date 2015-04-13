@@ -47,13 +47,14 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$conditions = $this->request->data;
 			$this->set(compact('conditions'));
 			$conditions = $this->_search($conditions);
+			$conditions = $this->_clean($conditions);
 		} else {
 			$conditions = $this->_options();
 			if(empty($conditions)){
 				$conditions = $querried;
 			}
-
 		}
+
 
 		$all = (int) $model::find('count');
 		$count = (int) $model::find('count', compact('conditions'));
@@ -315,6 +316,18 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return compact('success', 'url', 'message', 'errors');
 		}
 		return array('error' => 'content not valid.');
+	}
+
+
+	private static function _clean($conditions){
+		if(is_array($conditions) && !empty($conditions)){
+			foreach($conditions AS $key => $val){
+				if(is_array($val) && !empty($val)){
+					$conditions[$key] = array_values($val);
+				}
+			}
+		}
+		return $conditions;
 	}
 
 	/**
