@@ -83,25 +83,57 @@ class BaseController extends \lithium\action\Controller {
 	protected function _search($conditions) {
 		$model = $this->scaffold['model'];
 
-		$result = array('$or' => array());
-		foreach($conditions as $field => $value) {
-			if (empty($value) || $field == 'query') {
-				continue;
-			}
-			$result[$field] = array_filter((array) $value);
-		}
-		$result = array_filter($result);
-		if (!empty($conditions['query'])) {
-			$like = array('like' => sprintf('/%s/i', $conditions['query']));
-			$result['$or'][] = array('name' => $like);
-			$result['$or'][] = array('slug' => $like);
-			$result['$or'][] = array('notes' => $like);
+		$dbType = $model::meta('connection');
 
-			if(isset($model::$_searchable)){
-				foreach($model::$_searchable AS $field){
-					$result['$or'][] = array($field => $like);
+		switch($dbType) {
+
+			case 'mysql':
+				$result = array();
+				if(isset($conditions['query']) && strlen($conditions['query']) > 0){
+					foreach($model::$_searchable AS $field){
+						$result[$field] = $conditions['query'];
+					}
 				}
-			}
+				unset($conditions['query']);
+
+				$conditions['resource'][] = '';
+
+				foreach($conditions AS $key => $condition){
+					$positions = array_keys($condition, '');;
+					foreach($positions AS $pos){
+						unset($conditions[$key][$pos]);
+					}
+					if(empty($conditions[$key])){
+						unset($conditions[$key]);
+					}
+				}
+
+				$result = array_merge($result, $conditions);
+
+				break;
+
+			default:
+				$result = array('$or' => array());
+				foreach ($conditions as $field => $value) {
+					if (empty($value) || $field == 'query') {
+						continue;
+					}
+					$result[$field] = array_filter((array)$value);
+				}
+				$result = array_filter($result);
+				if (!empty($conditions['query'])) {
+					$like = array('like' => sprintf('/%s/i', $conditions['query']));
+					$result['$or'][] = array('name' => $like);
+					$result['$or'][] = array('slug' => $like);
+					$result['$or'][] = array('notes' => $like);
+
+					if (isset($model::$_searchable)) {
+						foreach ($model::$_searchable AS $field) {
+							$result['$or'][] = array($field => $like);
+						}
+					}
+				}
+				break;
 		}
 
 		return $result;
