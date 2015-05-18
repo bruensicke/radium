@@ -122,14 +122,27 @@ class BaseController extends \lithium\action\Controller {
 				}
 				$result = array_filter($result);
 				if (!empty($conditions['query'])) {
-					$like = array('like' => sprintf('/%s/i', $conditions['query']));
-					$result['$or'][] = array('name' => $like);
-					$result['$or'][] = array('slug' => $like);
-					$result['$or'][] = array('notes' => $like);
+					if (isset($model::$_noLikeSearch) && $model::$_noLikeSearch) {
+						$like = sprintf('%s', $conditions['query']);
+					} else {
+						$like = array('like' => sprintf('/%s/i', $conditions['query']));
+					}
 
-					if (isset($model::$_searchable)) {
-						foreach ($model::$_searchable AS $field) {
-							$result['$or'][] = array($field => $like);
+					$skipDefaultSearch = true;
+					if (!isset($model::$_skipDefaultSearch) || $model::$_skipDefaultSearch == false) {
+						$result['$or'][] = array('name' => $like);
+						$result['$or'][] = array('slug' => $like);
+						$result['$or'][] = array('notes' => $like);
+						$skipDefaultSearch = false;
+					}
+
+					if(isset($model::$_searchable)){
+						if (count($model::$_searchable) == 1 && $skipDefaultSearch) {
+							$result = array($model::$_searchable[0] => $like);
+						} else {
+							foreach($model::$_searchable AS $field){
+								$result['$or'][] = array($field => $like);
+							}
 						}
 					}
 				}
