@@ -137,12 +137,8 @@ class BaseController extends \lithium\action\Controller {
 					}
 
 					if(isset($model::$_searchable)){
-						if (count($model::$_searchable) == 1 && $skipDefaultSearch) {
-							$result = array($model::$_searchable[0] => $like);
-						} else {
-							foreach($model::$_searchable AS $field){
-								$result['$or'][] = array($field => $like);
-							}
+						foreach($model::$_searchable AS $field){
+							$result['$or'][] = array($field => $like);
 						}
 					}
 				}
