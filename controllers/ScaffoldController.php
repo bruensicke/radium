@@ -37,13 +37,14 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	}
 
 	public function index() {
+		$data = array();
 		$model = $this->scaffold['model'];
 		$page = $this->_currentPage();
 		$querried = $this->_queriedConditions();
-		$conditions = $this->_options();
 		$order = $this->_order();
 
 		if ($this->request->data) {
+			$data = $this->request->data;
 			$conditions = $this->request->data;
 			$this->set(compact('conditions'));
 			$conditions = $this->_search($conditions);
@@ -72,7 +73,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 		$objects = $model::find('all', compact('conditions', 'order', 'limit', 'page'));
 		$types = is_callable(array($model, 'types')) ? $model::types() : array();
-		return compact('objects', 'types', 'count', 'all', 'order', 'offsets', 'page', 'conditions');
+		return compact('objects', 'types', 'count', 'all', 'order', 'offsets', 'page', 'conditions', 'data');
 	}
 
 	public function view($id = null) {
