@@ -90,8 +90,16 @@ class BaseController extends \lithium\action\Controller {
 			case 'mysql':
 				$result = array();
 				if(isset($conditions['query']) && strlen($conditions['query']) > 0){
-					foreach($model::$_searchable AS $field){
-						$result[$field] = $conditions['query'];
+					if(isset($model::$_searchable)){
+						foreach($model::$_searchable AS $field){
+							$query[$field] = $conditions['query'];
+						}
+
+						if(count($model::$_searchable) > 1){
+							$result['OR'][] = $query;
+						}else{
+							$result = array_merge($result, $query);
+						}
 					}
 				}
 				unset($conditions['query']);
