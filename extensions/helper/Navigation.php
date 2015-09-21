@@ -207,7 +207,11 @@ class Navigation extends \lithium\template\Helper {
 		$navitem['name']   = (empty($navitem['name']) && !empty($navitem['url']))
 			? Inflector::humanize(basename($navitem['url']))
 			: $navitem['name'];
-		$navitem['active'] = (bool) stristr($navitem['url'], $context->scaffold->slug);
+		$navitem['active'] =
+			(bool) (
+				str_replace('_', '', array_pop(explode('/', $navitem['url'])))
+				== $context->scaffold->slug
+			);
 		$navitem['link']   = $context->url($navitem['url']);
 		$navitem['badge']  = empty($navitem['badge'])
 			? null
