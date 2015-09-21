@@ -73,7 +73,12 @@ class Widget extends \lithium\template\Helper {
 			}
 			$name = $options['prefix'].$widget;
 
-			$config = Configurations::get(String::insert($options['pattern'], compact('name')));
+			//Whow is not using widget configurations ATM.
+			//Therefore we disabled querying the MongoDB for each widget.
+			//
+			//$config = Configurations::get(String::insert($options['pattern'], compact('name')));
+			$config = false;
+
 			$result[] = ($config)
 				? $this->render($config, $options)
 				: $this->parse($name, $data, $options);

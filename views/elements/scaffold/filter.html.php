@@ -29,7 +29,7 @@ if(isset($collections)): ?>
 		<?= $this->form->text('query', array(
 			'placeholder' => 'Search on name, slug and notes'.$searchable,
 			'class' => 'form-control',
-			'value' => (!empty($conditions['query'])) ? $conditions['query'] : null,
+			'value' => (!empty($data['query'])) ? $data['query'] : null,
 		)); ?>
 		<span class="input-group-addon">
 			<i class="fa fa-search"></i>
