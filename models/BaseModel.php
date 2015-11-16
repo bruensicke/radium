@@ -305,7 +305,7 @@ class BaseModel extends \lithium\data\Model {
 		} else {
 			$default = static::$$field;
 		}
-		return array('field' => $type); //Configurations::get($slug, $default, array('field' => $type));
+		return $default; //Configurations::get($slug, $default, array('field' => $type));
 	}
 
 	/**
