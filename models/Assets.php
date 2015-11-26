@@ -90,12 +90,12 @@ class Assets extends \radium\models\BaseModel {
 	 * @param array $file array as described above
 	 * @param array $options additional options
 	 *        - `type`: overwrite type of file, if you want to disable automatic detection
-	 *        - `delete`: triggers deletion of retrieved temporary file, defaults to true
+	 *        - `delete`: triggers deletion of retrieved temporary file, defaults to false
 	 *        - `keep`: triggers keeping temporary files in case of errors, defaults to true
 	 * @return array parsed content of Assets bytes
 	 */
 	public static function init($file, array $options = array()) {
-		$defaults = array('type' => 'default', 'delete' => true, 'keep' => true);
+		$defaults = array('type' => 'default', 'delete' => false, 'keep' => true);
 		$options += $defaults;
 
 		// fetch file, if remote
@@ -103,7 +103,7 @@ class Assets extends \radium\models\BaseModel {
 		// determine md5 of file
 		// find by md5, first
 
-		/*$md5 = md5_file($file['tmp_name']);
+		$md5 = md5_file($file['tmp_name']);
 		$asset = static::findByMd5($md5, array('fields' => '_id'));
 		if ($asset) {
 			if ($options['delete']) {
@@ -111,7 +111,7 @@ class Assets extends \radium\models\BaseModel {
 			}
 			$error = 'Asset already present';
 			return compact('error', 'asset');
-		}*/
+		}
 
 		$mime = Mime::type($file['type']);
 		if (is_array($mime)) {
