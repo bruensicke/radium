@@ -103,7 +103,7 @@ class Assets extends \radium\models\BaseModel {
 		// determine md5 of file
 		// find by md5, first
 
-		$md5 = md5_file($file['tmp_name']);
+		/*$md5 = md5_file($file['tmp_name']);
 		$asset = static::findByMd5($md5, array('fields' => '_id'));
 		if ($asset) {
 			if ($options['delete']) {
@@ -111,7 +111,7 @@ class Assets extends \radium\models\BaseModel {
 			}
 			$error = 'Asset already present';
 			return compact('error', 'asset');
-		}
+		}*/
 
 		$mime = Mime::type($file['type']);
 		if (is_array($mime)) {
