@@ -305,7 +305,7 @@ class BaseModel extends \lithium\data\Model {
 		} else {
 			$default = static::$$field;
 		}
-		return Configurations::get($slug, $default, array('field' => $type));
+		return $default; //Configurations::get($slug, $default, array('field' => $type));
 	}
 
 	/**
@@ -647,7 +647,8 @@ class BaseModel extends \lithium\data\Model {
 		$load = (empty($entity->config_id))
 			? sprintf('%s.%s', strtolower(static::meta('name')), $entity->slug)
 			: $entity->config_id;
-		$config = Configurations::load($load);
+
+		$config = false; //$config = Configurations::load($load);
 		if (!$config) {
 			return null;
 		}
