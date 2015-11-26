@@ -90,12 +90,12 @@ class Assets extends \radium\models\BaseModel {
 	 * @param array $file array as described above
 	 * @param array $options additional options
 	 *        - `type`: overwrite type of file, if you want to disable automatic detection
-	 *        - `delete`: triggers deletion of retrieved temporary file, defaults to false
+	 *        - `delete`: triggers deletion of retrieved temporary file, defaults to true
 	 *        - `keep`: triggers keeping temporary files in case of errors, defaults to true
 	 * @return array parsed content of Assets bytes
 	 */
 	public static function init($file, array $options = array()) {
-		$defaults = array('type' => 'default', 'delete' => false, 'keep' => true);
+		$defaults = array('type' => 'default', 'delete' => true, 'keep' => true);
 		$options += $defaults;
 
 		// fetch file, if remote
