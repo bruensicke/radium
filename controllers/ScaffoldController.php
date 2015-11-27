@@ -57,8 +57,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		}
 
 
-		$all = (int) $model::find('count');
-		$count = (int) $model::find('count', compact('conditions'));
+		$all = $count = (int) $model::find('count', compact('conditions'));
 
 		if(isset($model::$_resultsPerPage)){
 			$offsets = $this->_offset(array(

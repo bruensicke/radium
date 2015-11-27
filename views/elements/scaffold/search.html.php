@@ -2,17 +2,13 @@
 	<a href="#" class="btn btn-search">
 		<i class="fa fa-fw fa-filter"></i>
 		<?php
-		if (!empty($conditions)):
-			echo sprintf('filtered %s from %s results', (int) $count, (int) $all);
-		else:
-			echo sprintf('%s results', (int) $all);
-		endif;
+		echo sprintf('%s results', (int) $all);
 		?>
 	</a>
 	<div class="search-form">
-		<!--<h5>Search <?= $this->scaffold->plural; ?></h5>-->    
+		<!--<h5>Search <?= $this->scaffold->plural; ?></h5>-->
 		<?= $this->form->create(); ?>
-		
+
 		<?= $this->scaffold->render('filter'); ?>
 
 		<div class="clearfix">
