@@ -158,5 +158,25 @@ class Handlebars extends \lithium\template\Helper {
 			}
 			return false;
 		});
+
+		$this->addHelper('equalsColor', function($a, $b, $c, $d) use ($context) {
+			list($lOption, $rOption, $color) = str_getcsv($c, ' ');
+			$lOption = $b->get($lOption);
+			$rOption = $b->get($rOption);
+			if($lOption == $rOption){
+				return $color;
+			}
+			return false;
+		});
+
+		$this->addHelper('notEqualsColor', function($a, $b, $c, $d) use ($context) {
+			list($lOption, $rOption, $color) = str_getcsv($c, ' ');
+			$lOption = $b->get($lOption);
+			$rOption = $b->get($rOption);
+			if($lOption != $rOption){
+				return $color;
+			}
+			return false;
+		});
 	}
 }
