@@ -29,6 +29,6 @@ namespace Handlebars;
  * @link      http://xamin.ir
  */
 
-class String extends BaseString
+class StringDeprecated extends BaseString
 {
 }
