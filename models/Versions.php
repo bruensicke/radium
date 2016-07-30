@@ -147,7 +147,7 @@ class Versions extends \radium\models\BaseModel {
 		$defaults = array('force' => false);
 		$options += $defaults;
 		$params = compact('entity', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
+		return static::_filter(get_called_class() . '::add', $params, function($self, $params) {
 			extract($params);
 			$model = $entity->model();
 			if ($model == $self || !$entity->exists()) {
@@ -201,7 +201,7 @@ class Versions extends \radium\models\BaseModel {
 		$defaults = array('validate' => false, 'callbacks' => false);
 		$options += $defaults;
 		$params = compact('id', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) use ($defaults) {
+		return static::_filter(get_called_class() . '::restore', $params, function($self, $params) use ($defaults) {
 			extract($params);
 			$version = $self::first($id);
 			if (!$version) {

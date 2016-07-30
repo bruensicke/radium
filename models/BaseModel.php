@@ -360,7 +360,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function search($slug, $status = 'active', array $options = array()) {
 		$params = compact('slug', 'status', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
+		return static::_filter(get_called_class() .'::search', $params, function($self, $params) {
 			extract($params);
 			$options['conditions'] = array(
 				'slug' => array('like' => "/$slug/i"),
@@ -418,7 +418,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public static function load($id, $status = 'active', array $options = array()) {
 		$params = compact('id', 'status', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
+		return static::_filter(get_called_class() .'::load', $params, function($self, $params) {
 			extract($params);
 			$defaults = array('key' => 'slug');
 			$options += $defaults;
@@ -553,7 +553,7 @@ class BaseModel extends \lithium\data\Model {
 		$defaults = array('updated' => true);
 		$options += $defaults;
 		$params = compact('field', 'data', 'options');
-		return static::_filter(__METHOD__, $params, function($self, $params) {
+		return static::_filter(get_called_class() .'::multiUpdate', $params, function($self, $params) {
 			extract($params);
 			$key = static::key();
 			$result = array();
@@ -585,7 +585,7 @@ class BaseModel extends \lithium\data\Model {
 		$defaults = array('updated' => true);
 		$options += $defaults;
 		$params = compact('entity', 'values', 'options');
-		return $this->_filter(__METHOD__, $params, function($self, $params) {
+		return $this->_filter(get_called_class() .'::updateFields', $params, function($self, $params) {
 			extract($params);
 			$key = $self::key();
 			$conditions = array($key => $entity->id());
@@ -844,7 +844,7 @@ class BaseModel extends \lithium\data\Model {
 	 */
 	public function _ini($entity, $field) {
 		$params = compact('entity', 'field');
-		return $this->_filter(__METHOD__, $params, function($self, $params) {
+		return $this->_filter(get_called_class() .'::_ini', $params, function($self, $params) {
 			extract($params);
 			if (empty($entity->$field)) {
 				return array();
