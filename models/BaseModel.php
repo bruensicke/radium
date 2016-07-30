@@ -15,7 +15,6 @@ use radium\util\IniFormat;
 use lithium\core\Libraries;
 use lithium\core\Environment;
 use lithium\util\Set;
-use lithium\util\String;
 use lithium\util\Validator;
 use lithium\util\Inflector;
 

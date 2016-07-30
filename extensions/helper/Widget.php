@@ -10,9 +10,7 @@ namespace radium\extensions\helper;
 
 use radium\models\Configurations;
 use lithium\template\TemplateException;
-
 use lithium\core\Environment;
-use lithium\util\String;
 
 class Widget extends \lithium\template\Helper {
 
@@ -76,7 +74,7 @@ class Widget extends \lithium\template\Helper {
 			//Whow is not using widget configurations ATM.
 			//Therefore we disabled querying the MongoDB for each widget.
 			//
-			//$config = Configurations::get(String::insert($options['pattern'], compact('name')));
+			//$config = Configurations::get(StringDeprecated::insert($options['pattern'], compact('name')));
 			$config = false;
 
 			$result[] = ($config)

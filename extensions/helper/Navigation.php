@@ -12,7 +12,7 @@ use radium\models\Configurations;
 use radium\util\Neon;
 use lithium\util\Inflector;
 use lithium\template\TemplateException;
-use lithium\util\String;
+use lithium\util\StringDeprecated;
 use lithium\util\Set;
 
 class Navigation extends \lithium\template\Helper {
@@ -121,7 +121,7 @@ class Navigation extends \lithium\template\Helper {
 			'pattern' => 'nav.{:name}.', 'seperator' => "\n", 'files' => true, 'db' => true);
 		$options += $defaults;
 
-		$search = String::insert($options['pattern'], compact('name'));
+		$search = StringDeprecated::insert($options['pattern'], compact('name'));
 		$result = array();
 		if ($options['db']) {
 			$configs = Configurations::search($search);

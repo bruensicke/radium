@@ -274,7 +274,7 @@ class Template
             );
 
             $return = call_user_func_array($helpers->$sectionName, $params);
-            if ($return instanceof String) {
+            if ($return instanceof StringDeprecated) {
                 return $this->handlebars->loadString($return)->render($context);
             } else {
                 return $return;
@@ -444,7 +444,7 @@ class Template
 
         return $value;
     }
-    
+
     /**
      * Break an argument string into an array of strings
      *
@@ -457,18 +457,18 @@ class Template
         $args = array();
         preg_match_all('#(?:[^\'"\[\]\s]|\[.+?\])+|(?<!\\\\)("|\')(?:[^\\\\]|\\\\.)*?\1|\S+#s', $string, $args);
         $args =  isset($args[0])?$args[0]:array();
-        
+
         for ($x=0, $argc = count($args); $x<$argc;$x++) {
             // check to see if argument is a quoted string literal
             if ($args[$x][0] == "'" || $args[$x][0] == '"') {
                 if ($args[$x][0] === substr($args[$x], -1)) {
                     // remove enclosing quotes and unescape
-                    $args[$x] = new \Handlebars\String(stripcslashes(substr($args[$x], 1, strlen($args[$x]) -2)));
+                    $args[$x] = new \Handlebars\StringDeprecated(stripcslashes(substr($args[$x], 1, strlen($args[$x]) -2)));
                 } else {
                     throw new \RuntimeException("Malformed string: ".$args);
                 }
             }
-            
+
         }
         return $args;
     }

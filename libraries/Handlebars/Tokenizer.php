@@ -109,7 +109,7 @@ class Tokenizer
      */
     public function scan($text, $delimiters = null)
     {
-        if ($text instanceof String) {
+        if ($text instanceof StringDeprecated) {
             $text = $text->getString();
         }
         $this->reset();

@@ -10,7 +10,7 @@
 namespace radium\extensions\storage;
 
 use lithium\core\Libraries;
-use lithium\util\String;
+use lithium\util\StringDeprecated;
 
 /**
  * Class for setting, getting and clearing flash messages. Use this class inside your
@@ -152,7 +152,7 @@ class FlashMessage extends \lithium\core\StaticObject {
 			if (isset(static::$_messages[$message])) {
 				$message = static::$_messages[$message];
 			}
-			$message = String::insert($message, $attrs);
+			$message = StringDeprecated::insert($message, $attrs);
 		} elseif (is_array($message)) {
 			foreach ($message as $index => $value) {
 				$message[$index] = static::_translate($value, $attrs);
