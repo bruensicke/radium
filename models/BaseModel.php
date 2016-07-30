@@ -11,12 +11,12 @@ namespace radium\models;
 use radium\models\Configurations;
 use radium\util\Neon;
 use radium\util\IniFormat;
-
 use lithium\core\Libraries;
 use lithium\core\Environment;
 use lithium\util\Set;
 use lithium\util\Validator;
 use lithium\util\Inflector;
+use lithium\util\StringDeprecated;
 
 /**
  * Base class for all Models
@@ -754,7 +754,7 @@ class BaseModel extends \lithium\data\Model {
 							'host' => $_SERVER['HTTP_HOST'],
 						)
 					);
-					$item[$field] = String::insert($source, $replace);
+					$item[$field] = StringDeprecated::insert($source, $replace);
 					break;
 				case isset($entity->$source):
 					$item[$field] = $entity->$source;
