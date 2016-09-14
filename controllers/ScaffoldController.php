@@ -105,8 +105,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function add() {
 		$model = $this->scaffold['model'];
 		$object = $model::create($this->_options());
-		$this->request->data = $this->removeEmptyArray($this->request->data, $object);
-
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
@@ -124,8 +122,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return $this->redirect(array('action' => 'index'));
 		}
 		
-		$this->request->data = $this->removeEmptyArray($this->request->data, $object);
-
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
@@ -376,28 +372,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		Environment::set(Environment::get(), array('scaffold' => $this->scaffold));
 		return $this->scaffold;
 	}
-
-	public function removeEmptyArray($request, $object) {
-		foreach ($request as $field => $value ) {
-			$newList  = array();
-			if (is_array($value)) {
-				foreach ($value as $key => $data ) {
-					if (!empty($data)) {
-						array_push($newList, $data);
-					}
-				}
-				if (empty($newList)) {
-					unset($request[$field]);
-					unset($object[$field]);
-					$object->save();
-				} else {
-					$request[$field] = $newList;
-				}
-			}
-		}
-		return $request;
-	}
-
 }
 
 ?>
