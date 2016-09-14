@@ -105,6 +105,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	public function add() {
 		$model = $this->scaffold['model'];
 		$object = $model::create($this->_options());
+		$this->request->data = $this->removeEmptyArray($this->request->data, $object);
+
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
@@ -122,6 +124,8 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			return $this->redirect(array('action' => 'index'));
 		}
 		
+		$this->request->data = $this->removeEmptyArray($this->request->data, $object);
+
 		if (($this->request->data) && $object->save($this->request->data)) {
 			$url = array('action' => 'view', 'args' => array((string) $object->{$model::key()}));
 			return $this->redirect($url);
@@ -372,6 +376,41 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		Environment::set(Environment::get(), array('scaffold' => $this->scaffold));
 		return $this->scaffold;
 	}
+
+	/**
+	 * Remove removeSelect object and the second part of 'mulselect' field Name.
+	 * to destroy empty Values in the mulselect fields.
+	 * @param $request
+	 * @param $object
+	 * @return mixed
+	 */
+	public function removeEmptyArray($request, $object) {
+		foreach ($request as $field => $value ) {
+			$selectField = explode('_',$field);
+			if ($selectField['0'] == 'removeSelect') {
+				$selectField = $selectField['1'];
+				$newList  = array();
+				if (is_array($request[$selectField])) {
+					foreach ($request[$selectField] as $key => $data ) {
+						if (!empty($data)) {
+							array_push($newList, $data);
+						}
+					}
+					if (empty($newList)) {
+						unset($request[$selectField]);
+						unset($object[$selectField]);
+						$object->save();
+					} else {
+						$request[$selectField] = $newList;
+					}
+				}
+				unset($request[$field]);
+				unset($object[$field]);
+			}
+		}
+		return $request;
+	}
+
 }
 
 ?>
