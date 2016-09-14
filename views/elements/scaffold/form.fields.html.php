@@ -197,6 +197,7 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-textarea';
 			}
+			
 			echo $this->form->field($field, $options);
 		break;
 
