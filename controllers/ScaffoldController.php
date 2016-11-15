@@ -29,6 +29,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 
 	public function _init() {
 		parent::_init();
+		$this->_scaffoldPaths();
 		$this->controller = $this->request->controller;
 		$this->library = $this->request->library;
 
@@ -129,7 +130,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 			$data = array($model => array($id => $result->data()));
 			$name = sprintf('%s-%s.json', $singular, $id);
 		}
-		$this->response->headers('download', $name);
+		$this->response->headers('Content-Disposition', sprintf('attachment; filename=%s', $name));
 		$this->_render['hasRendered'] = true;
 		return Media::render($this->response, $data, array('type' => 'json'));
 	}
@@ -335,10 +336,41 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if (!is_null($field)) {
 			return (isset($this->scaffold[$field])) ? $this->scaffold[$field] : false;
 		}
-		Environment::set(Environment::get(), array('scaffold' => $this->scaffold));
+		Environment::set(true, array('scaffold' => $this->scaffold));
 		return $this->scaffold;
 	}
 
+	protected function _scaffoldPaths($field = null) {
+		Media::type('default', null, array(
+			'view' => 'lithium\template\View',
+			'paths' => array(
+				'template' => array(
+					LITHIUM_APP_PATH . '/views/{:controller}/{:template}.{:type}.php',
+					RADIUM_PATH . '/views/{:controller}/{:template}.{:type}.php',
+
+					'{:library}/views/scaffold/{:template}.{:type}.php',
+					RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php',
+
+					'{:library}/views/{:controller}/{:template}.{:type}.php',
+				),
+				'layout' => array(
+					LITHIUM_APP_PATH . '/views/layouts/{:layout}.{:type}.php',
+					RADIUM_PATH . '/views/layouts/{:layout}.{:type}.php',
+					'{:library}/views/layouts/{:layout}.{:type}.php',
+				),
+				'element' => array(
+					LITHIUM_APP_PATH . '/views/elements/{:template}.{:type}.php',
+					RADIUM_PATH . '/views/elements/{:template}.{:type}.php',
+					'{:library}/views/elements/{:template}.{:type}.php',
+				),
+				'widget' => array(
+					LITHIUM_APP_PATH . '/views/widgets/{:template}.{:type}.php',
+					RADIUM_PATH . '/views/widgets/{:template}.{:type}.php',
+					'{:library}/views/widgets/{:template}.{:type}.php',
+				),
+		    )
+		));
+	}
 }
 
 ?>

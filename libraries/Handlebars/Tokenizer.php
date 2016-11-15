@@ -12,6 +12,8 @@
  * @author    Justin Hileman <dontknow@example.org>
  * @author    fzerorubigd <fzerorubigd@gmail.com>
  * @author    Behrooz Shabani <everplays@gmail.com>
+ * @author    Dmitriy Simushev <simushevds@gmail.com>
+ * @copyright 2010-2012 (c) Justin Hileman
  * @copyright 2012 (c) ParsPooyesh Co
  * @copyright 2013 (c) Behrooz Shabani
  * @license   MIT <http://opensource.org/licenses/mit-license.php>
@@ -55,6 +57,10 @@ class Tokenizer
     const T_UNESCAPED = '{';
     const T_UNESCAPED_2 = '&';
     const T_TEXT = '_t';
+    const T_ESCAPE = "\\";
+    const T_SINGLE_Q = "'";
+    const T_DOUBLE_Q = "\"";
+    const T_TRIM = "~";
 
     // Valid token types
     private static $_tagTypes = array(
@@ -88,47 +94,88 @@ class Tokenizer
     const NODES = 'nodes';
     const VALUE = 'value';
     const ARGS = 'args';
+    const TRIM_LEFT = 'tleft';
+    const TRIM_RIGHT = 'tright';
 
     protected $state;
     protected $tagType;
     protected $tag;
-    protected $buffer;
+    protected $buffer = '';
     protected $tokens;
     protected $seenTag;
     protected $lineStart;
     protected $otag;
     protected $ctag;
+    protected $escaped;
+    protected $escaping;
+    protected $trimLeft;
+    protected $trimRight;
 
     /**
      * Scan and tokenize template source.
      *
-     * @param string $text       Mustache template source to tokenize
-     * @param string $delimiters Optional, pass opening and closing delimiters
+     * @param string $text Mustache template source to tokenize
+     *
+     * @internal string $delimiters Optional, pass opening and closing delimiters
      *
      * @return array Set of Mustache tokens
      */
-    public function scan($text, $delimiters = null)
+    public function scan($text/*, $delimiters = null*/)
     {
-        if ($text instanceof String) {
+        if ($text instanceof StringWrapper) {
             $text = $text->getString();
         }
         $this->reset();
 
+        /* Actually we not support this. so this code is not used at all, yet.
         if ($delimiters = trim($delimiters)) {
             list($otag, $ctag) = explode(' ', $delimiters);
             $this->otag = $otag;
             $this->ctag = $ctag;
         }
-
+        */
         $len = strlen($text);
         for ($i = 0; $i < $len; $i++) {
+            $this->escaping = $this->tagChange(self::T_ESCAPE, $text, $i);
+
+            // To play nice with helpers' arguments quote and apostrophe marks
+            // should be additionally escaped only when they are not in a tag.
+            $quoteInTag = $this->state != self::IN_TEXT
+                && ($text[$i] == self::T_SINGLE_Q || $text[$i] == self::T_DOUBLE_Q);
+
+            if ($this->escaped && !$this->tagChange($this->otag, $text, $i) && !$quoteInTag) {
+                $this->buffer .= "\\";
+            }
+
             switch ($this->state) {
             case self::IN_TEXT:
-                if ($this->tagChange($this->otag, $text, $i)) {
+                // Handlebars.js does not think that openning curly brace in
+                // "\\\{{data}}" template is escaped. Instead it removes one
+                // slash and leaves others "as is". To emulate similar behavior
+                // we have to check the last character in the buffer. If it's a
+                // slash we actually does not need to escape openning curly
+                // brace.
+                $prev_slash = substr($this->buffer, -1) == '\\';
+
+                if ($this->tagChange($this->otag. self::T_TRIM, $text, $i) and (!$this->escaped || $prev_slash)) {
+                    $this->flushBuffer();
+                    $this->state = self::IN_TAG_TYPE;
+                    $this->trimLeft = true;
+                } elseif ($this->tagChange(self::T_UNESCAPED.$this->otag, $text, $i) and $this->escaped) {
+                    $this->buffer .= "{{{";
+                    $i += 2;
+                    continue;
+                } elseif ($this->tagChange($this->otag, $text, $i) and (!$this->escaped || $prev_slash)) {
                     $i--;
                     $this->flushBuffer();
                     $this->state = self::IN_TAG_TYPE;
-                } else {
+                } elseif ($this->escaped and $this->escaping) {
+                    // We should not add extra slash before opening tag because
+                    // doubled slash where should be transformed to single one
+                    if (($i + 1) < $len && !$this->tagChange($this->otag, $text, $i + 1)) {
+                        $this->buffer .= "\\";
+                    }
+                } elseif (!$this->escaping) {
                     if ($text[$i] == "\n") {
                         $this->filterLine();
                     } else {
@@ -161,6 +208,10 @@ class Tokenizer
                 break;
 
             default:
+                if ($this->tagChange(self::T_TRIM . $this->ctag, $text, $i)) {
+                    $this->trimRight = true;
+                    continue;
+                }
                 if ($this->tagChange($this->ctag, $text, $i)) {
                     // Sections (Helpers) can accept parameters
                     // Same thing for Partials (little known fact)
@@ -183,6 +234,8 @@ class Tokenizer
                         self::INDEX => ($this->tagType == self::T_END_SECTION) ?
                             $this->seenTag - strlen($this->otag) :
                             $i + strlen($this->ctag),
+                        self::TRIM_LEFT => $this->trimLeft,
+                        self::TRIM_RIGHT => $this->trimRight
                     );
                     if (isset($args)) {
                         $t[self::ARGS] = $args;
@@ -191,12 +244,14 @@ class Tokenizer
                     unset($t);
                     unset($args);
                     $this->buffer = '';
+                    $this->trimLeft = false;
+                    $this->trimRight = false;
                     $i += strlen($this->ctag) - 1;
                     $this->state = self::IN_TEXT;
                     if ($this->tagType == self::T_UNESCAPED) {
                         if ($this->ctag == '}}') {
                             $i++;
-                        } else {
+                        } /* else { // I can't remember why this part is here! the ctag is always }} and
                             // Clean up `{{{ tripleStache }}}` style tokens.
                             $lastIndex = count($this->tokens) - 1;
                             $lastName = $this->tokens[$lastIndex][self::NAME];
@@ -205,13 +260,15 @@ class Tokenizer
                                     substr($lastName, 0, -1)
                                 );
                             }
-                        }
+                        } */
                     }
                 } else {
                     $this->buffer .= $text[$i];
                 }
                 break;
             }
+
+            $this->escaped = ($this->escaping and !$this->escaped);
         }
 
         $this->filterLine(true);
@@ -227,6 +284,8 @@ class Tokenizer
     protected function reset()
     {
         $this->state = self::IN_TEXT;
+        $this->escaped = false;
+        $this->escaping = false;
         $this->tagType = null;
         $this->tag = null;
         $this->buffer = '';
@@ -235,6 +294,8 @@ class Tokenizer
         $this->lineStart = 0;
         $this->otag = '{{';
         $this->ctag = '}}';
+        $this->trimLeft = false;
+        $this->trimRight = false;
     }
 
     /**
@@ -244,7 +305,7 @@ class Tokenizer
      */
     protected function flushBuffer()
     {
-        if (!empty($this->buffer)) {
+        if ($this->buffer !== '') {
             $this->tokens[] = array(
                 self::TYPE => self::T_TEXT,
                 self::VALUE => $this->buffer
@@ -310,7 +371,7 @@ class Tokenizer
     }
 
     /**
-     * Change the current Mustache delimiters. Set new `otag` and `ctag` values.
+     * Change the current Handlebars delimiters. Set new `otag` and `ctag` values.
      *
      * @param string $text  Mustache template source
      * @param int    $index Current tokenizer index
@@ -337,7 +398,7 @@ class Tokenizer
      * Test whether it's time to change tags.
      *
      * @param string $tag   Current tag name
-     * @param string $text  Mustache template source
+     * @param string $text  Handlebars template source
      * @param int    $index Current tokenizer index
      *
      * @return boolean True if this is a closing section tag

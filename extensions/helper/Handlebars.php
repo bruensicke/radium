@@ -115,7 +115,7 @@ class Handlebars extends \lithium\template\Helper {
 			return call_user_func_array('number_format', $params);
 		});
 		$this->addHelper('colorlabel', function($a, $b, $c, $d) use ($context) {
-			$useClass = array('active', 'inactive');
+			$useClass = array('active', 'inactive', 'online', 'offline');
 			$text = $b->get($c);
 			if (in_array($text, $useClass)) {
 				$html = '<span class="label label-primary label-%s">%s</span>';

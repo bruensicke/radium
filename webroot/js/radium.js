@@ -136,7 +136,16 @@ var Radium = new function ($) {
 	}
 
 	function initRTE() {
-		$('.controls .rte').trumbowyg();
+		$.trumbowyg.svgPath = '/radium/trumbowyg/ui/icons.svg';
+		// $('div.rte').trumbowyg();
+		var ed = $('div.rte').trumbowyg({
+			autogrow: true,
+    		btns: [['bold', 'italic'], ['link']]
+		});
+		ed.on('tbwblur', function(e){
+			var div = $(e.target);
+			$(div.data('for')).val(div.trumbowyg('html'));
+		});
 	}
 
 	function initDatetimes() {

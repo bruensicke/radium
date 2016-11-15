@@ -29,6 +29,7 @@
 				<div class="form-group">
 					<?= $this->form->field('body', array(
 						'type' => 'textarea',
+						'id' => 'content-body',
 						'class' => 'form-control',
 						'style' => 'height: 370px;',
 					));?>
@@ -36,11 +37,7 @@
 			</div>
 		</div>
 		<div class="type_html type_handlebars">
-			<?= $this->form->field('body', array(
-				'label' => false,
-				'type' => 'textarea',
-				'class' => 'rte',
-			));?>
+			<div class="form-control rte" data-for="#content-body"><?php echo $object->body; ?></div>
 		</div>
 	</div>
 

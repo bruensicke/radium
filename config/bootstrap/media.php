@@ -20,10 +20,6 @@ Media::type('default', null, array(
 		'template' => array(
 			LITHIUM_APP_PATH . '/views/{:controller}/{:template}.{:type}.php',
 			RADIUM_PATH . '/views/{:controller}/{:template}.{:type}.php',
-
-			'{:library}/views/scaffold/{:template}.{:type}.php',
-			RADIUM_PATH . '/views/scaffold/{:template}.{:type}.php',
-
 			'{:library}/views/{:controller}/{:template}.{:type}.php',
 		),
 		'layout' => array(

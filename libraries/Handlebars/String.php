@@ -20,15 +20,16 @@ namespace Handlebars;
 /**
  * Handlebars string
  *
- * @category  Xamin
- * @package   Handlebars
- * @author    fzerorubigd <fzerorubigd@gmail.com>
- * @copyright 2013 Authors
- * @license   MIT <http://opensource.org/licenses/MIT>
- * @version   Release: @package_version@
- * @link      http://xamin.ir
+ * @category   Xamin
+ * @package    Handlebars
+ * @author     fzerorubigd <fzerorubigd@gmail.com>
+ * @copyright  2013 Authors
+ * @license    MIT <http://opensource.org/licenses/MIT>
+ * @version    Release: @package_version@
+ * @link       http://xamin.ir
+ * @deprecated Since v0.10.3. Use \Handlebars\StringWrapper instead.
  */
 
-class String extends BaseString
+class String extends StringWrapper
 {
 }

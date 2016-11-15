@@ -9,6 +9,7 @@
  * @package   Handlebars
  * @author    Joey Baker <joey@byjoeybaker.com>
  * @author    Behrooz Shabani <everplays@gmail.com>
+ * @author    Mária Šormanová <maria.sormanova@gmail.com>
  * @copyright 2013 (c) Meraki, LLP
  * @copyright 2013 (c) Behrooz Shabani
  * @license   MIT <http://opensource.org/licenses/MIT>
@@ -20,7 +21,7 @@ namespace Handlebars\Cache;
 use Handlebars\Cache;
 
 /**
- * A dummy array cache
+ * A APC cache
  *
  * @category  Xamin
  * @package   Handlebars
@@ -35,31 +36,51 @@ class APC implements Cache
 {
 
     /**
-     * Get cache for $name if exist.
-     *
-     * @param string $name Cache id
-     *
-     * @return mixed data on hit, boolean false on cache not found
+     * @var string
      */
-    public function get($name)
+    private $_prefix;
+
+    /**
+     * Construct the APC cache.
+     *
+     * @param string|null $prefix optional key prefix, defaults to null
+     */
+    public function __construct( $prefix = null )
     {
-        if (apc_exists($name)) {
-            return apc_fetch($name);
-        }
-        return false;
+        $this->_prefix = (string)$prefix;
     }
 
     /**
-     * Set a cache
+     * Get cache for $name if exist
+     * and if the cache is not older than defined TTL.
+     *
+     * @param string $name Cache id
+     *
+     * @return mixed data on hit, boolean false on cache not found/expired
+     */
+    public function get($name)
+    {
+        $success = null;
+        $result = apc_fetch($this->_getKey($name), $success);
+
+        return $success ? $result : false;
+
+    }
+
+    /**
+     * Set a cache with $ttl, if present
+     * If $ttl set to -1, the cache expires immediately
+     * If $ttl set to 0 (default), cache is never purged
      *
      * @param string $name  cache id
      * @param mixed  $value data to store
+     * @param int    $ttl   time to live in seconds
      *
      * @return void
      */
-    public function set($name, $value)
+    public function set($name, $value, $ttl = 0)
     {
-        apc_store($name, $value);
+        apc_store($this->_getKey($name), $value, $ttl);
     }
 
     /**
@@ -71,7 +92,19 @@ class APC implements Cache
      */
     public function remove($name)
     {
-        apc_delete($name);
+        apc_delete($this->_getKey($name));
+    }
+
+    /**
+     * Gets the full cache key for a given cache item's
+     *
+     * @param string $name Name of the cache item
+     *
+     * @return string full cache key of cached item
+     */
+    private function _getKey($name)
+    {
+        return $this->_prefix . ':' . $name;
     }
 
 }

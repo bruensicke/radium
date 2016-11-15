@@ -2619,10 +2619,10 @@ a.fc-event:hover {
  * Login
  */
 body.cover {
-  background: transparent url('../img/bg.jpg') 0 0;
+/*  background: transparent url('../img/bg.jpg') 0 0;
   background-size: cover;
   background-attachment: fixed;
-}
+*/}
 .login-wrap {
   margin: 0 auto;
   padding-top: 70px;
@@ -2914,10 +2914,10 @@ tr.inactive td:not(:last-child) {
 	font-weight: normal;
 	letter-spacing: 0.03em;
 }
-.label-inactive {
+.label-inactive, .label-offline {
 	background-color: #e8b976;
 }
-.label-active {
+.label-active, .label-online {
 	background-color: #84ce84;
 }
 

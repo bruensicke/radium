@@ -58,9 +58,6 @@ class Assets extends \radium\models\BaseModel {
 	 * @var array
 	 */
 	public $validates = array(
-		'slug' => array(
-			array('notEmpty', 'message' => 'Please provide a valid slug'),
-		),
 		'md5' => array(
 			array('notEmpty', 'message' => 'an md5 is required.'),
 			array('md5', 'message' => 'md5 hash must be a valid md5 hash, doh.'),

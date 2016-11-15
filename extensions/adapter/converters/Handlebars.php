@@ -18,6 +18,12 @@ class Handlebars extends \lithium\core\Object {
 	 * @param string $content input content
 	 * @param array $data additional data to be passed into render context
 	 * @param array $options an array with additional options
+     * helpers        => Helpers object
+     * escape         => a callable function to escape values
+     * escapeArgs     => array to pass as extra parameter to escape function
+     * loader         => Loader object
+     * partials_loader => Loader object
+     * cache          => Cache object
 	 * @return string content as given
 	 * @filter
 	 */
@@ -26,8 +32,8 @@ class Handlebars extends \lithium\core\Object {
 		$options += $defaults;
 		$params = compact('content', 'data', 'options');
 		return $this->_filter(__METHOD__, $params, function($self, $params) {
-			$renderer = new Renderer($params['content'], $params['data']);
-			return $renderer->render();
+			$renderer = new Renderer($params['options']);
+			return $renderer->render($params['content'], $params['data']);
 		});
 	}
 

@@ -11,7 +11,7 @@
 	'/radium/css/jbox',
 	'/radium/css/ark',
 	// '/radium/css/theme',
-	'/radium/trumbowyg/design/css/trumbowyg',
+	'/radium/trumbowyg/ui/trumbowyg',
 	'/radium/css/radium',
 	// '/li3_bootstrap/css/bootstrap-select.min',
 	// '/li3_bootstrap/css/bootstrap-modal',
@@ -29,9 +29,9 @@
 	'/radium/js/jquery.slug.js',
 	'/radium/js/jquery.jbox.min',
 	'/radium/js/select2.min',
+	'/radium/trumbowyg/trumbowyg.min',
 	'/radium/js/moment.min',
 	'/radium/js/import',
-	'/radium/trumbowyg/trumbowyg.min',
 	'/radium/js/radium'
 )); ?>
 <?php echo $this->head(); ?>
