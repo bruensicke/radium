@@ -9,6 +9,7 @@
  * @package   Handlebars
  * @author    fzerorubigd <fzerorubigd@gmail.com>
  * @author    Behrooz Shabani <everplays@gmail.com>
+ * @copyright 2010-2012 (c) Justin Hileman
  * @copyright 2012 (c) ParsPooyesh Co
  * @copyright 2013 (c) Behrooz Shabani
  * @license   MIT <http://opensource.org/licenses/MIT>
@@ -18,7 +19,7 @@
 
 namespace Handlebars\Loader;
 use Handlebars\Loader;
-use Handlebars\String;
+use Handlebars\StringWrapper;
 
 /**
  * Handlebars Template string Loader implementation.
@@ -26,6 +27,7 @@ use Handlebars\String;
  * @category  Xamin
  * @package   Handlebars
  * @author    fzerorubigd <fzerorubigd@gmail.com>
+ * @copyright 2010-2012 (c) Justin Hileman
  * @copyright 2012 (c) ParsPooyesh Co
  * @license   MIT <http://opensource.org/licenses/MIT>
  * @version   Release: @package_version@
@@ -40,11 +42,11 @@ class StringLoader implements Loader
      *
      * @param string $name Handlebars Template source
      *
-     * @return String Handlebars Template source
+     * @return StringWrapper Handlebars Template source
      */
     public function load($name)
     {
-        return new String($name);
+        return new StringWrapper($name);
     }
 
 }

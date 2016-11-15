@@ -9,6 +9,9 @@
  * @package   Handlebars
  * @author    fzerorubigd <fzerorubigd@gmail.com>
  * @author    Behrooz Shabani <everplays@gmail.com>
+ * @author    Jeff Turcotte <jeff.turcotte@gmail.com>
+ * @author    Mária Šormanová <maria.sormanova@gmail.com>
+ * @copyright 2010-2012 (c) Justin Hileman
  * @copyright 2012 (c) ParsPooyesh Co
  * @copyright 2013 (c) Behrooz Shabani
  * @license   MIT <http://opensource.org/licenses/MIT>
@@ -35,10 +38,10 @@ use Handlebars\Cache\Dummy;
 class Handlebars
 {
     private static $_instance = false;
-    const VERSION = '1.0.0';
+    const VERSION = '1.1.0';
 
     /**
-     * factory method
+     * Factory method
      *
      * @param array $options see __construct's options parameter
      *
@@ -54,34 +57,58 @@ class Handlebars
     }
 
     /**
+     * Current tokenizer instance
+     *
      * @var Tokenizer
      */
     private $_tokenizer;
 
     /**
+     * Current parser instance
+     *
      * @var Parser
      */
     private $_parser;
 
     /**
+     * Current helper list
+     *
      * @var Helpers
      */
     private $_helpers;
 
     /**
+     * Current loader instance
+     *
      * @var Loader
      */
     private $_loader;
 
     /**
+     * Current partial loader instance
+     *
      * @var Loader
      */
     private $_partialsLoader;
 
     /**
+     * Current cache instance
+     *
      * @var Cache
      */
     private $_cache;
+
+    /**
+     * @var int time to live parameter in seconds for the cache usage
+     *          default set to 0 which means that entries stay in cache
+     *          forever and are never purged
+     */
+    private $_ttl = 0;
+
+    /**
+     * @var string the class to use for the template
+     */
+    private $_templateClass = 'Handlebars\\Template';
 
     /**
      * @var callable escape function to use
@@ -89,6 +116,8 @@ class Handlebars
     private $_escape = 'htmlspecialchars';
 
     /**
+     * Parameters for the escpae method above
+     *
      * @var array parametes to pass to escape function
      */
     private $_escapeArgs = array(
@@ -107,6 +136,7 @@ class Handlebars
      * loader         => Loader object
      * partials_loader => Loader object
      * cache          => Cache object
+     * template_class => the class to use for the template object
      *
      * @param array $options array of options to set
      *
@@ -128,6 +158,14 @@ class Handlebars
 
         if (isset($options['cache'])) {
             $this->setCache($options['cache']);
+        }
+
+        if (isset($options['ttl'])) {
+            $this->setTtl($options['ttl']);
+        }
+
+        if (isset($options['template_class'])) {
+            $this->setTemplateClass($options['template_class']);
         }
 
         if (isset($options['escape'])) {
@@ -164,8 +202,8 @@ class Handlebars
      * @param mixed  $data     data to use as context
      *
      * @return string Rendered template
-     * @see Handlebars::loadTemplate
-     * @see Template::render
+     * @see    Handlebars::loadTemplate
+     * @see    Template::render
      */
     public function render($template, $data)
     {
@@ -234,6 +272,110 @@ class Handlebars
     {
         return $this->getHelpers()->has($name);
     }
+    
+     /**
+     * Add a new helper.
+     *
+     * @param string $name   helper name
+     * @param mixed  $helper helper callable
+     *
+     * @return void
+     */
+    public function registerHelper($name, $helper)
+    {    
+        $callback = function ($template, $context, $arg) use ($helper) {
+            $args = $template->parseArguments($arg);
+            $named = $template->parseNamedArguments($arg);
+            
+            foreach ($args as $i => $arg) {
+                //if it's literally string
+                if ($arg instanceof BaseString) {
+                    //we have no problems here
+                    $args[$i] = (string) $arg;
+                    continue;
+                }
+                
+                //not sure what to do if it's not a string or StringWrapper
+                if (!is_string($arg)) {
+                    continue;
+                }
+                
+                //it's a variable and we need to figure out the value of it
+                $args[$i] = $context->get($arg);
+            }
+            
+            //push the options    
+            $args[] = array(
+                //special fields
+                'data' => array(
+                    'index' => $context->get('@index'),
+                    'key' => $context->get('@key'),
+                    'first' => $context->get('@first'),
+                    'last' => $context->get('@last')),
+                // Named arguments
+                'hash' => $named,
+                // A renderer for block helper
+                'fn' => function ($inContext = null) use ($context, $template) {
+                    $defined = !!$inContext;
+                    
+                    if (!$defined) {
+                        $inContext = $context;
+                        $inContext->push($inContext->last());
+                    } else if (!$inContext instanceof Context) {
+                        $inContext = new ChildContext($inContext);
+                        $inContext->setParent($context);
+                    }
+                    
+                    $template->setStopToken('else');
+                    $buffer = $template->render($inContext);
+                    $template->setStopToken(false);
+                    //what if it's a loop ?
+                    $template->rewind();
+                    //What's the point of this again?
+                    //I mean in this context (literally)
+                    //$template->discard($inContext);
+                    
+                    if ($defined) {
+                        $inContext->pop();
+                    }
+                    
+                    return $buffer;
+                },
+                
+                // A render for the else block
+                'inverse' => function ($inContext = null) use ($context, $template) {
+                    $defined = !!$inContext;
+                    
+                    if (!$defined) {
+                        $inContext = $context;
+                        $inContext->push($inContext->last());
+                    } else if (!$inContext instanceof Context) {
+                        $inContext = new ChildContext($inContext);
+                        $inContext->setParent($context);
+                    }
+                    
+                    $template->setStopToken('else');
+                    $template->discard($inContext);
+                    $template->setStopToken(false);
+                    $buffer = $template->render($inContext);
+                    
+                    if ($defined) {
+                        $inContext->pop();
+                    }
+                    
+                    return $buffer;
+                },
+                
+                // The current context.
+                'context' => $context,
+                // The current template
+                'template' => $template);
+            
+            return call_user_func_array($helper, $args);
+        };
+    
+        $this->addHelper($name, $callback);
+    }
 
     /**
      * Remove a helper by name.
@@ -260,7 +402,7 @@ class Handlebars
     }
 
     /**
-     * get current loader
+     * Get current loader
      *
      * @return Loader
      */
@@ -286,7 +428,7 @@ class Handlebars
     }
 
     /**
-     * get current partials loader
+     * Get current partials loader
      *
      * @return Loader
      */
@@ -323,6 +465,28 @@ class Handlebars
         }
 
         return $this->_cache;
+    }
+
+    /**
+     * Set time to live for the used cache
+     *
+     * @param int $ttl time to live in seconds
+     *
+     * @return void
+     */
+    public function setTtl($ttl)
+    {
+        $this->_ttl = $ttl;
+    }
+
+    /**
+     * Get ttl
+     *
+     * @return int
+     */
+    public function getTtl()
+    {
+        return $this->_ttl;
     }
 
     /**
@@ -438,6 +602,27 @@ class Handlebars
     }
 
     /**
+     * Sets the class to use for the template object
+     *
+     * @param string $class the class name
+     *
+     * @return void
+     */
+    public function setTemplateClass($class)
+    {
+        if (!is_a($class, 'Handlebars\\Template', true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Custom template class "%s" must extend Template',
+                    $class
+                )
+            );
+        }
+
+        $this->_templateClass = $class;
+    }
+
+    /**
      * Load a template by name with current template loader
      *
      * @param string $name template name
@@ -449,7 +634,7 @@ class Handlebars
         $source = $this->getLoader()->load($name);
         $tree = $this->_tokenize($source);
 
-        return new Template($this, $tree, $source);
+        return new $this->_templateClass($this, $tree, $source);
     }
 
     /**
@@ -467,7 +652,7 @@ class Handlebars
         $source = $this->getPartialsLoader()->load($name);
         $tree = $this->_tokenize($source);
 
-        return new Template($this, $tree, $source);
+        return new $this->_templateClass($this, $tree, $source);
     }
 
     /**
@@ -508,11 +693,11 @@ class Handlebars
     {
         $tree = $this->_tokenize($source);
 
-        return new Template($this, $tree, $source);
+        return new $this->_templateClass($this, $tree, $source);
     }
 
     /**
-     * try to tokenize source, or get them from cache if available
+     * Try to tokenize source, or get them from cache if available
      *
      * @param string $source handlebars source code
      *
@@ -525,7 +710,7 @@ class Handlebars
         if ($tree === false) {
             $tokens = $this->getTokenizer()->scan($source);
             $tree = $this->getParser()->parse($tokens);
-            $this->getCache()->set($hash, $tree);
+            $this->getCache()->set($hash, $tree, $this->_ttl);
         }
 
         return $tree;
