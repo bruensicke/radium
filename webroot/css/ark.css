@@ -2914,10 +2914,10 @@ tr.inactive td:not(:last-child) {
 	font-weight: normal;
 	letter-spacing: 0.03em;
 }
-.label-inactive {
+.label-inactive, .label-offline {
 	background-color: #e8b976;
 }
-.label-active {
+.label-active, .label-online {
 	background-color: #84ce84;
 }
 
