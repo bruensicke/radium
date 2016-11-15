@@ -9,7 +9,7 @@
 namespace radium\tests\cases\controllers;
 
 use lithium\util\Inflector;
-use lithium\tests\mocks\core\MockRequest;
+use radium\tests\mocks\core\MockRequest;
 use radium\tests\mocks\controllers\MockScaffoldController;
 
 class ScaffoldControllerTest extends \lithium\test\Unit {
