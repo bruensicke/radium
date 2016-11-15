@@ -2619,10 +2619,10 @@ a.fc-event:hover {
  * Login
  */
 body.cover {
-  background: transparent url('../img/bg.jpg') 0 0;
+/*  background: transparent url('../img/bg.jpg') 0 0;
   background-size: cover;
   background-attachment: fixed;
-}
+*/}
 .login-wrap {
   margin: 0 auto;
   padding-top: 70px;
