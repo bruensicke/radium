@@ -54,24 +54,6 @@ class Configurations extends \radium\models\BaseModel {
 	);
 
 	/**
-	 * Validation rules
-	 *
-	 * @var array
-	 */
-	public $validates = array(
-		'_id' => array(
-			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
-		),
-		'name' => array(
-			array('notEmpty', 'message' => 'a name is required.'),
-		),
-		'slug' => array(
-			array('notEmpty', 'message' => 'a valid slug is required.', 'last' => true),
-			array('slug', 'message' => 'only numbers, small letters and . - _ are allowed.', 'last' => true),
-		),
-	);
-
-	/**
 	 * return configured value
 	 *
 	 * Depending on type this can be a boolean, a string or an array.
