@@ -3,15 +3,18 @@
 <?php echo $this->html->style(array(
 	'http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700',
 	'/radium/css/bootstrap.min',
-	'/radium/css/font-awesome.min',
-	'/radium/css/import',
-	'/radium/css/select2',
-	'/radium/css/select2-bootstrap',
-	'/radium/css/uniform.default.min',
-	'/radium/css/jbox',
-	'/radium/css/ark',
+	'/radium/css/nifty.min',
+	'/radium/themify-icons/themify-icons.min',
+
+	'/radium/plugins/font-awesome/css/font-awesome.min',
+	// '/radium/css/import',
+	// '/radium/css/select2',
+	// '/radium/css/select2-bootstrap',
+	// '/radium/css/uniform.default.min',
+	// '/radium/css/jbox',
+	// '/radium/css/ark',
 	// '/radium/css/theme',
-	'/radium/trumbowyg/ui/trumbowyg',
+	// '/radium/trumbowyg/ui/trumbowyg',
 	'/radium/css/radium',
 	// '/li3_bootstrap/css/bootstrap-select.min',
 	// '/li3_bootstrap/css/bootstrap-modal',
@@ -23,16 +26,18 @@
 <?php echo $this->html->script(array(
 	'/radium/js/jquery.min',
 	'/radium/js/bootstrap.min',
-	'/radium/js/jquery.autoresize.min',
-	'/radium/js/fineuploader.min',
-	'/radium/js/jquery.uniform.min.js',
-	'/radium/js/jquery.slug.js',
-	'/radium/js/jquery.jbox.min',
-	'/radium/js/select2.min',
-	'/radium/trumbowyg/trumbowyg.min',
-	'/radium/js/moment.min',
-	'/radium/js/import',
-	'/radium/js/radium'
+
+	'/radium/js/nifty.min',
+	// '/radium/js/jquery.autoresize.min',
+	// '/radium/js/fineuploader.min',
+	// '/radium/js/jquery.uniform.min.js',
+	// '/radium/js/jquery.slug.js',
+	// '/radium/js/jquery.jbox.min',
+	// '/radium/js/select2.min',
+	// '/radium/trumbowyg/trumbowyg.min',
+	// '/radium/js/moment.min',
+	// '/radium/js/import',
+	// '/radium/js/radium'
 )); ?>
 <?php echo $this->head(); ?>
 <?php echo $this->scripts(); ?>

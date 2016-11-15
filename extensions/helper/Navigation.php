@@ -62,7 +62,7 @@ class Navigation extends \lithium\template\Helper {
 	 * @return string HTML navigation list
 	 */
 	public function render($nav, array $options = array()) {
-		$defaults = array('caption' => false);
+		$defaults = array('id' => false, 'caption' => false);
 		$options += $defaults;
 
 		if (is_string($nav)) {
@@ -83,6 +83,9 @@ class Navigation extends \lithium\template\Helper {
 			$navigation['caption'] = $options['caption'];
 		}
 
+		if ($options['id']) {
+			$navigation['id'] = $options['id'];
+		}
 
 		foreach ($nav as $navitem) {
 			$navitem = $this->_item($navitem);

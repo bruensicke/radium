@@ -1,122 +1,167 @@
-<nav class="navbar navbar-default navbar-static-top navbar-main" role="navigation">
-	<div class="navbar-header">
-		<a class="navbar-brand" href="<?= $this->url('/radium'); ?>"><i class="fa fa-html5"></i> Radium</a>
-	</div>
-	<ul class="nav navbar-nav navbar-right">
-		<li class="visible-xs">
-			<a href="#" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar">
-				<span class="sr-only">Toggle navigation</span>
-				<i class="fa fa-bars"></i>
+<header id="navbar">
+
+	<div id="navbar-container" class="boxed">
+
+		<div class="navbar-header">
+			<a href="<?= $this->url('/radium'); ?>" class="navbar-brand">
+				<?= $this->html->image('/radium/img/logo.png', ['class' => 'brand-icon', 'alt' => 'radium']); ?>
+				<div class="brand-title">
+					<span class="brand-text">Radium</span>
+				</div>
 			</a>
-		</li>
-<!-- 		<li class="dropdown notification">
-			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<span class="label label-danger arrowed arrow-left-in pull-right">12</span>
-				<i class="fa fa-bell"></i>
-			</a>
-			<ul class="dropdown-menu pull-right">
-				<li>
-					<a href="#">
-						<i class="fa fa-inbox pull-left"></i>
-						<span class="time">now</span>
-						<p>Stet clita kasd gubergren, no sea takimata Lorem ipsum dolor sit amet.</p>
+		</div>
+
+
+		<div class="navbar-content clearfix">
+
+			<ul class="nav navbar-top-links pull-left">
+				<li class="tgl-menu-btn">
+					<a class="mainnav-toggle" href="#">
+						<i class="ti-view-list icon-lg"></i>
 					</a>
 				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-bell pull-left"></i>
-						<span class="time">13 min. ago</span>
-						<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy et dolore.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-bell pull-left"></i>
-						<span class="time">17 min. ago</span>
-						<p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-inbox pull-left"></i>
-						<span class="time">23 min. ago</span>
-						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco ut aliquid ex ea commodi consequat.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-inbox pull-left"></i>
-						<span class="time">26 min. ago</span>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor et dolore magna aliqua.</p>
-					</a>
-				</li>
-				<li class="open-section">
-					<a href="#">View All Notifications</a>
-				</li>
+
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                <i class="ti-bell icon-lg"></i>
+                                <span class="badge badge-header badge-danger"></span>
+                            </a>
+
+                            <!--Notification dropdown menu-->
+                            <div class="dropdown-menu dropdown-menu-md">
+                                <div class="pad-all bord-btm">
+                                    <p class="text-semibold text-main mar-no">You have 3 notifications.</p>
+                                </div>
+                                <div class="nano scrollable">
+                                    <div class="nano-content">
+                                        <ul class="head-list">
+
+                                            <!-- Dropdown list-->
+                                            <li>
+                                                <a href="#">
+                                                    <div class="clearfix">
+                                                        <p class="pull-left">Progressbar</p>
+                                                        <p class="pull-right">70%</p>
+                                                    </div>
+                                                    <div class="progress progress-sm">
+                                                        <div style="width: 70%;" class="progress-bar">
+                                                            <span class="sr-only">70% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    <i class="ti-truck icon-lg"></i>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">With Icon</div>
+									                    <small class="text-muted">15 minutes ago</small>
+									                </div>
+									            </a>
+									        </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    <i class="ti-plug icon-lg"></i>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">With Icon</div>
+									                    <small class="text-muted">15 minutes ago</small>
+									                </div>
+									            </a>
+									        </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    
+									<span class="icon-wrap icon-circle bg-primary">
+									    <i class="ti-layout icon-lg"></i>
+									</span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Circle Icon</div>
+									                    <small class="text-muted">15 minutes ago</small>
+									                </div>
+									            </a>
+									        </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									        <span class="badge badge-success pull-right">90%</span>
+									                <div class="media-left">
+									                    
+									<span class="icon-wrap icon-circle bg-danger">
+									    <i class="ti-crown icon-lg"></i>
+									</span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Circle icon with badge</div>
+									                    <small class="text-muted">50 minutes ago</small>
+									                </div>
+									            </a>
+									        </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    
+									<span class="icon-wrap bg-info">
+									    <i class="ti-camera icon-lg"></i>
+									</span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Square Icon</div>
+									                    <small class="text-muted">Last Update 8 hours ago</small>
+									                </div>
+									            </a>
+									        </li>
+									
+									        <!-- Dropdown list-->
+									        <li>
+									            <a href="#" class="media">
+									        <span class="label label-danger pull-right">New</span>
+									                <div class="media-left">
+									                    
+									<span class="icon-wrap bg-purple">
+									    <i class="ti-bolt icon-lg"></i>
+									</span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Square icon with label</div>
+									                    <small class="text-muted">Last Update 8 hours ago</small>
+									                </div>
+									            </a>
+									        </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!--Dropdown footer-->
+                                <div class="pad-all bord-top">
+                                    <a href="#" class="btn-link text-dark box-block">
+                                        <i class="ti-angle-right pull-right"></i>Show All Notifications
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+
+
+
 			</ul>
-		</li> -->
-<!-- 		<li class="dropdown notification">
-			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<span class="label label-primary arrowed arrow-left-in pull-right">6</span>
-				<i class="fa fa-inbox"></i>
-			</a>
-			<ul class="dropdown-menu pull-right">
-				<li>
-					<a href="#">
-						<img src="img/users/alex.jpg" alt="alex" class="img-avatar pull-left" />
-						<span class="time">now</span>
-						<p>Stet clita kasd gubergren, no sea takimata Lorem ipsum dolor sit amet.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="img/users/fabbian.jpg" alt="fabbian" class="img-avatar pull-left" />
-						<span class="time">13 min. ago</span>
-						<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy et dolore.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="img/users/lex.jpg" alt="lex" class="img-avatar pull-left" />
-						<span class="time">17 min. ago</span>
-						<p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="img/users/lex.jpg" alt="lex" class="img-avatar pull-left" />
-						<span class="time">23 min. ago</span>
-						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco ut aliquid ex ea commodi consequat.</p>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="img/users/molly.jpg" alt="molly" class="img-avatar pull-left" />
-						<span class="time">26 min. ago</span>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor et dolore magna aliqua.</p>
-					</a>
-				</li>
-				<li class="open-section">
-					<a href="#">View All Messages</a>
-				</li>
-			</ul>
-		</li> -->
-<!--
-		<li class="dropdown">
-			<a href="#" class="dropdown-toggle avatar pull-right" data-toggle="dropdown">
-				<i class="fa fa-user fa-3x"></i>
-				<span class="hidden-small">Mike Smith<b class="caret"></b></span>
-			</a>
-			<ul class="dropdown-menu pull-right">
-				<li><a href="#"><i class="fa fa-gear"></i>Account Settings</a></li>
-				<li><a href="profile.html"><i class="fa fa-user"></i>View Profile</a></li>
-				<li class="divider"></li>
-				<li><a href="login.html"><i class="fa fa-sign-out"></i>Logout</a></li>
-			</ul>
-		</li>
--->
-	</ul>
-</nav>
+
+		</div>
+
+</header>
 
 <!--
 <nav class="navbar navbar-default navbar-static-top navbar-main" role="navigation">

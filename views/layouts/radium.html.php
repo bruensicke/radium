@@ -3,20 +3,22 @@
 <head>
 	<?= $this->_render('element', 'radium/head'); ?>
 </head>
-<body class="cover">
-	<div class="wrapper">
-		<div class="body">
-			<?= $this->_render('element', 'radium/sidebar'); ?>
-			<section class="content">
-				<?= $this->_render('element', 'radium/topnav'); ?>
-				<header id="header">
-					<?= $this->_render('element', 'radium/header'); ?>
-				</header>
-				<div id="content">
-					<?= $this->flashMessage->render(); ?>
+<body>
+	<div id="container" class="effect mainnav-lg">
+		<?= $this->_render('element', 'radium/topnav'); ?>
+		
+		<div class="boxed">
+			<div id="content-container">
+				<!-- breadcrumb -->
+				<?= $this->_render('element', 'radium/header'); ?>
+				<?= $this->flashMessage->render(); ?>
+				<div id="page-content">
 					<?= $this->content(); ?>
 				</div>
-			</section>
+			</div>
+			
+			<?= $this->_render('element', 'radium/sidebar'); ?>
+			<?= $this->_render('element', 'radium/aside'); ?>
 		</div>
 		<?= $this->_render('element', 'radium/footer'); ?>
 	</div>

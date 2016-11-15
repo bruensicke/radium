@@ -1,6 +1,9 @@
-<ul class="nav nav-stacked">
+<ul class="list-group"{{#if id}} id="{{ id }}"{{/if}}>
+	{{#if divider}}
+		<li class="list-divider"></li>
+	{{/if}}
 	{{#if caption}}
-		<li class="nav-header"><h4>{{ caption }}</h4></li>
+		<li class="list-header">{{ caption }}</li>
 	{{/if}}
 	{{#each items}}
 		{{#if children}}
@@ -9,18 +12,23 @@
 					{{#if icon}}
 						<i class="fa fa-{{ icon }} fa-fw"></i>
 					{{/if}}
-					{{ name }}
-					{{#with badge}}
-						<span class="badge {{#if color}}badge-{{ color }}{{/if}} {{ shape }}">{{ value }}</span>
-					{{/with}}
-					<i class="caret"></i>
+					<span class="menu-title">
+						{{ name }}
+						{{#with badge}}
+							<span class="pull-right badge {{#if color}}badge-{{ color }}{{/if}}">{{ value }}</span>
+						{{/with}}
+						{{#with label}}
+							<span class="pull-right label {{#if color}}label-{{ color }}{{/if}}">{{ value }}</span>
+						{{/with}}
+					</span>
+					<i class="arrow"></i>
 				</a>
-				<ul class="submenu">
+				<ul class="collapse">
 					{{#each children}}
 					<li{{#if active}} class="active"{{/if}}>
 						<a href="{{ link }}">
 							{{#if icon}}
-								<i class="fa fa-{{ icon }} fa-fw"></i>
+								<i class="{{ icon }}"></i>
 							{{/if}}
 							{{ name }}
 							{{#with badge}}
@@ -32,15 +40,20 @@
 				</ul>
 			</li>
 		{{else}}
-			<li{{#if active}} class="active"{{/if}}>
+			<li{{#if active}} class="active-link"{{/if}}>
 				<a href="{{ link }}">
 					{{#if icon}}
-						<i class="fa fa-{{ icon }} fa-fw"></i>
+						<i class="{{ icon }}"></i>
 					{{/if}}
-					{{ name }}
-					{{#with badge}}
-					<span class="badge {{#if color}}badge-{{ color }}{{/if}} {{ shape }}">{{ value }}</span>
-					{{/with}}
+					<span class="menu-title">
+						{{ name }}
+						{{#with badge}}
+							<span class="pull-right badge {{#if color}}badge-{{ color }}{{/if}}">{{ value }}</span>
+						{{/with}}
+						{{#with label}}
+							<span class="pull-right label {{#if color}}label-{{ color }}{{/if}}">{{ value }}</span>
+						{{/with}}
+					</span>
 				</a>
 			</li>
 		{{/if}}

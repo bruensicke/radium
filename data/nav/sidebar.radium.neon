@@ -1,15 +1,15 @@
 -
 	name: Assets
-	icon: image
+	icon: fa fa-image
 -
 	name: Configurations
-	icon: cogs
+	icon: fa fa-cogs
 -
 	name: Contents
-	icon: file2
+	icon: fa fa-file
 -
 	name: Pages
-	icon: file
+	icon: fa fa-file
 -
 	name: Versions
-	icon: clock
+	icon: fa fa-calendar
