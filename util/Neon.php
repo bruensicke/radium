@@ -122,6 +122,9 @@ class Neon {
 	 *               If `$type` is `all` returns null or a DocumentSet object with loaded entities
 	 */
 	public static function find($model, $type, array $options = array()) {
+		$defaults = array('conditions' => null, 'fields' => null);
+		$options += $defaults;
+
 		$paths = self::$_paths;
 		Libraries::paths($paths);
 		$meta = is_array($model) ? $model : $model::meta();
@@ -141,7 +144,9 @@ class Neon {
 			$field = $meta['key'];
 		}
 		if (!isset($field)) {
-			return array();
+			$field = 'all';
+			// var_dump($field);
+			// return array();
 		}
 		$value = $conditions[$field];
 
@@ -181,6 +186,20 @@ class Neon {
 				$data['value'] = Neon::encode($data['value']);
 			}
 			return $model::create($data);
+		}
+
+		// we found one (!) file with name 'all.neon', this is the entire set
+		if ($type == 'all' && count($files) == 1 && (substr($files->first(), -strlen('all.neon')) === 'all.neon')) {
+			$rows = self::file($files->first());
+			$data = array();
+			foreach($rows as $row) {
+				$data[] = $model::create($row);
+			}
+			if (is_array($model)) {
+				return new Collection(compact('data'));
+			}
+			$model = $meta['class'];
+			return new DocumentSet(compact('data', 'model'));
 		}
 
 		if ($type == 'all' && count($files)) {
