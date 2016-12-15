@@ -21,7 +21,7 @@ class Order extends \lithium\template\helper\Html {
 	 *                    if name and internal fieldname differs
 	 * @return string Returns an `<a />` element.
 	 */
-	public function order($name, $data, $options = array()){
+	public static function order($name, $data, $options = array()){
 		$order = 'asc';
 		$sorts = array('desc' => 'sort-up', 'asc' => 'sort-down');
 		$string = ucfirst($name).'<a href="?order=%s:%s%s" class="sort fa fa-%s"></a>';

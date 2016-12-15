@@ -197,6 +197,7 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-textarea';
 			}
+			
 			echo $this->form->field($field, $options);
 		break;
 
@@ -208,6 +209,28 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}
+			echo $this->form->field($field, $options);
+		break;
+		case 'mulselect':
+			$value = array();
+			$method = Inflector::underscore(Inflector::pluralize($field));
+			if (is_object($this->scaffold->object->$field)) {
+				$data = $this->scaffold->object->$field->data();
+				$value = (!empty($data)) ? $data : array();
+			}
+
+			$options = array(
+				'type' => 'select',
+				'multi' => true,
+				'class' => "form-control $field",
+				'data-switch' => $field,
+				'list' => $model::$method(),
+				'value' => $value,
+				'multiple' => true,
+			);
+			$removeFieldOptions['hidden'] = true;
+			$removeFieldOptions['label'] = false;
+			echo $this->form->field('removeSelect_'.$field, $removeFieldOptions);
 			echo $this->form->field($field, $options);
 		break;
 	}
