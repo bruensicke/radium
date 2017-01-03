@@ -11,7 +11,7 @@ use lithium\core\Environment;
 use lithium\action\Response;
 use lithium\net\http\Media;
 use lithium\util\Set;
-use lithium\util\StringDepracted;
+use lithium\util\StringDeprecated;
 use Handlebars\Autoloader;
 
 Media::type('default', null, array(
@@ -58,7 +58,7 @@ Media::type('csv', 'application/csv', array('encode' => function($data) {
 	if ($scaffold && isset($data['object'])) {
 		$object = $data['object'] ? : array();
 		$replace = Set::flatten(array_merge(compact('scaffold'), $object));
-		$name = StringDepracted::insert('{:scaffold.human} - {:_id}: {:name}.csv', $replace);
+		$name = StringDeprecated::insert('{:scaffold.human} - {:_id}: {:name}.csv', $replace);
 		foreach($fields as $field) {
 			fputcsv($out, array($field, isset($object[$field]) ? $object[$field] : ''));
 		}
@@ -66,7 +66,7 @@ Media::type('csv', 'application/csv', array('encode' => function($data) {
 
 	if ($scaffold && isset($data['objects'])) {
 		$objects = $data['objects'] ? : array();
-		$name = StringDepracted::insert('{:slug}.csv', $scaffold);
+		$name = StringDeprecated::insert('{:slug}.csv', $scaffold);
 		fputcsv($out, array_values($fields));
 		foreach($data['objects'] as $row) {
 			fputcsv($out, Set::flatten($row));
