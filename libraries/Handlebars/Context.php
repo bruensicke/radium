@@ -203,7 +203,7 @@ class Context
      */
     public function get($variableName, $strict = false)
     {
-        if ($variableName instanceof \Handlebars\String) {
+        if ($variableName instanceof \Handlebars\StringDeprecated) {
             return (string)$variableName;
         }
         $variableName = trim($variableName);

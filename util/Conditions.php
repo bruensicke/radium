@@ -9,7 +9,7 @@
 namespace radium\util;
 
 use radium\extensions\errors\ConditionsException;
-use lithium\util\String;
+use lithium\util\StringDeprecated;
 use lithium\util\Set;
 
 class Conditions extends \lithium\core\StaticObject {
@@ -20,7 +20,7 @@ class Conditions extends \lithium\core\StaticObject {
 			extract($params);
 			$defaults = array();
 			$options += $defaults;
-			$check = String::insert($conditions, Set::flatten($data));
+			$check = StringDeprecated::insert($conditions, Set::flatten($data));
 			if (strpbrk($check, '&|')) {
 				return eval("return (boolean)($check);");
 			}

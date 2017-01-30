@@ -184,9 +184,11 @@ foreach ($fields as $field) {
 		break;
 
 		case 'list':
-			$value = (is_object($binding->$field))
-				? $binding->$field->data()
-				: (array) $binding->$field;
+            $x = $binding->$field;
+
+            $value = (is_object($x))
+                ? $x->data()
+                : (array)$x;
 			$options = array(
 				'type' => 'textarea',
 				'class' => "form-control autogrow $field",
@@ -197,6 +199,7 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-textarea';
 			}
+
 			echo $this->form->field($field, $options);
 		break;
 
@@ -208,6 +211,30 @@ foreach ($fields as $field) {
 				$options['disabled'] = 'disabled';
 				$options['class'] .= ' uneditable-input';
 			}
+			echo $this->form->field($field, $options);
+		break;
+		case 'mulselect':
+			$value = array();
+			$method = Inflector::underscore(Inflector::pluralize($field));
+
+			if (is_object($this->scaffold->object->$field)) {
+                $x = $this->scaffold->object->$field;
+				$data = $x->data();
+				$value = (!empty($data)) ? $data : array();
+			}
+
+			$options = array(
+				'type' => 'select',
+				'multi' => true,
+				'class' => "form-control $field",
+				'data-switch' => $field,
+				'list' => $model::$method(),
+				'value' => $value,
+				'multiple' => true,
+			);
+			$removeFieldOptions['hidden'] = true;
+			$removeFieldOptions['label'] = false;
+			echo $this->form->field('removeSelect_'.$field, $removeFieldOptions);
 			echo $this->form->field($field, $options);
 		break;
 	}
