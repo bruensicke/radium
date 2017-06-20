@@ -123,7 +123,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 		if (!$object) {
 			return $this->redirect(array('action' => 'index'));
 		}
-		
+
 		$this->request->data = $this->removeEmptyArray($this->request->data, $object);
 
 		if (($this->request->data) && $object->save($this->request->data)) {
@@ -359,7 +359,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				: array('controller' => $this->controller);
 			$this->scaffold = array(
 				'base' => Router::match($base, $this->request),
-				'controller' => strtolower($this->controller),
+				'controller' => $this->controller,
 				'library' => $this->library,
 				'class' => $class,
 				'model' => $this->model,
