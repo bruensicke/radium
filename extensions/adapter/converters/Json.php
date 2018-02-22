@@ -14,7 +14,7 @@ use Exception;
 
 use lithium\util\Set;
 
-class Json extends \lithium\core\Object {
+class Json extends \lithium\core\DynamicObject {
 
 	/**
 	 * returns rendered content

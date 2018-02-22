@@ -13,7 +13,7 @@ use radium\extensions\errors\IniFormatException;
 
 use lithium\util\Set;
 
-class Ini extends \lithium\core\Object {
+class Ini extends \lithium\core\DynamicObject {
 
 	/**
 	 * returns rendered content

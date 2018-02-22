@@ -8,7 +8,7 @@
 
 namespace radium\extensions\adapter\converters;
 
-class Html extends \lithium\core\Object {
+class Html extends \lithium\core\DynamicObject {
 
 	/**
 	 * returns rendered content

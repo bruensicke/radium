@@ -8,7 +8,7 @@
 
 namespace radium\extensions\adapter\converters;
 
-class Markdown extends \lithium\core\Object {
+class Markdown extends \lithium\core\DynamicObject {
 
 	/**
 	 * returns rendered content

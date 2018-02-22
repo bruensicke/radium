@@ -10,7 +10,7 @@ namespace radium\extensions\adapter\converters;
 
 use li3_mustache\libraries\Mustache as Renderer;
 
-class Mustache extends \lithium\core\Object {
+class Mustache extends \lithium\core\DynamicObject {
 
 	/**
 	 * returns rendered content
