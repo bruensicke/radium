@@ -399,7 +399,7 @@ class BaseModel extends \lithium\data\Model {
 	public static function find($type, array $options = array()) {
 		$result = parent::find($type, $options);
         $neon = static::meta('neon');
-		if ($neon && (!$result || (is_object($result) && (!count($result))))) {
+        if ($neon && (!$result || (!@count($result)))) {
 			return Neon::find(get_called_class(), $type, $options);
 		}
 		return $result;
