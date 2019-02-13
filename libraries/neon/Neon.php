@@ -77,7 +77,7 @@ class Neon
 	 */
 	public static function encode($var, $options = NULL)
 	{
-		if ($var instanceof DateTime) {
+		if ($var instanceof \DateTime) {
 			return $var->format('Y-m-d H:i:s O');
 
 		} elseif ($var instanceof NeonEntity) {
@@ -318,7 +318,7 @@ class Neon
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
 				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?\z#A', $t)) {
-					$value = new DateTime($t);
+					$value = new \DateTime($t);
 				} else { // literal
 					$value = $t;
 				}
