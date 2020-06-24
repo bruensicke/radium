@@ -171,6 +171,19 @@ foreach ($fields as $field) {
 			echo $this->form->field($field, $options);
 		break;
 
+        case 'float':
+            $options = array(
+                'type' => 'number',
+                'step' => '0.0000001',
+                'class' => 'form-control numeric',
+            );
+            if (in_array($field, $readonly)) {
+                $options['disabled'] = 'disabled';
+                $options['class'] .= ' uneditable-input';
+            }
+            echo $this->form->field($field, $options);
+            break;
+
 		case 'date':
 			// TODO: datepicker
 			$options = array(
