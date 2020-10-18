@@ -37,6 +37,7 @@ class ScaffoldController extends \radium\controllers\BaseController {
 	}
 
 	public function index() {
+        $limit = $offsets = null;
 		$data = array();
 		$model = $this->scaffold['model'];
 		$page = $this->_currentPage();
@@ -55,7 +56,6 @@ class ScaffoldController extends \radium\controllers\BaseController {
 				$conditions = $querried;
 			}
 		}
-
 
 		$all = $count = (int) $model::find('count', compact('conditions'));
 
