@@ -15,12 +15,12 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th><?Order::order('status', $order);?></th>
-			<th><?Order::order('type', $order);?></th>
-			<th><?Order::order('slug', $order);?></th>
-			<th><?Order::order('name', $order);?> </th>
-			<th><?Order::order('created', $order)?></th>
-			<th><?Order::order('updated', $order)?></th>
+			<th><?php Order::order('status', $order);?></th>
+			<th><?php Order::order('type', $order);?></th>
+			<th><?php Order::order('slug', $order);?></th>
+			<th><?php Order::order('name', $order);?> </th>
+			<th><?php Order::order('created', $order)?></th>
+			<th><?php Order::order('updated', $order)?></th>
 			<th>Actions</th>
 		</tr>
 	</thead>

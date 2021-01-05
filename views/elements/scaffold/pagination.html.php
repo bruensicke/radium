@@ -26,13 +26,13 @@ $start = ($offsets['offset'] <= 0) ? 1 : $offsets['offset'];
 	<div class="pull-right">
 		<div>
 			<ul class="pagination">
-				<li class="prev <? if($prev <=0) echo "disabled"?>">
+				<li class="prev <?php if($prev <=0) echo "disabled"?>">
 					<a href="<?=$pageUri.'1';?>">
 						<span class="fa fa-angle-left"></span>
 						<span class="fa fa-angle-left"></span>
 					</a>
 				</li>
-				<li class="prev <? if($prev <=0) echo "disabled"?>">
+				<li class="prev <?php if($prev <=0) echo "disabled"?>">
 					<a href="<?=$pageUri.$prev;?>">
 						<span class="fa fa-angle-left"></span>
 						Previous
@@ -43,19 +43,19 @@ $start = ($offsets['offset'] <= 0) ? 1 : $offsets['offset'];
 						if($i<1) continue;
 						if($i>$offsets['pages']) continue;
 						?>
-						<li class="<? if($i == $page) echo "active"?>">
+						<li class="<?php if($i == $page) echo "active"?>">
 							<a href="<?=$pageUri.$i;?>"><?=$i;?></a>
 						</li>
 						<?php
 					}
 				?>
-				<li class="next <? if($next > $offsets['pages']) echo "disabled"?>">
+				<li class="next <?php if($next > $offsets['pages']) echo "disabled"?>">
 					<a href="<?=$pageUri.$next;?>">
 						Next
 						<span class="fa fa-angle-right"></span>
 					</a>
 				</li>
-				<li class="next <? if($next > $offsets['pages']) echo "disabled"?>">
+				<li class="next <?php if($next > $offsets['pages']) echo "disabled"?>">
 					<a href="<?=$pageUri.$offsets['pages'];?>">
 						<span class="fa fa-angle-right"></span>
 						<span class="fa fa-angle-right"></span>
