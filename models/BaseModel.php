@@ -100,9 +100,11 @@ class BaseModel extends \lithium\data\Model {
 		'_id' => array(
 			array('notEmpty', 'message' => 'a unique _id is required.', 'last' => true, 'on' => 'update'),
 		),
-		'name' => array(
+		/*
+        'name' => array(
 			array('notEmpty', 'message' => 'This field should not be empty.'),
 		),
+        */
 		'slug' => array(
 			array('notEmpty', 'message' => 'Insert an alphanumeric value'),
 			array('slug', 'message' => 'This must be alphanumeric'),
