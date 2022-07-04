@@ -111,7 +111,7 @@ class Handlebars extends \lithium\template\Helper {
 		$this->addHelper('number_format', function($a, $b, $c, $d) {
 			$params = explode(' ', $c, 4);
 			$params += array(null, 2, '.', ',');
-			$params[0] = $b->get($params[0]);
+			$params[0] = (float) $b->get($params[0]);
 			return call_user_func_array('number_format', $params);
 		});
 		$this->addHelper('colorlabel', function($a, $b, $c, $d) use ($context) {
