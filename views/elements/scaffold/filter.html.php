@@ -3,7 +3,7 @@
 	$searchable = '';
 	if(isset($model::$_searchable)){
 		if(is_array($model::$_searchable)){
-			$searchable = ', '.implode($model::$_searchable, ', ');
+			$searchable = ', '.implode(', ', $model::$_searchable);
 		}
 	}
 ?>
